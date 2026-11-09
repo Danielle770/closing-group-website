@@ -23,7 +23,7 @@ const cfg = {
   siteUrl: (env.SITE_URL || 'https://closinggroupisrael.com').replace(/\/$/, ''),
   dbPath: env.DB_PATH || '/var/lib/closinggroup/members.db',
   smtp: { host: env.SMTP_HOST, port: Number(env.SMTP_PORT || 587), user: env.SMTP_USER, pass: env.SMTP_PASS },
-  mailFrom: env.MAIL_FROM || 'The Closing Group <no-reply@closinggroupisrael.com>',
+  mailFrom: env.MAIL_FROM || 'The Closing Group <closinggroupisrael@gmail.com>',
   adminEmail: env.ADMIN_EMAIL || '',
   adminPassword: env.ADMIN_PASSWORD || '',
   twilio: { sid: env.TWILIO_ACCOUNT_SID, token: env.TWILIO_AUTH_TOKEN, verifySid: env.TWILIO_VERIFY_SERVICE_SID },
