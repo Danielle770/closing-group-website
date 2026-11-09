@@ -22,7 +22,9 @@
   }
 
   function post(url, data) {
-    return fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+    var ctrl = window.AbortController ? new AbortController() : null;
+    if (ctrl) setTimeout(function () { ctrl.abort(); }, 20000);
+    return fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data), signal: ctrl ? ctrl.signal : undefined })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j.httpOk = r.ok; j.status = r.status; return j; }); });
   }
 
@@ -75,6 +77,7 @@
       if (!data.email || data.email.indexOf("@") < 1) { message(form, "Please enter a valid email address."); return; }
       if (data.consent_terms !== true) { message(form, "Please agree to the Terms of use and Privacy policy."); return; }
       button.disabled = true;
+      message(form, "Sending…", true);
       post("/api/join", data)
         .then(function (j) {
           if (j.status === 404 || j.status === 502 || j.status === 503) { message(form, "Registration opens very soon. Please check back in a few days."); return; }

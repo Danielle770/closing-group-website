@@ -61,7 +61,8 @@ function normalisePhone(raw) {
 
 // ---------- email ----------
 const mailer = cfg.smtp.host
-  ? nodemailer.createTransport({ host: cfg.smtp.host, port: cfg.smtp.port, secure: cfg.smtp.port === 465, auth: { user: cfg.smtp.user, pass: cfg.smtp.pass } })
+  ? nodemailer.createTransport({ host: cfg.smtp.host, port: cfg.smtp.port, secure: cfg.smtp.port === 465, auth: { user: cfg.smtp.user, pass: cfg.smtp.pass },
+      connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000 })
   : null;
 
 async function sendMail(to, subject, text, html) {
@@ -140,7 +141,13 @@ app.use(express.json({ limit: '10kb' }));
 
 const findByEmail = db.prepare('SELECT * FROM members WHERE email = ?');
 
-app.get('/api/health', (req, res) => res.json({ ok: true, email: !!mailer, whatsapp: whatsappEnabled }));
+app.get('/api/health', async (req, res) => {
+  let emailStatus = mailer ? 'configured' : 'off';
+  if (mailer && req.query.check === 'email') {
+    try { await mailer.verify(); emailStatus = 'working'; } catch (e) { emailStatus = 'error: ' + e.message; }
+  }
+  res.json({ ok: true, email: emailStatus, whatsapp: whatsappEnabled });
+});
 
 app.post('/api/join', async (req, res) => {
   const b = req.body || {};
@@ -178,12 +185,13 @@ app.post('/api/join', async (req, res) => {
   }
 
   const m = findByEmail.get(email);
-  try { if (!m.email_verified_at) await sendVerifyEmail(m); } catch (e) { console.error('mail error', e.message); }
-  notifyAdmin(m, !existing).catch((e) => console.error('admin mail error', e.message));
+  // Send emails in the background so the visitor never waits on the mail server
+  if (!m.email_verified_at) sendVerifyEmail(m).catch((e) => console.error('mail error:', e.message));
+  notifyAdmin(m, !existing).catch((e) => console.error('admin mail error:', e.message));
 
   let wa = 'skipped';
   if (whatsappEnabled && m.whatsapp && !m.whatsapp_verified_at) {
-    try { await startWhatsapp(m.whatsapp); wa = 'sent'; } catch (e) { console.error('whatsapp error', e.message); wa = 'failed'; }
+    try { await Promise.race([startWhatsapp(m.whatsapp), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 10000))]); wa = 'sent'; } catch (e) { console.error('whatsapp error', e.message); wa = 'failed'; }
   } else if (m.whatsapp_verified_at) wa = 'verified';
   res.json({ ok: true, emailVerified: !!m.email_verified_at, whatsapp: wa });
 });
