@@ -1,0 +1,44 @@
+/* The Closing Group — shared styles. Most layout lives inline in each page. */
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+a { color: #A8522F; }
+
+/* Editorial serif headlines (trust, finance), clean sans everywhere else */
+h1, h2 { font-family: "Newsreader", Georgia, "Times New Roman", serif !important; font-weight: 500 !important; letter-spacing: -0.02em !important; }
+
+/* Top bar: keep it dark even over light sections */
+header { background: rgba(18,18,19,0.9) !important; }
+
+/* Focus rings */
+:focus-visible { outline: 3px solid #A8522F; outline-offset: 3px; }
+
+/* Scroll reveal (modern browsers); content stays visible elsewhere */
+@keyframes tcgrise { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+  .tcg-reveal { animation: tcgrise both cubic-bezier(0.2, 0.8, 0.2, 1); animation-timeline: view(); animation-range: entry 0% entry 45%; }
+}
+@keyframes tcgpulse { 0% { box-shadow: 0 0 0 0 rgba(46,184,114,.55); } 70% { box-shadow: 0 0 0 10px rgba(46,184,114,0); } 100% { box-shadow: 0 0 0 0 rgba(46,184,114,0); } }
+.tcg-live { animation: tcgpulse 1.8s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) { .tcg-reveal, .tcg-live { animation: none !important; } html { scroll-behavior: auto; } }
+
+/* Form status message */
+.tcg-msg { font-size: 15px; line-height: 1.45; text-align: center; padding: 12px 16px; border-radius: 12px; background: #F5F5F7; color: #1D1D1F; }
+.tcg-msg.ok { background: #EAF7EF; color: #1E5E3C; }
+
+/* Tablet */
+@media (max-width: 1068px) {
+  h1 { font-size: 72px !important; }
+  h2 { font-size: 56px !important; }
+}
+/* Phone */
+@media (max-width: 734px) {
+  h1 { font-size: 46px !important; line-height: 1.08 !important; }
+  h2 { font-size: 38px !important; line-height: 1.1 !important; }
+  h3 { font-size: 24px !important; }
+  h1 + p { font-size: 21px !important; }
+  h1 + p br { display: none; }
+  section { padding-top: 88px !important; padding-bottom: 88px !important; }
+  header nav { gap: 14px !important; }
+  table { font-size: 13px !important; }
+}
