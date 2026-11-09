@@ -1,0 +1,46 @@
+{
+  "_note": "SAMPLE DATA for testing only. Not a real project or real prices.",
+  "project": {
+    "name": "Sample project · South Netanya",
+    "area": "South Netanya",
+    "street": "Sample Street 10",
+    "lat": 32.3075,
+    "lng": 34.8605,
+    "newBuild": true,
+    "form4": false,
+    "form4Months": 4,
+    "compsSource": "sample data"
+  },
+  "building": {
+    "floors": 9,
+    "elevators": 2,
+    "shabbatElevator": true,
+    "mamad": true,
+    "lobby": true,
+    "gym": true,
+    "gatedParking": true,
+    "evCharging": true
+  },
+  "location": {
+    "coastal": true,
+    "quietStreet": true,
+    "streetNote": "A short residential street that ends at a park, with little through traffic.",
+    "beachM": 900,
+    "trainM": 2400,
+    "schoolM": 350,
+    "parkM": 120,
+    "synagogueM": 200,
+    "elevationM": 38,
+    "areaElevationM": 30
+  },
+  "assumptions": {
+    "annualTrendPct": -1
+  },
+  "units": [
+    { "id": "6A", "rooms": 4, "sizeM2": 112, "balconyM2": 12, "floor": 6, "directions": "W N", "parking": 1, "storage": 1, "listPrice": 2600000 },
+    { "id": "6B", "rooms": 5, "sizeM2": 132, "balconyM2": 14, "floor": 6, "directions": "S W E", "parking": 2, "storage": 1, "listPrice": 3050000 },
+    { "id": "7A", "rooms": 4, "sizeM2": 112, "balconyM2": 12, "floor": 7, "directions": "W N", "parking": 1, "storage": 1, "listPrice": 2650000 },
+    { "id": "8C", "rooms": 3, "sizeM2": 86, "balconyM2": 10, "floor": 8, "directions": "S", "parking": 1, "storage": 0, "listPrice": 2050000 },
+    { "id": "9P", "rooms": 5, "sizeM2": 150, "balconyM2": 60, "floor": 9, "directions": "N S W", "parking": 2, "storage": 1, "listPrice": 4100000, "view": "Penthouse with a 60 m² roof terrace and open sea views." }
+  ]
+}
