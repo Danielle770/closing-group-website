@@ -2,15 +2,17 @@
 'use strict';
 /*
  * Fair price agent — command line.
- *   node run.js <deal.json> <sales.csv|sales.json> [report.html] [--public]
+ *   node run.js <deal.json> <sales.csv|sales.json> [report.html] [--public] [--builder]
  * deal.json  : the project, building, location and apartments (see examples/deal.example.json)
  * sales      : nearby reported sales (see examples/sales.example.csv)
  * --public   : hide house numbers of the compared sales (for sharing with members)
+ * --builder  : also write negotiation-brief.html (internal) and builder-pitch.html (for the developer)
  */
 const fs = require('fs');
 const path = require('path');
 const { analyse } = require('./engine');
 const { render } = require('./report');
+const { negotiate, renderBrief, renderPitch } = require('./builder');
 const { ilsK, pct } = require('./highlights');
 
 function parseCSV(text) {
@@ -52,6 +54,15 @@ if (require.main === module) {
   }
   if (t.price) console.log(`TOTAL saving ${ilsK(t.saving)} (${pct(t.savingPct)})`);
   console.log('Report: ' + out);
+  if (process.argv.includes('--builder')) {
+    const ng = negotiate(result);
+    const dir = path.dirname(out);
+    fs.writeFileSync(path.join(dir, 'negotiation-brief.html'), renderBrief(result, ng));
+    fs.writeFileSync(path.join(dir, 'builder-pitch.html'), renderPitch(result, ng));
+    console.log(`Negotiation: open ${ilsK(ng.opening)} · target ${ilsK(ng.target)} · walk away above ${ilsK(ng.walkAway)}`);
+    console.log(`Builder carrying cost ≈ ${ilsK(ng.main.total)}/month; selling alone nets ${ng.scenarios.map((x) => x.months + 'm ' + ilsK(x.net)).join(', ')}`);
+    console.log('Brief: ' + path.join(dir, 'negotiation-brief.html') + '\nPitch: ' + path.join(dir, 'builder-pitch.html'));
+  }
 }
 
 module.exports = { parseCSV, loadSales };

@@ -5,7 +5,7 @@
  */
 const { median, quantile, num, bool } = require('./engine');
 
-const ils = (n) => '₪' + Math.round(n).toLocaleString('en-US');
+const ils = (n) => (n < 0 ? '−₪' : '₪') + Math.abs(Math.round(n)).toLocaleString('en-US');
 const ilsK = (n) => (Math.abs(n) >= 1e6 ? '₪' + (n / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M' : '₪' + Math.round(n / 1000) + 'K');
 const pct = (n) => Math.round(n) + '%';
 

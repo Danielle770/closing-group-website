@@ -9,7 +9,8 @@
     "newBuild": true,
     "form4": false,
     "form4Months": 4,
-    "compsSource": "sample data"
+    "compsSource": "sample data",
+    "builder": { "ourFee": 400000 }
   },
   "building": {
     "floors": 9,
