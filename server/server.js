@@ -24,6 +24,9 @@ const cfg = {
   dbPath: env.DB_PATH || '/var/lib/closinggroup/members.db',
   smtp: { host: env.SMTP_HOST, port: Number(env.SMTP_PORT || 587), user: env.SMTP_USER, pass: env.SMTP_PASS },
   mailFrom: env.MAIL_FROM || 'The Closing Group <closinggroupisrael@gmail.com>',
+  replyTo: env.REPLY_TO || 'closinggroupisrael@gmail.com',
+  resendKey: env.RESEND_API_KEY || '',
+  brevoKey: env.BREVO_API_KEY || '',
   adminEmail: env.ADMIN_EMAIL || '',
   adminPassword: env.ADMIN_PASSWORD || '',
   twilio: { sid: env.TWILIO_ACCOUNT_SID, token: env.TWILIO_AUTH_TOKEN, verifySid: env.TWILIO_VERIFY_SERVICE_SID },
@@ -65,9 +68,36 @@ const mailer = cfg.smtp.host
       connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000 })
   : null;
 
+// Email goes out through an HTTPS email API when a key is set (works even when the
+// server's mail ports are blocked), otherwise through SMTP, otherwise it is only logged.
+const mailProvider = cfg.resendKey ? 'resend' : cfg.brevoKey ? 'brevo' : mailer ? 'smtp' : 'off';
+
+function parseFrom(from) {
+  const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(from);
+  return m ? { name: m[1].replace(/^"|"$/g, ''), email: m[2] } : { name: '', email: from.trim() };
+}
+
+async function httpsMail(url, headers, body) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body), signal: ctrl.signal });
+    if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 300)}`);
+  } finally { clearTimeout(timer); }
+}
+
 async function sendMail(to, subject, text, html) {
-  if (!mailer) { console.log(`[mail disabled] to=${to} subject="${subject}"\n${text}\n`); return; }
-  await mailer.sendMail({ from: cfg.mailFrom, to, subject, text, html });
+  if (mailProvider === 'resend') {
+    return httpsMail('https://api.resend.com/emails', { Authorization: `Bearer ${cfg.resendKey}` },
+      { from: cfg.mailFrom, to: [to], subject, text, html, reply_to: cfg.replyTo });
+  }
+  if (mailProvider === 'brevo') {
+    const f = parseFrom(cfg.mailFrom);
+    return httpsMail('https://api.brevo.com/v3/smtp/email', { 'api-key': cfg.brevoKey, accept: 'application/json' },
+      { sender: { name: f.name || 'The Closing Group', email: f.email }, to: [{ email: to }], subject, textContent: text, htmlContent: html, replyTo: { email: cfg.replyTo } });
+  }
+  if (mailProvider === 'smtp') return mailer.sendMail({ from: cfg.mailFrom, to, subject, text, html, replyTo: cfg.replyTo });
+  console.log(`[mail disabled] to=${to} subject="${subject}"\n${text}\n`);
 }
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -142,8 +172,8 @@ app.use(express.json({ limit: '10kb' }));
 const findByEmail = db.prepare('SELECT * FROM members WHERE email = ?');
 
 app.get('/api/health', async (req, res) => {
-  let emailStatus = mailer ? 'configured' : 'off';
-  if (mailer && req.query.check === 'email') {
+  let emailStatus = mailProvider === 'off' ? 'off' : `configured (${mailProvider})`;
+  if (mailProvider === 'smtp' && req.query.check === 'email') {
     try { await mailer.verify(); emailStatus = 'working'; } catch (e) { emailStatus = 'error: ' + e.message; }
   }
   res.json({ ok: true, email: emailStatus, whatsapp: whatsappEnabled });
@@ -255,5 +285,5 @@ app.get('/api/admin/members.csv', (req, res) => {
 app.use('/api', (req, res) => res.status(404).json({ ok: false, error: 'Not found' }));
 
 app.listen(cfg.port, '127.0.0.1', () => {
-  console.log(`Closing Group API on 127.0.0.1:${cfg.port} · email ${mailer ? 'on' : 'OFF (logging only)'} · WhatsApp ${whatsappEnabled ? 'on' : 'OFF'}`);
+  console.log(`Closing Group API on 127.0.0.1:${cfg.port} · email ${mailProvider === 'off' ? 'OFF (logging only)' : mailProvider} · WhatsApp ${whatsappEnabled ? 'on' : 'OFF'}`);
 });
