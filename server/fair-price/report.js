@@ -23,13 +23,14 @@ function render(a, { internal = true } = {}) {
 <td>${num(u.parking)} / ${num(u.storage)}</td>
 <td>${u.price ? ils(u.price) : '–'}</td>
 <td>${ils(u.fairValue)}</td>
-<td class="${u.saving > 0 ? 'good' : ''}">${u.price ? `${ils(u.saving)}<br><span class="muted">${pct(u.savingPct)}</span>` : `<span class="muted">target ≤</span><br>${ils(u.negotiationTarget)}`}</td>
+<td class="${u.saving > 0 ? 'good' : ''}">${u.price ? `<span style="font-size:16px">${ils(u.saving)}</span><br><span class="muted">${pct(u.savingPct)}</span>` : `<span class="muted">target ≤</span><br>${ils(u.negotiationTarget)}`}</td>
 </tr>`).join('');
 
   const unitCards = units.map((u) => {
     const hs = unitHighlights(u, a);
     return `<article class="card"><div class="card-head"><h3>${esc(u.id ? 'Apartment ' + u.id : num(u.rooms) + '-room apartment')}</h3><span class="tag">${num(u.rooms)} rooms · ${num(u.sizeM2)} m² · floor ${num(u.floor)}</span></div>
-<ul>${hs.map((h) => `<li>${esc(h)}</li>`).join('')}</ul></article>`;
+${u.price && u.saving > 0 ? `<div class="save">You save ${ils(u.saving)}<span>${ils(u.fairPerM2 - u.pricePerM2)} less per m² · ${pct(u.savingPct)} below fair value</span></div>` : `<div class="save target">Target: ${ils(u.negotiationTarget)} or less<span>fair value ${ils(u.fairValue)}</span></div>`}
+<ul>${hs.slice(1).map((h) => `<li>${esc(h)}</li>`).join('')}</ul></article>`;
   }).join('');
 
   const compRows = comps.map((c) => `
@@ -65,6 +66,7 @@ h2{font-size:40px;margin-bottom:24px}
 .card{background:#fff;border-radius:20px;padding:24px;border:1px solid var(--line)}
 .card-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 .card h3{font-size:26px}.tag{color:var(--muted);font-size:14px}
+.save{font-family:Newsreader,Georgia,serif;font-size:34px;color:var(--good);margin:6px 0 14px;line-height:1.1}.save span{display:block;font-family:-apple-system,BlinkMacSystemFont,Inter,Arial,sans-serif;font-size:14px;color:var(--muted);margin-top:6px}.save.target{color:var(--ink);font-size:26px}
 .card ul{margin:0;padding-left:20px;line-height:1.6}.card li{margin:4px 0}
 .tbl{overflow-x:auto;border:1px solid var(--line);border-radius:18px;background:#fff}
 table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;min-width:760px}
@@ -85,6 +87,7 @@ ul.assume{columns:2;column-gap:32px;color:#424245;line-height:1.7;font-size:15px
 <h1>${esc(title)}</h1>
 <div style="color:#A1A1A6;font-size:18px">${totals.units} apartment${totals.units === 1 ? '' : 's'}${project.form4Months ? ` · Form 4 in about ${num(project.form4Months)} months` : project.form4 ? ' · Form 4 received' : ''}</div>
 <div class="big">${heroNumber}</div><div class="lbl">${esc(heroLabel)}</div>
+${hasPrice && totals.saving > 0 && totals.units > 1 ? `<div class="lbl" style="color:#F5F5F7;margin-top:18px;font-size:22px">That's about <strong>${ils(totals.saving / units.filter((u) => u.price).length)}</strong> saved per apartment</div>` : ''}
 </div></div>
 
 <section class="soft"><div class="wrap">

@@ -27,7 +27,7 @@ function dealHighlights(a) {
   const { stats, totals, project, building, location, cfg, comps } = a;
 
   if (totals.price && totals.saving > 0) {
-    out.push({ kind: 'price', title: `${ilsK(totals.saving)} below fair value`, text: `Across ${totals.units === 1 ? 'this apartment' : 'the ' + totals.units + ' apartments'}, the price is about ${pct(totals.savingPct)} below what comparable homes nearby actually sold for.` });
+    out.push({ kind: 'price', title: `${ilsK(totals.saving)} below fair value`, text: `${totals.units === 1 ? 'This apartment costs' : 'Together, the ' + totals.units + ' apartments cost'} ${ils(totals.saving)} less than comparable homes nearby actually sold for${totals.units > 1 ? ` (about ${ils(totals.saving / a.units.filter((u) => u.price).length)} per apartment)` : ''}.` });
   } else if (!totals.price) {
     const t = a.units.reduce((s, u) => s + u.negotiationTarget, 0);
     out.push({ kind: 'price', title: `Target: ${ilsK(t)} or less`, text: `Fair value for the ${totals.units} apartments is about ${ilsK(totals.fairValue)}. Reaching ${ilsK(t)} or less in negotiation means at least ${cfg.goodDealPct}% below the market.` });
