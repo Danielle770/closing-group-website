@@ -33,6 +33,14 @@ function dealHighlights(a) {
     out.push({ kind: 'price', title: `Target: ${ilsK(t)} or less`, text: `Fair value for the ${totals.units} apartments is about ${ilsK(totals.fairValue)}. Reaching ${ilsK(t)} or less in negotiation means at least ${cfg.goodDealPct}% below the market.` });
   }
 
+  const sb = stats.sameBuilding || {};
+  if (sb.count >= 1) {
+    const priced = a.units.filter((u) => u.price);
+    const ourPpm = priced.length ? priced.reduce((s2, u) => s2 + u.price, 0) / priced.reduce((s2, u) => s2 + num(u.sizeM2), 0) : null;
+    const diff = ourPpm ? sb.medianRawPpm - ourPpm : 0;
+    out.push({ kind: 'proof', title: diff > 0 ? `${ils(diff)} less per m² than neighbours paid` : `${sb.count} sale${sb.count > 1 ? 's' : ''} in this building`,
+      text: `${sb.count} apartment${sb.count > 1 ? 's' : ''} in this same building ${sb.count > 1 ? 'were' : 'was'} already sold, at a typical ${ils(sb.medianRawPpm)} per m²${diff > 0 ? `. You pay about ${ils(ourPpm)} per m²` : ''}.` });
+  }
   if (stats.count) {
     out.push({ kind: 'proof', title: `Checked against ${stats.count} real sales`, text: `Officially reported sales${stats.radius ? ` within ${stats.radius} m` : ''}${stats.from ? `, ${monthYear(stats.from)} to ${monthYear(stats.to)}` : ''}. Typical price: ${ils(stats.rawMedianPpm)} per m².` });
   }

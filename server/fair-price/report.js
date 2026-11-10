@@ -36,7 +36,7 @@ ${u.price && u.saving > 0 ? `<div class="save">You save ${ils(u.saving)}<span>${
   const compRows = comps.map((c) => `
 <tr><td>${dateStr(c.date)}</td><td>${esc(internal ? (c.street || c.address || '') : (c.street || '').replace(/\s*\d+.*$/, ''))}</td><td>${c.distanceM !== null ? c.distanceM + ' m' : '–'}</td>
 <td>${num(c.rooms) || '–'}</td><td>${num(c.sizeM2)}</td><td>${c.floor !== undefined && c.floor !== '' ? num(c.floor) : '–'}</td>
-<td>${ils(num(c.price))}</td><td>${ils(c.rawPpm)}</td><td>${ils(c.basePpm)}</td></tr>`).join('');
+<td>${ils(num(c.price))}</td><td>${ils(c.rawPpm)}</td><td>${ils(c.basePpm)}${c.sameBuilding ? ' <span class="muted">same building</span>' : ''}</td></tr>`).join('');
 
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -116,7 +116,8 @@ ${hasPrice && totals.saving > 0 && totals.units > 1 ? `<div class="lbl" style="c
 <li>New apartment vs second-hand: +${cfg.newBuildPremiumPct}%</li>
 <li>Parking space: ${ilsK(cfg.parkingValue)} · storage unit: ${ilsK(cfg.storageValue)}</li>
 <li>Reported sales without details assumed to include ${cfg.assumeCompParking} parking and ${cfg.assumeCompStorage} storage</li>
-<li>Market change: ${cfg.annualTrendPct}% per year</li>
+<li>Market change: ${cfg.annualTrendPct}% per year (${esc(stats.trendSource || '')})</li>
+${stats.sameBuilding && stats.sameBuilding.weight ? `<li>Sales in this same building: ${stats.sameBuilding.count}, given ${Math.round(stats.sameBuilding.weight * 100)}% of the weight</li>` : ''}<li>Builder's cost (doch efes): ${a.project.builder && a.project.builder.costTotal ? 'used as a floor' : 'not used; prices rely on our own market evidence'}</li>
 <li>"Good deal" target: at least ${cfg.goodDealPct}% below fair value</li>
 </ul>
 </div></section>

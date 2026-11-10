@@ -10,7 +10,9 @@
     "form4": false,
     "form4Months": 4,
     "compsSource": "sample data",
-    "builder": { "ourFee": 400000 }
+    "builder": {
+      "ourFee": 400000
+    }
   },
   "building": {
     "floors": 9,
@@ -34,14 +36,62 @@
     "elevationM": 38,
     "areaElevationM": 30
   },
-  "assumptions": {
-    "annualTrendPct": -1
-  },
   "units": [
-    { "id": "6A", "rooms": 4, "sizeM2": 112, "balconyM2": 12, "floor": 6, "directions": "W N", "parking": 1, "storage": 1, "listPrice": 2600000 },
-    { "id": "6B", "rooms": 5, "sizeM2": 132, "balconyM2": 14, "floor": 6, "directions": "S W E", "parking": 2, "storage": 1, "listPrice": 3050000 },
-    { "id": "7A", "rooms": 4, "sizeM2": 112, "balconyM2": 12, "floor": 7, "directions": "W N", "parking": 1, "storage": 1, "listPrice": 2650000 },
-    { "id": "8C", "rooms": 3, "sizeM2": 86, "balconyM2": 10, "floor": 8, "directions": "S", "parking": 1, "storage": 0, "listPrice": 2050000 },
-    { "id": "9P", "rooms": 5, "sizeM2": 150, "balconyM2": 60, "floor": 9, "directions": "N S W", "parking": 2, "storage": 1, "listPrice": 4100000, "view": "Penthouse with a 60 m² roof terrace and open sea views." }
+    {
+      "id": "6A",
+      "rooms": 4,
+      "sizeM2": 112,
+      "balconyM2": 12,
+      "floor": 6,
+      "directions": "W N",
+      "parking": 1,
+      "storage": 1,
+      "listPrice": 2600000
+    },
+    {
+      "id": "6B",
+      "rooms": 5,
+      "sizeM2": 132,
+      "balconyM2": 14,
+      "floor": 6,
+      "directions": "S W E",
+      "parking": 2,
+      "storage": 1,
+      "listPrice": 3050000
+    },
+    {
+      "id": "7A",
+      "rooms": 4,
+      "sizeM2": 112,
+      "balconyM2": 12,
+      "floor": 7,
+      "directions": "W N",
+      "parking": 1,
+      "storage": 1,
+      "listPrice": 2650000
+    },
+    {
+      "id": "8C",
+      "rooms": 3,
+      "sizeM2": 86,
+      "balconyM2": 10,
+      "floor": 8,
+      "directions": "S",
+      "parking": 1,
+      "storage": 0,
+      "listPrice": 2050000
+    },
+    {
+      "id": "9P",
+      "rooms": 5,
+      "sizeM2": 150,
+      "balconyM2": 60,
+      "floor": 9,
+      "directions": "N S W",
+      "parking": 2,
+      "storage": 1,
+      "listPrice": 4100000,
+      "view": "Penthouse with a 60 m² roof terrace and open sea views."
+    }
   ]
 }

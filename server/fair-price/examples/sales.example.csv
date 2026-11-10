@@ -1,4 +1,7 @@
-date,street,distanceM,rooms,sizeM2,floor,price,newBuild,parking,storage
+date,street,distanceM,rooms,sizeM2,floor,price,newBuild,parking,storage,sameBuilding
+2026-10-02,SAMPLE Sample Street 10 (this building),0,4,112,3,2790000,yes,1,1,yes
+2026-07-21,SAMPLE Sample Street 10 (this building),0,5,132,2,3300000,yes,2,1,yes
+2026-04-15,SAMPLE Sample Street 10 (this building),0,3,86,4,2120000,yes,1,0,yes
 2026-09-14,SAMPLE Herzl 40,180,4,105,3,2650000,yes,1,1
 2026-08-02,SAMPLE Herzl 52,240,4,108,5,2780000,yes,1,0
 2026-06-20,SAMPLE Ben Gurion 12,310,5,128,4,3200000,yes,1,1

@@ -22,6 +22,12 @@ const DEFAULTS = {
   assumeCompStorage: 0,          // ...and this many storage units
   goodDealPct: 8,                // a "good deal" is at least this % below fair value (negotiation target)
   walkMetresPerMinute: 80,
+  sameBuildingRadiusM: 30,       // sales this close (or marked sameBuilding) count as the same building
+  sameBuildingMaxWeight: 0.6,    // same-building sales can make up at most this share of the benchmark
+  sameBuildingWeightEach: 0.2,   // ...each one adds this much weight
+  trendMinSales: 10,             // estimate the local price trend from the data when we have this many sales
+  trendMinSpanMonths: 9,         // ...spread over at least this many months
+  trendMaxAbsPct: 15,            // never let the estimated trend go beyond ±15% a year
 };
 
 const median = (xs) => { const s = [...xs].sort((a, b) => a - b); const n = s.length; if (!n) return NaN; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
@@ -64,7 +70,8 @@ function normaliseComp(c, subject, cfg, today) {
   const bare = price - parking * cfg.parkingValue - storage * cfg.storageValue;
   const area = effectiveArea(c, cfg);
   const basePpm = bare / area / floorFactor(c.floor, cfg);
-  return { ...c, months, parkingUsed: parking, storageUsed: storage, rawPpm: num(c.price) / num(c.sizeM2), basePpm, area };
+  const sameBuilding = bool(c.sameBuilding) || (c.distanceM !== null && c.distanceM !== undefined && num(c.distanceM, 1e9) <= cfg.sameBuildingRadiusM);
+  return { ...c, months, sameBuilding, parkingUsed: parking, storageUsed: storage, rawPpm: num(c.price) / num(c.sizeM2), basePpm, area };
 }
 
 /** Pick comparable sales: recent, closest first, expanding the radius until there are enough. */
@@ -93,16 +100,50 @@ function trimOutliers(list) {
   return list.filter((c) => c.basePpm >= q1 - 1.5 * iqr && c.basePpm <= q3 + 1.5 * iqr);
 }
 
+/** Least-squares slope of adjusted price per m² against age of sale, as % per year (null if not enough data). */
+function estimateTrend(list, cfg) {
+  const pts = list.filter((c) => Number.isFinite(c.months) && Number.isFinite(c.basePpm));
+  if (pts.length < cfg.trendMinSales) return null;
+  const ms = pts.map((c) => c.months);
+  if (Math.max(...ms) - Math.min(...ms) < cfg.trendMinSpanMonths) return null;
+  const mx = ms.reduce((a, b) => a + b, 0) / pts.length;
+  const my = pts.reduce((a, c) => a + c.basePpm, 0) / pts.length;
+  let sxy = 0, sxx = 0;
+  for (const c of pts) { sxy += (c.months - mx) * (c.basePpm - my); sxx += (c.months - mx) ** 2; }
+  if (!sxx) return null;
+  const perMonthOlder = sxy / sxx;               // change in ₪/m² for each month further in the past
+  const pctPerYear = (-perMonthOlder * 12 / my) * 100; // recent sales higher => positive trend
+  return Math.max(-cfg.trendMaxAbsPct, Math.min(cfg.trendMaxAbsPct, pctPerYear));
+}
+
 function analyse(deal, compsInput, userCfg = {}, today = new Date()) {
   const cfg = { ...DEFAULTS, ...(deal.assumptions || {}), ...userCfg };
   const project = deal.project || {};
   const subject = { newBuild: project.newBuild !== false };
 
   const sel = selectComps(compsInput, project, cfg, today);
+
+  // Local price trend: measured from the sales themselves when there is enough data, otherwise the assumption
+  const userSetTrend = 'annualTrendPct' in (deal.assumptions || {}) || 'annualTrendPct' in userCfg;
+  let trendSource = userSetTrend ? 'set manually' : 'default assumption';
+  if (!userSetTrend) {
+    const flat = trimOutliers(sel.chosen.map((c) => normaliseComp(c, subject, { ...cfg, annualTrendPct: 0 }, today)));
+    const est = estimateTrend(flat, cfg);
+    if (est !== null) { cfg.annualTrendPct = Math.round(est * 10) / 10; trendSource = `measured from ${flat.length} sales`; }
+  }
+
   const normalised = sel.chosen.map((c) => normaliseComp(c, subject, cfg, today));
   const kept = trimOutliers(normalised);
   const removed = normalised.length - kept.length;
-  const benchmark = median(kept.map((c) => c.basePpm));
+
+  // Sales in the same building are the strongest evidence: give them extra weight
+  const same = kept.filter((c) => c.sameBuilding);
+  const areaMedian = median(kept.filter((c) => !c.sameBuilding).map((c) => c.basePpm));
+  const sameMedian = same.length ? median(same.map((c) => c.basePpm)) : NaN;
+  const sameWeight = same.length >= 2 ? Math.min(cfg.sameBuildingMaxWeight, same.length * cfg.sameBuildingWeightEach) : 0;
+  const benchmark = sameWeight && Number.isFinite(areaMedian)
+    ? sameWeight * sameMedian + (1 - sameWeight) * areaMedian
+    : median(kept.map((c) => c.basePpm));
   const benchLow = quantile(kept.map((c) => c.basePpm), 0.25);
   const benchHigh = quantile(kept.map((c) => c.basePpm), 0.75);
   const rawMedianPpm = median(kept.map((c) => c.rawPpm));
@@ -141,7 +182,8 @@ function analyse(deal, compsInput, userCfg = {}, today = new Date()) {
     comps: kept.sort((a, b) => (a.distanceM ?? 1e9) - (b.distanceM ?? 1e9)),
     stats: {
       count: kept.length, removedOutliers: removed, radius: sel.radius, recentCount: sel.recentCount, totalCount: sel.totalCount,
-      benchmark, benchLow, benchHigh, rawMedianPpm,
+      benchmark, benchLow, benchHigh, rawMedianPpm, areaMedian, trendSource,
+      sameBuilding: { count: same.length, weight: sameWeight, medianBasePpm: sameMedian, medianRawPpm: same.length ? median(same.map((c) => c.rawPpm)) : NaN },
       from: dates[0] || null, to: dates[dates.length - 1] || null,
     },
     generatedAt: today,
