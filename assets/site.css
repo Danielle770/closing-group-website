@@ -208,3 +208,23 @@ header { background: rgba(18,18,19,0.9) !important; }
 }
 @media (prefers-reduced-motion: reduce) { .tcg-fold, .tcg-bar { animation: none !important; } }
 .tcg-tile-line { display: block; width: 44px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, #B57A2C, #F6D98C); }
+
+/* ---------- Gentle life: floating + hover lift on the explainer cards ---------- */
+@keyframes tcgfloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+.tcg-tile, .tcg-step, .tcg-warranty, .tcg-perks li { transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s, border-color .45s, background .45s; }
+.tcg-tile, .tcg-step, .tcg-warranty { will-change: translate; }
+.tcg-grid3 > :nth-child(1), .tcg-steps > :nth-child(1), .tcg-steps > :nth-child(4) { --fd: 0s; }
+.tcg-grid3 > :nth-child(2), .tcg-steps > :nth-child(2), .tcg-steps > :nth-child(5) { --fd: -2s; }
+.tcg-grid3 > :nth-child(3), .tcg-steps > :nth-child(3) { --fd: -4s; }
+/* idle float uses the separate "translate" property so it never fights the scroll unfold */
+.tcg-tile, .tcg-step, .tcg-warranty { animation: tcgfloat 6s ease-in-out infinite var(--fd, 0s); }
+@supports (animation-timeline: view()) {
+  .tcg-tile.tcg-fold, .tcg-step.tcg-fold { animation: tcgunfold both cubic-bezier(.2,.8,.2,1), tcgfloat 6s ease-in-out infinite var(--fd, 0s); animation-timeline: view(), auto; animation-range: entry 0% entry 55%, normal; }
+}
+.tcg-tile:hover, .tcg-step:hover, .tcg-warranty:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 34px 60px -28px rgba(0,0,0,.45); }
+.tcg-dark .tcg-tile:hover { border-color: rgba(217,165,72,.5); background: linear-gradient(160deg, rgba(217,165,72,.18), #111113 65%); }
+.tcg-step:hover .tcg-num, .tcg-tile:hover .tcg-num { transform: rotate(-8deg) scale(1.12); }
+.tcg-num { transition: transform .4s cubic-bezier(.2,.8,.2,1); }
+.tcg-perks li:hover { transform: translateY(-3px); }
+.tcg-bars li:hover .tcg-bar { filter: brightness(1.12); }
+@media (prefers-reduced-motion: reduce) { .tcg-tile, .tcg-step, .tcg-warranty { animation: none !important; } }
