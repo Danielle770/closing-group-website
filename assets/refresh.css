@@ -1,0 +1,45 @@
+/* The Closing Group — refresh: Netanya photos in the hero, shorter copy, bigger floating map, white benefits band */
+.tcg-slides { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.tcg-slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 1.8s ease; }
+.tcg-slide.is-on { opacity: 1; }
+.tcg-slide img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.08); }
+.tcg-slide img:not([src]), .tcg-slide img.is-broken { display: none; }
+.tcg-slide.is-on img { animation: tcgdrift 9s ease-out both; }
+@keyframes tcgdrift { from { transform: scale(1.14); } to { transform: scale(1.02); } }
+.tcg-slide figcaption { position: absolute; right: 22px; bottom: 18px; font-size: 13px; color: #fff; letter-spacing: .04em; background: rgba(0,0,0,.3); padding: 6px 12px; border-radius: 999px; }
+.tcg-slide.is-broken figcaption { display: none; }
+.tcg-hero::before { background: linear-gradient(90deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.22) 45%, rgba(0,0,0,0) 70%) !important; }
+
+.tcg-hero-lead { color: #E8E8ED; max-width: 460px; }
+.tcg-hero-note { margin: 0; max-width: 440px; font-size: 15px; line-height: 1.5; color: #F3D9A8; }
+.tcg-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2EB872; margin-right: 8px; vertical-align: 1px; animation: tcgpulse 1.8s ease-out infinite; }
+
+/* Bigger map, floating over the scene */
+.tcg-map-wrap { width: 440px; height: 690px; margin: -20px 0; z-index: 2; }
+#tcg-map { filter: drop-shadow(0 30px 60px rgba(0,0,0,.6)); }
+#tcg-map .tcg-label { font-size: 10px; }
+
+/* White benefits band between the hero and the next section */
+.tcg-band { background: #fff; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 34px max(22px, calc((100vw - 1100px) / 2)); }
+.tcg-band > div { display: flex; flex-direction: column; gap: 4px; text-align: center; padding: 0 16px; border-left: 1px solid rgba(0,0,0,.08); }
+.tcg-band > div:first-child { border-left: 0; }
+.tcg-band b { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 24px; color: #1D1D1F; }
+.tcg-band span { font-size: 15px; color: #6E6E73; }
+
+@media (max-width: 1068px) {
+  .tcg-map-wrap { width: 320px; height: 500px; margin: 0; }
+}
+@media (max-width: 734px) {
+  .tcg-map-wrap { width: 270px; height: 420px; }
+  .tcg-band { grid-template-columns: 1fr; gap: 18px; padding: 28px 22px; }
+  .tcg-band > div { border-left: 0; }
+  .tcg-slide figcaption { font-size: 12px; right: 12px; bottom: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .tcg-slide.is-on img, .tcg-dot { animation: none !important; } }
+.tcg-navbtn { background: #A8522F; color: #fff !important; text-decoration: none; padding: 0 16px; min-height: 32px; border-radius: 999px; font-weight: 600; display: inline-flex; align-items: center; }
+
+/* Hero on plain black: no sunset scene, no photos — the gold map floats on black */
+.tcg-hero { background: #000 !important; }
+.tcg-scene, .tcg-slides { display: none !important; }
+.tcg-hero::before { background: none !important; }
+#tcg-map .tcg-burst { opacity: .35; }

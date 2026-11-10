@@ -48,7 +48,7 @@ header { background: rgba(18,18,19,0.9) !important; }
 .tcg-hero-text { display: flex; flex-direction: column; gap: 18px; max-width: 560px; padding: 40px 0; animation: tcgrise 1s cubic-bezier(.2,.8,.2,1) both; }
 .tcg-eyebrow { font-size: 15px; font-weight: 600; color: #F0A47A; letter-spacing: .01em; word-spacing: .22em; }
 .tcg-hero h1 { margin: 0; font-size: 64px; line-height: 1.04; color: #F5F5F7; }
-.tcg-hero-see { margin: -4px 0 0; font-family: "Newsreader", Georgia, serif; font-style: italic; font-size: 28px; color: #F3D9A8; letter-spacing: .01em; }
+.tcg-hero-see { margin: -4px 0 0; font-family: "Newsreader", Georgia, serif; font-style: italic; font-size: 28px; color: #F3D9A8; letter-spacing: .01em; word-spacing: .22em; }
 .tcg-hero-lead { margin: 0; font-size: 21px; line-height: 1.45; color: #C7C7CC; }
 .tcg-hero-facts { margin: 0; font-size: 15px; color: #D9AE6A; letter-spacing: .02em; }
 .tcg-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
@@ -228,3 +228,54 @@ header { background: rgba(18,18,19,0.9) !important; }
 .tcg-perks li:hover { transform: translateY(-3px); }
 .tcg-bars li:hover .tcg-bar { filter: brightness(1.12); }
 @media (prefers-reduced-motion: reduce) { .tcg-tile, .tcg-step, .tcg-warranty { animation: none !important; } }
+
+/* ---------- Hero v3: moving sea backdrop, short copy, small floating map ---------- */
+.tcg-hero { position: relative; isolation: isolate; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; padding-right: max(22px, calc((100vw - 1240px) / 2)); }
+.tcg-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; display: block; }
+.tcg-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 70%), linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,0) 30%); }
+.tcg-hero-text { gap: 20px; }
+.tcg-hero h1 { font-size: 68px; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
+.tcg-hero-see { margin: 0; font-size: 30px; color: #F3D9A8; }
+.tcg-hero-facts { color: #D9AE6A; }
+
+/* The map floats: no box, no sea, no neighbours — just gold Israel and its pins */
+.tcg-map-wrap { width: 300px; height: 470px; min-height: 0; border-radius: 0; background: none; overflow: visible; animation: tcgfloat 7s ease-in-out infinite; }
+#tcg-map { overflow: visible; filter: drop-shadow(0 18px 40px rgba(0,0,0,.55)); }
+#tcg-map > rect:first-of-type, #tcg-map > g[clip-path="url(#tcgLandClip)"], #tcg-map .tcg-sea, #tcg-map .tcg-nb { display: none; }
+#tcg-map .tcg-burst { opacity: .7; }
+#tcg-map .tcg-pin.is-active .tcg-core { transform: scale(1.7); }
+#tcg-map .tcg-pin.is-active .tcg-label { fill: #fff; }
+.tcg-map-hint { bottom: -6px; font-size: 12px; opacity: .7; }
+.tcg-map-wrap.is-open .tcg-map-hint { opacity: 0; }
+@keyframes tcgfloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Hover card that opens beside the pin */
+.tcg-card-pop { position: absolute; z-index: 5; width: 240px; background: rgba(14,12,10,.62); -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(217,174,106,.3); border-radius: 18px; overflow: hidden; color: #F5F5F7; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+.tcg-card-pop[hidden] { display: none; }
+.tcg-card-pop.is-in { animation: tcgpop .35s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes tcgpop { from { opacity: 0; transform: translateY(6px) scale(.97); } to { opacity: 1; transform: none; } }
+.tcg-pop-photo { height: 96px; background: linear-gradient(160deg,#5a3d1c,#14100b); }
+.tcg-pop-photo img { width: 100%; height: 100%; object-fit: cover; display: block; visibility: hidden; }
+.tcg-pop-body { padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 3px; }
+.tcg-pop-title { margin: 0; font: 500 21px/1.15 "Newsreader", Georgia, serif; color: #F5F5F7; }
+.tcg-pop-cities { margin: 0; font-size: 13px; line-height: 1.4; color: #C7C7CC; }
+.tcg-pop-status { margin: 2px 0 0; font-size: 13px; color: #9BE3B9; }
+.tcg-pop-status::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #2EB872; margin-right: 7px; vertical-align: 1px; animation: tcgpulse 1.8s ease-out infinite; }
+.tcg-pop-go { margin-top: 8px; align-self: flex-start; color: #F0A47A; text-decoration: none; font-size: 15px; font-weight: 600; min-height: 32px; display: inline-flex; align-items: center; }
+.tcg-pop-go:hover { color: #FFC29E; }
+
+@media (max-width: 1068px) {
+  .tcg-hero { grid-template-columns: 1fr; justify-items: center; padding: 24px 22px 56px; min-height: 0; gap: 8px; }
+  .tcg-hero-text { justify-self: stretch; }
+  .tcg-hero::before { background: linear-gradient(180deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.2) 45%, rgba(0,0,0,.35) 100%); }
+  .tcg-map-wrap { width: 230px; height: 360px; min-height: 0; border-radius: 0; }
+}
+@media (max-width: 734px) {
+  .tcg-hero h1 { font-size: 40px !important; }
+  .tcg-hero-see { font-size: 24px !important; }
+  .tcg-map-wrap { width: 200px; height: 300px; }
+  .tcg-card-pop { width: 220px; }
+}
+@media (prefers-reduced-motion: reduce) { .tcg-map-wrap, .tcg-card-pop { animation: none !important; } }

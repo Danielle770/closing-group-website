@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Closing Group · Your apartment in Israel. At the builder's cost.</title>
+<title>The Closing Group · A home in Israel. At the builder's cost.</title>
 <meta name="description" content="Families abroad join together on one platform, so each can buy from a builder's remaining stock at a group price. No agent fees. No legal fees.">
 <meta property="og:title" content="The Closing Group · Homes in Israel at the builder's cost">
 <meta property="og:description" content="Families abroad join together on one platform, so each can buy from a builder's remaining stock at a group price. No agent fees. No legal fees.">
@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/refresh.css">
+<style>.tcg-card-img,.tcg-panel-photo img{visibility:hidden}.tcg-card{background:linear-gradient(160deg,#3a2a17,#0b0b0c)}.tcg-panel-photo{background:linear-gradient(160deg,#5a3d1c,#14100b)}</style>
 </head>
 <body>
 
@@ -22,38 +24,32 @@
 <!-- Nav -->
 <header style="position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.72); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08)">
 <div style="max-width: 1024px; margin: 0 auto; padding: 0 22px; min-height: 52px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
-<a href="/" style="color: #F5F5F7; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: -0.01em">The Closing Group <span style="color: #A1A1A6; font-weight: 500">Israel</span></a>
+<a href="#" style="color: #F5F5F7; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: -0.01em">The Closing Group <span style="color: #A1A1A6; font-weight: 500">Israel</span></a>
 <nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 13px">
 <a href="/netanya/" style="color: #D2D2D7; text-decoration: none">Netanya</a>
 <a href="/center/" style="color: #D2D2D7; text-decoration: none">Center</a>
 <a href="/jerusalem/" style="color: #D2D2D7; text-decoration: none">Jerusalem</a>
 <a href="/why-now/" style="color: #D2D2D7; text-decoration: none">Why now</a>
 <a href="/how-it-works/" style="color: #D2D2D7; text-decoration: none">How it works</a>
-<a href="#kahilot" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 16px; min-height: 32px; border-radius: 999px; font-weight: 600; display: inline-flex; align-items: center">Join</a>
+<a href="#kahilot" class="tcg-navbtn">See the apartments</a>
 </nav>
 </div>
 </header>
 
 <!-- Hero: statement + live map of the Kahilot -->
 <section class="tcg-hero" aria-labelledby="tcg-hero-title">
+<canvas class="tcg-scene" id="tcg-scene" aria-hidden="true"></canvas><div class="tcg-slides"><figure class="tcg-slide is-on"><img src="https://images.pexels.com/photos/19400722/pexels-photo-19400722.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Netanya's coastline, beaches and seafront skyline from the air"><figcaption>Netanya · the seafront</figcaption></figure><figure class="tcg-slide"><img src="https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=1920&q=70" alt="The sea seen from the cliff-top promenade in Netanya" loading="lazy"><figcaption>Netanya · the cliff-top promenade</figcaption></figure><figure class="tcg-slide"><img src="https://images.pexels.com/photos/8099026/pexels-photo-8099026.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Turquoise water and sandy shore below Netanya" loading="lazy"><figcaption>Netanya · two streets from the beach</figcaption></figure><figure class="tcg-slide"><img src="https://images.pexels.com/photos/31570354/pexels-photo-31570354.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="The beach and breakwater in Netanya on a sunny day" loading="lazy"><figcaption>Netanya · the beaches below the esplanade</figcaption></figure></div>
 <div class="tcg-hero-text">
-<span class="tcg-eyebrow">Israel's first platform for communities buying at the builder's cost</span>
-<h1 id="tcg-hero-title">Your apartment in Israel.<br>At the builder's cost.</h1>
-<p class="tcg-hero-see">See it. Choose it. Buy it.</p>
-<p class="tcg-hero-lead">Finished apartments, ready now or just months from handover. Join your Kahila (community), see the exact apartment on video, and buy it together with families like yours.</p>
-<p class="tcg-hero-facts">No agent fees · No legal fees · Ready to visit</p>
-<div class="tcg-chips" role="group" aria-label="Explore a Kahila (community) on the map">
-<button type="button" class="tcg-chip" data-region="netanya">Netanya</button>
-<button type="button" class="tcg-chip" data-region="center">Tel Aviv–Jaffa</button>
-<button type="button" class="tcg-chip" data-region="jerusalem">Jerusalem</button>
-</div>
+<h1 id="tcg-hero-title">A home in Israel.<br>At the builder's cost.</h1>
+<p class="tcg-hero-lead">Finished apartments from trusted builders, for families buying from abroad.</p>
 <div class="tcg-hero-cta">
-<a href="#kahilot" class="tcg-btn">Join a Kahila (community)</a>
+<a href="#kahilot" class="tcg-btn">Watch the apartments for sale</a>
 <a href="#how" class="tcg-link">How it works ›</a>
 </div>
+<p class="tcg-hero-note"><span class="tcg-dot" aria-hidden="true"></span>Kahila (community) members see real videos of the apartments for sale now. Free to join.</p>
 </div>
 <div class="tcg-map-wrap">
-<svg id="tcg-map" viewBox="186.77999999999997 91.41999999999996 640 940" preserveAspectRatio="xMidYMid slice" role="group" aria-label="Map of Israel with our Kahilot (communities). Choose a city to zoom in." data-views='{"home":{"cx":506.78,"cy":561.42,"w":640},"israel":{"cx":506.78,"cy":561.42,"w":230,"minH":410},"netanya":{"cx":490.53499999999997,"cy":468.7,"w":50},"center":{"cx":484.605,"cy":498.155,"w":37.5},"jerusalem":{"cx":508.40999999999997,"cy":523.325,"w":58.3}}'>
+<svg id="tcg-map" viewBox="186.77999999999997 91.41999999999996 640 940" preserveAspectRatio="xMidYMid slice" role="group" aria-label="Map of Israel with our Kahilot (communities). Hover or tap a city." data-views='{"home":{"cx":506.78,"cy":561.42,"w":640},"israel":{"cx":506.78,"cy":561.42,"w":230,"minH":410},"netanya":{"cx":490.53499999999997,"cy":468.7,"w":50},"center":{"cx":484.605,"cy":498.155,"w":37.5},"jerusalem":{"cx":508.40999999999997,"cy":523.325,"w":58.3}}'>
 <defs>
 <radialGradient id="tcgSea" cx="50%" cy="50%" r="70%"><stop offset="0" stop-color="#08111C"/><stop offset="1" stop-color="#020306"/></radialGradient>
 <linearGradient id="tcgGoldFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6D98C"/><stop offset=".35" stop-color="#D9A548"/><stop offset=".6" stop-color="#B57A2C"/><stop offset=".85" stop-color="#E8BE64"/><stop offset="1" stop-color="#9C6524"/></linearGradient>
@@ -81,34 +77,39 @@
 </g>
 <use href="#tcgIL" fill="none" stroke="#FFE9B3" stroke-opacity=".9" stroke-width="1" vector-effect="non-scaling-stroke"/>
 <path d="M490.8,514.3L492.1,514.3L491,514.7ZM552.8,514.3L553.3,514.3L553.3,514.7ZM476.4,516.7L476.8,517.9L476.4,518.4L473.8,517.9L476.4,517.9ZM480.1,520.9L480.7,521.6L480.1,521.6ZM497.9,521.6L498.4,521.1L498.4,521.6ZM502,521.3L502.4,521.6L502,521.6ZM556.2,521.6L557,520.9L557,521.6ZM483.7,524.7L484.3,525.2L483.7,525.2ZM490.4,525.2L491,524.4L491,525.2L491.5,525.2L491,525.7ZM535,524.9L535.3,525.2L535,525.2ZM468,525.2L469.1,525.2L469.1,526.4ZM541.3,525.2L542.3,525.2L542.3,526.3ZM475.8,528.9L476.4,528.3L476.4,528.9ZM483.1,528.9L483.7,528.3L483.7,528.9ZM486.6,528.9L487.4,528.2L487.4,528.9L487.9,528.9L487.4,529.6ZM512.7,528.9L513,528.6L513,528.9ZM494.7,528.9L495,528.9L494.7,529.2ZM468.6,532.6L469.1,532.6L469.1,533ZM472.7,532.6L473.1,532.6L472.7,532.9ZM479.8,532.6L481,532.6L480.1,533ZM486.7,532.6L487.4,532.6L487.4,533.2ZM469.1,539.4L469.5,539.9L469.1,539.9ZM483.7,539.9L484,539.9L483.7,540.2ZM479.7,543.6L480.1,543.2L480.4,543.6L480.1,543.6L480.1,544ZM475.5,543.6L476.4,543.6L476.4,544.5ZM483.7,547.2L484,547.2L483.7,547.5ZM567,547.2L568.4,547.2L568,547.9ZM468.7,550.9L469.1,550.3L469.1,551.2ZM465.1,554.5L465.4,554.2L465.4,554.5ZM461.1,558.2L461.8,558.2L461.8,558.9ZM568,559.7L568.7,561.9L568,562ZM461.8,565.2L462.1,565.5L461.8,565.5ZM476.1,565.5L476.4,565.5L476.4,565.8ZM465.1,569.2L465.4,569.2L465.4,569.5ZM472.7,569.2L473.3,569.2L472.7,569.8ZM505.7,569.2L506,569.2L505.7,569.5ZM544.8,528.9L548.5,528.9L548.5,532.6L548.8,534.4L548.1,536.2L547.7,539.9L547.6,543.6L546,546.4L546,547.2L546.4,550.9L546.2,552.7L546.8,554.5L547.6,556.4L547.2,558.2L547.5,561.9L546,563.7L545.4,565.5L546,565.5L546,566.8L544,569.2L544.9,571L544.3,572.9L542.3,573.3L542.3,567.2L538.7,567.2L538.7,569.2L536.4,569.2L538.7,571.5L539.8,572.9L538.7,574.2L536.8,575.3L535,574L534.4,572.9L534.7,569.2L535,569.2L535,567.6L533.1,565.5L533.1,561.9L533.1,558.2L533.3,554.5L533.1,552.7L533.9,550.9L534.7,549L533.7,547.2L535,545.3L535,542.8L537.4,539.9L537.2,536.2L538.7,534.9L540.5,534.4L540.4,532.6L539.6,529.1L542.3,530.2ZM491,572.9L491.5,572.9L491,573.3ZM472.5,576.5L472.7,576.2L473.3,576.5ZM487.1,576.5L487.4,576.2L487.4,576.5ZM512.7,576.5L513.4,576.5L513,576.8ZM531.3,576.5L536.1,576.5L535,578L531.3,577.1ZM487.1,580.2L487.4,580.2L487.4,580.5ZM461.4,583.8L461.8,583.8L461.8,584.2ZM478.5,591.2L480.1,589.7L480.1,591.2ZM516.7,596L517.7,598.5L516.7,598.8ZM483.3,602.2L483.7,602.2L483.7,602.6ZM491,605.4L491.5,605.8L491,605.8ZM527.7,583.8L531.3,581.6L533.2,581L535,581.2L538.7,580.7L538.7,583.9L540.2,583.8L538.9,581.9L542.3,582.8L543.1,583.8L544.1,587.5L542.3,589.7L541,591.2L542.7,591.2L542.3,593.2L540.9,594.8L538.7,597.3L538.7,592.1L536.7,594.8L536.7,598.5L535,599L535,602.2L534.7,602.2L533.8,605.8L534.5,608.3L531.3,607.6L530,605.8L531.3,603.9L531.3,602.2L530.1,602.2L531.3,600.5L533.3,598.5L533.2,594.8L532.5,593L533.4,591.2L533.2,589.3L531.3,588.8L529.5,587.5L531.3,585.3L533.1,583.8ZM535,585L535,589.9L537.5,587.5ZM559.8,605.8L560.6,605.8L560.6,606.6ZM498.4,613.1L499.4,613.1L498.4,614.2ZM524,624.1L524.5,624.1L524,624.6ZM548.8,389.7L549.6,388.3L549.6,390.3ZM553,389.7L553.3,389.4L553.3,389.7ZM567.6,389.7L568,389.4L568,389.7ZM551.7,393.4L553.3,393L553.7,393.4L553.3,393.9L553.3,393.4ZM560.4,393.4L560.6,392.9L561.7,393.4ZM564.3,392.6L565.1,393.4L564.3,393.4ZM548.6,397.1L549.6,396.2L550.7,397.1L549.6,398.3ZM564,397.1L564.3,396.8L564.6,397.1ZM571.4,397.1L571.6,395.5L573.2,397.1L571.6,397.5L571.6,397.1ZM508.6,400.7L509.4,400L509.4,400.7ZM567.3,400.7L568,400.7L568,401.4ZM509.4,403.5L510.2,404.4L509.4,404.4ZM575.1,404.4L575.3,402.8L576.9,404.4L575.3,405.4L575.3,404.4ZM537.7,404.4L538.7,404.4L538.7,405.4ZM568,404.4L568.7,404.4L568,405.1ZM513,407.6L513.5,408.1L513,408.1ZM553,408.1L553.3,407.7L553.3,408.1ZM567.6,408.1L568,408.1L568,408.4ZM508.8,411.7L509.4,411.2L509.9,411.7L509.4,412.7L509.4,411.7ZM546,411.4L546.3,411.7L546,411.7ZM552.7,411.7L553.3,411.2L553.3,411.7ZM571.6,411.7L571.9,411.7L571.6,412ZM577.6,411.7L578.9,411.7L578.9,413.1ZM564.3,414.5L565.2,415.4L564.3,416.4ZM508.1,419L509.4,417.9L510,419L509.4,419.8ZM513,418.4L513.7,419L513,419ZM516.7,418.7L517,419L516.7,419ZM574.8,419L575.3,418.6L575.3,419ZM578.9,417.1L579.8,419L578.9,419.4ZM527.3,419L527.7,419L527.7,419.4ZM538.7,419L539,419L538.7,419.4ZM534.5,422.7L535,422.3L535,422.7ZM564.3,421.1L565.9,422.7L564.3,422.7ZM573.6,422.7L575.3,422L575.5,422.7ZM564.3,425.2L565.5,426.4L564.3,426.4ZM575.3,423.1L576.4,426.4L575.3,426.5ZM505.1,430L505.7,429.2L506.4,430L505.7,430.5ZM509.4,429.6L509.8,430L509.4,430ZM520.3,427.6L521.3,430L520.3,430.2ZM538.7,430L538.7,429.7L539,430ZM570.4,430L571.6,428.8L571.6,430ZM494.7,430L495,430L494.7,430.3ZM538.7,430L538.7,430.3L538.3,430ZM560.6,430L561.1,430L560.6,430.5ZM547.8,419L549.6,417.4L551.8,419L553.3,420.8L554.2,422.7L553.4,424.5L553.6,426.4L553.3,427.8L552.4,430L552.9,431.9L552.3,433.7L549.6,436.4L546.8,433.7L547.1,430L546,430L546,428.7L543.6,426.4L543.4,422.7L546,420.2ZM542,433.7L542.3,433.4L542.3,433.7ZM574.3,433.7L575.3,433L575.3,435ZM516.2,433.7L516.7,433.7L516.7,434.1ZM493.1,437.4L494.7,436.1L495.3,437.4L494.7,438.3ZM538.7,437L539,437.4L538.7,437.4ZM519.9,437.4L520.3,437.4L520.3,437.8ZM556.6,437.4L557,437.4L557,437.7ZM512,441L513,440.2L513.8,441L513,442ZM523.5,441L524,440.8L524,442.2ZM527.3,441L527.7,440.7L528.3,441L527.7,441L527.7,441.5ZM531.3,440.1L531.8,441L531.3,441.2ZM549.6,440.7L550,441L549.6,441ZM546,439L546.3,441L546,441.3L545.6,441L546,441ZM493.9,444.7L494.7,443.9L494.7,444.7ZM516.7,442.9L518,444.7L516.7,445.7ZM538.3,444.7L538.7,444.4L538.7,444.7ZM513,444.7L513.6,444.7L513,445.2ZM520.3,444.7L521.3,444.7L520.3,445.6ZM492.5,448.3L494.7,446.4L494.7,450.9ZM531,448.3L531.3,448L531.3,448.3ZM535,447.9L535.4,448.3L535,448.3ZM546,447L547.3,448.3L546,448.3ZM505.4,448.3L505.7,448.3L505.7,448.7ZM509,448.3L509.4,448.3L509.4,448.7ZM516.7,448.3L517.5,448.3L516.7,449.2ZM523.6,448.3L524,448.3L524,448.8ZM527.4,452L527.7,451.7L527.7,452ZM530.3,452L531.3,451L531.3,452ZM533.8,452L535,451.2L536.2,452L535,453.6ZM491,452L491.8,452L491,452.7ZM519.9,452L520.3,452L520.3,452.4ZM523.1,452L524,452L524,452.9ZM546,452L546.9,452L546,452.9ZM501.7,455.7L502,455.4L502,455.7ZM541.5,455.7L542.3,455L542.9,455.7L542.6,459.3L542.3,459.3L542.3,455.7ZM552.8,455.7L553.3,455.2L553.3,455.7ZM546,455.7L546.7,455.7L546,456.4ZM494,459.3L494.7,458.7L495.3,459.3L494.7,459.3L494.7,460.3ZM537.9,459.3L538.7,458.1L539.9,459.3L538.7,460.1ZM582.3,459.3L582.6,459L582.6,459.3ZM497.5,463L498.4,462.3L498.8,463L498.4,463.5ZM505.4,463L505.7,462.7L505.7,463ZM542.3,461.9L543.4,463L542.3,463ZM546,461.7L547.2,463L546,463ZM544.1,466.7L546,464.8L546,466.7ZM490.7,470.3L491,469.7L491.7,470.3L491,470.5L491,470.3ZM497.1,470.3L498.4,469.1L498.4,470.3ZM501.5,470.3L502,469.6L502,470.6ZM483.7,471.5L487.4,472.8L487.7,474L483.7,474ZM497.5,474L498.4,473.1L498.4,474ZM484.9,477.6L487.4,475.1L487.4,477.6ZM487,481.3L487.4,480.9L487.4,481.6ZM490.4,481.3L491,481.3L491,481.9ZM567.2,488.6L568,487.5L569,488.6L568,488.6L568,488.9ZM487.4,495.6L487.7,495.9L487.4,495.9ZM480.1,495.9L480.5,495.9L480.1,496.4ZM483.4,503.3L483.7,503L483.7,503.3ZM546,502.3L547.3,503.3L546,505.2ZM568,506.6L568.3,506.9L568,506.9ZM478.8,510.6L480.1,509.8L480.6,510.6Z" fill="#0A1724" stroke="#FFE2A0" stroke-opacity=".7" stroke-width="1" vector-effect="non-scaling-stroke"/>
-<g class="tcg-sub" data-region="netanya" aria-hidden="true"><circle class="tcg-ring" cx="487.77" cy="474.25" r="0.8"/><circle class="tcg-core" cx="487.77" cy="474.25" r="0.55"/><text x="486.67" y="474.71" text-anchor="end" font-size="1.3" stroke-width="0.3" class="tcg-sublabel">Netanya</text><circle class="tcg-ring" cx="493.3" cy="463.15" r="0.8"/><circle class="tcg-core" cx="493.3" cy="463.15" r="0.55"/><text x="494.4" y="463.6" text-anchor="start" font-size="1.3" stroke-width="0.3" class="tcg-sublabel">Hadera</text></g><g class="tcg-sub" data-region="center" aria-hidden="true"><circle class="tcg-ring" cx="481.82" cy="497.51" r="0.6"/><circle class="tcg-core" cx="481.82" cy="497.51" r="0.41"/><text x="480.99" y="497.85" text-anchor="end" font-size="0.98" stroke-width="0.23" class="tcg-sublabel">Tel Aviv–Jaffa</text><circle class="tcg-ring" cx="484.22" cy="497.81" r="0.6"/><circle class="tcg-core" cx="484.22" cy="497.81" r="0.41"/><text x="484.22" y="496.98" text-anchor="middle" font-size="0.98" stroke-width="0.23" class="tcg-sublabel">Ramat Gan</text><circle class="tcg-ring" cx="484.38" cy="498.8" r="0.6"/><circle class="tcg-core" cx="484.38" cy="498.8" r="0.41"/><text x="484.38" y="500.32" text-anchor="middle" font-size="0.98" stroke-width="0.23" class="tcg-sublabel">Givatayim</text><circle class="tcg-ring" cx="487.39" cy="498.24" r="0.6"/><circle class="tcg-core" cx="487.39" cy="498.24" r="0.41"/><text x="488.22" y="498.58" text-anchor="start" font-size="0.98" stroke-width="0.23" class="tcg-sublabel">Givat Shmuel</text></g><g class="tcg-sub" data-region="jerusalem" aria-hidden="true"><circle class="tcg-ring" cx="517.81" cy="528.64" r="0.93"/><circle class="tcg-core" cx="517.81" cy="528.64" r="0.64"/><text x="519.09" y="529.17" text-anchor="start" font-size="1.52" stroke-width="0.35" class="tcg-sublabel">Jerusalem</text><circle class="tcg-ring" cx="499.01" cy="530.73" r="0.93"/><circle class="tcg-core" cx="499.01" cy="530.73" r="0.64"/><text x="499.01" y="533.07" text-anchor="middle" font-size="1.52" stroke-width="0.35" class="tcg-sublabel">Beit Shemesh</text><circle class="tcg-ring" cx="500.87" cy="515.92" r="0.93"/><circle class="tcg-core" cx="500.87" cy="515.92" r="0.64"/><text x="500.87" y="514.64" text-anchor="middle" font-size="1.52" stroke-width="0.35" class="tcg-sublabel">Modi’in</text></g><g class="tcg-pin" data-region="netanya" tabindex="0" role="button" aria-label="Netanya Kahila (community): Netanya and Hadera. Zoom in."><circle class="tcg-hit" cx="487.77" cy="474.25" r="9" fill="transparent"/><circle class="tcg-ring" cx="487.77" cy="474.25" r="2.6"/><circle class="tcg-ring tcg-ring2" cx="487.77" cy="474.25" r="2.6"/><circle class="tcg-core" cx="487.77" cy="474.25" r="2.2"/><text x="482.77" y="476.85" text-anchor="end" class="tcg-label">Netanya</text></g><g class="tcg-pin" data-region="center" tabindex="0" role="button" aria-label="Tel Aviv–Jaffa Kahila (community): Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel. Zoom in."><circle class="tcg-hit" cx="481.82" cy="497.51" r="9" fill="transparent"/><circle class="tcg-ring" cx="481.82" cy="497.51" r="2.6"/><circle class="tcg-ring tcg-ring2" cx="481.82" cy="497.51" r="2.6"/><circle class="tcg-core" cx="481.82" cy="497.51" r="2.2"/><text x="476.82" y="500.11" text-anchor="end" class="tcg-label">Tel Aviv–Jaffa</text></g><g class="tcg-pin" data-region="jerusalem" tabindex="0" role="button" aria-label="Jerusalem Kahila (community): Jerusalem, Beit Shemesh and Modi’in. Zoom in."><circle class="tcg-hit" cx="517.81" cy="528.64" r="9" fill="transparent"/><circle class="tcg-ring" cx="517.81" cy="528.64" r="2.6"/><circle class="tcg-ring tcg-ring2" cx="517.81" cy="528.64" r="2.6"/><circle class="tcg-core" cx="517.81" cy="528.64" r="2.2"/><text x="512.81" y="531.24" text-anchor="end" class="tcg-label">Jerusalem</text></g>
+<g class="tcg-pin" data-region="netanya" tabindex="0" role="button" aria-label="Netanya Kahila (community): Netanya and Hadera."><circle class="tcg-hit" cx="487.77" cy="474.25" r="9" fill="transparent"/><circle class="tcg-ring" cx="487.77" cy="474.25" r="2.6"/><circle class="tcg-ring tcg-ring2" cx="487.77" cy="474.25" r="2.6"/><circle class="tcg-core" cx="487.77" cy="474.25" r="2.2"/><text x="482.77" y="476.85" text-anchor="end" class="tcg-label">Netanya</text></g><g class="tcg-pin" data-region="center" tabindex="0" role="button" aria-label="Tel Aviv–Jaffa Kahila (community): Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel."><circle class="tcg-hit" cx="481.82" cy="497.51" r="9" fill="transparent"/><circle class="tcg-ring" cx="481.82" cy="497.51" r="2.6"/><circle class="tcg-ring tcg-ring2" cx="481.82" cy="497.51" r="2.6"/><circle class="tcg-core" cx="481.82" cy="497.51" r="2.2"/><text x="476.82" y="500.11" text-anchor="end" class="tcg-label">Tel Aviv–Jaffa</text></g><g class="tcg-pin" data-region="jerusalem" tabindex="0" role="button" aria-label="Jerusalem Kahila (community): Jerusalem, Beit Shemesh and Modi’in."><circle class="tcg-hit" cx="517.81" cy="528.64" r="9" fill="transparent"/><circle class="tcg-ring" cx="517.81" cy="528.64" r="2.6"/><circle class="tcg-ring tcg-ring2" cx="517.81" cy="528.64" r="2.6"/><circle class="tcg-core" cx="517.81" cy="528.64" r="2.2"/><text x="512.81" y="531.24" text-anchor="end" class="tcg-label">Jerusalem</text></g>
 </svg>
-<p class="tcg-map-hint" aria-hidden="true">Tap a glowing city to explore</p>
-<div class="tcg-panel" id="tcg-panel" hidden aria-live="polite">
-<div class="tcg-panel-photo"><img alt="" src="" loading="lazy"></div>
-<div class="tcg-panel-body">
-<span class="tcg-panel-kicker"></span>
-<h2 class="tcg-panel-title"></h2>
-<p class="tcg-panel-cities"></p>
-<p class="tcg-panel-status"></p>
-<div class="tcg-panel-actions"><a class="tcg-btn tcg-panel-go" href="#"></a><button type="button" class="tcg-back">← All of Israel</button></div>
+<p class="tcg-map-hint" aria-hidden="true">Hover a city</p>
+<div class="tcg-card-pop" id="tcg-pop" hidden role="dialog" aria-live="polite">
+<div class="tcg-pop-body">
+<p class="tcg-pop-title"></p>
+<p class="tcg-pop-cities"></p>
+<p class="tcg-pop-status"></p>
+<a class="tcg-pop-go" href="#">Watch its apartments ›</a>
 </div>
 </div>
 </div>
 <script type="application/json" id="tcg-kahilot">{"netanya": {"name": "The Netanya Kahila", "cities": "Netanya and Hadera", "status": "First apartments ready to view", "href": "/netanya/", "img": "https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=1400&q=70", "alt": "The sea seen from the cliff-top promenade in Netanya"}, "center": {"name": "The Tel Aviv–Jaffa Kahila", "cities": "Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel", "status": "Now forming", "href": "/center/", "img": "https://images.unsplash.com/photo-1719757658840-f225d174282c?auto=format&fit=crop&w=1400&q=70", "alt": "Two people on a bench looking out to sea in Old Jaffa"}, "jerusalem": {"name": "The Jerusalem Kahila", "cities": "Jerusalem, Beit Shemesh and Modi’in", "status": "Now forming", "href": "/jerusalem/", "img": "https://images.unsplash.com/photo-1643801510485-f24fcabbb453?auto=format&fit=crop&w=1400&q=70", "alt": "The stone walls of Jerusalem’s Old City"}}</script>
 </section>
 
-<!-- The problem -->
+<!-- White benefits band -->
+<div class="tcg-band" role="list" aria-label="What you get">
+<div role="listitem"><b>Finished and ready</b><span>Not sold on paper</span></div>
+<div role="listitem"><b>No agent or legal fees</b><span>You pay the builder's cost</span></div>
+<div role="listitem"><b>Fully warranted</b><span>Guaranteed by Israeli law</span></div>
+</div>
+
+<!-- The benefits -->
 <section class="tcg-sec tcg-dark" aria-labelledby="tcg-problem">
 <div class="tcg-wrap tcg-reveal">
-<h2 id="tcg-problem" class="tcg-h2">Buying in Israel from abroad<br>shouldn't be this hard.</h2>
+<h2 id="tcg-problem" class="tcg-h2">Ready homes. Real videos. <br>The builder's price.</h2>
 </div>
 <div class="tcg-wrap tcg-grid3">
-<div class="tcg-tile tcg-fold"><span class="tcg-tile-line" aria-hidden="true"></span><h3>Years of waiting</h3><p>Most new apartments are sold on paper. You pay, then wait years for a building that doesn't exist yet.</p></div>
-<div class="tcg-tile tcg-fold"><span class="tcg-tile-line" aria-hidden="true"></span><h3>Fees on top of fees</h3><p>Agent fees, legal fees and the builder's full list price, all paid by you.</p></div>
-<div class="tcg-tile tcg-fold"><span class="tcg-tile-line" aria-hidden="true"></span><h3>Alone at the table</h3><p>One family, far away, negotiating alone. No leverage, and no one on your side.</p></div>
+<div class="tcg-tile tcg-fold"><span class="tcg-tile-line" aria-hidden="true"></span><h3>Ready to live in</h3><p>Finished or nearly finished apartments. Get the keys now, or within a few months.</p></div>
+<div class="tcg-tile tcg-fold"><span class="tcg-tile-line" aria-hidden="true"></span><h3>Watch it, then buy it</h3><p>A real video of every apartment. Love it? Reserve it on the spot, from anywhere in the world.</p></div>
+<div class="tcg-tile tcg-fold"><span class="tcg-tile-line" aria-hidden="true"></span><h3>The best price possible</h3><p>Our Kahila buys together, so you pay the builder's cost, not the list price.</p></div>
 </div>
-<p class="tcg-wrap tcg-turn tcg-reveal">Meanwhile, builders are sitting on finished apartments they need to sell. <strong>That's where we come in.</strong></p>
+<p class="tcg-wrap tcg-turn tcg-reveal">Everything you need to buy a home in Israel from abroad. <strong>All in one place.</strong></p>
 </section>
 
 <!-- How it works -->
@@ -119,11 +120,11 @@
 <p class="tcg-sub">Five simple steps from your sofa abroad to the keys in your hand.</p>
 </div>
 <ol class="tcg-wrap tcg-steps">
-<li class="tcg-step tcg-fold"><span class="tcg-num">1</span><h3>Join your Kahila (community)</h3><p>Pick the area you love and join the families buying there. It's free.</p></li>
+<li class="tcg-step tcg-fold"><span class="tcg-num">1</span><h3>Join your Kahila (community)</h3><p>Pick the area you love and join free. You get instant access to real videos of the apartments for sale there now.</p></li>
 <li class="tcg-step tcg-fold"><span class="tcg-num">2</span><h3>See your exact apartment</h3><p>Not a brochure. The real unit on video: its number, floor, floor plan, tiles, kitchen and view.</p></li>
 <li class="tcg-step tcg-fold"><span class="tcg-num">3</span><h3>We bring the community together</h3><p>We gather the buyers and negotiate one group price with the builder, down to his cost.</p></li>
 <li class="tcg-step tcg-fold"><span class="tcg-num">4</span><h3>Reserve and sign</h3><p>Your deposit is held in trust by our partner law firm. You sign your own contract with the builder.</p></li>
-<li class="tcg-step tcg-fold"><span class="tcg-num">5</span><h3>Get your keys</h3><p>Choose your apartment. Buy your home.</p></li>
+<li class="tcg-step tcg-fold"><span class="tcg-num">5</span><h3>Get your keys</h3><p>A finished home, ready the day you arrive.</p></li>
 </ol>
 <ul class="tcg-wrap tcg-perks" aria-label="What you get">
 <li>The builder's cost price</li><li>No agent fees</li><li>No legal fees</li><li>Ready apartments</li><li>Buy with your community</li><li>Money held in trust</li>
@@ -152,8 +153,8 @@
 <p class="tcg-sub tcg-left">Every apartment is finished or just months from handover, and many already have their Tofes 4 (occupancy permit). Watch its video and see the tiles, the kitchen, the amenities and the view. No surprises and no changes: you buy the apartment exactly as you see it.</p>
 </div>
 <div class="tcg-warranty tcg-reveal" aria-labelledby="tcg-law">
-<h3 id="tcg-law">And fully protected by Israeli law</h3>
-<p class="tcg-law-sub">Every builder must repair defects under the Sale (Apartments) Law. These rights can't be waived, not even in the contract.</p>
+<h3 id="tcg-law">Fully warranted. Guaranteed by Israeli law.</h3>
+<p class="tcg-law-sub">You're buying a solid, finished home with the builder's warranty for up to 20 years. Israel's Sale (Apartments) Law guarantees it for every buyer, so it comes with every apartment.</p>
 <ul class="tcg-bars">
 <li style="--y:1"><span class="tcg-bar"><b>1 yr</b></span><span>General items</span></li>
 <li style="--y:2"><span class="tcg-bar"><b>2 yrs</b></span><span>Doors, windows, frames and interior tiling</span></li>
@@ -162,7 +163,7 @@
 <li style="--y:7"><span class="tcg-bar"><b>7 yrs</b></span><span>Exterior cladding</span></li>
 <li style="--y:20" class="tcg-bar-long"><span class="tcg-bar"><b>20 yrs</b></span><span>The building's structure</span></li>
 </ul>
-<p class="tcg-law-note"><strong>Plus 3 more years</strong> of warranty after each period ends. Our partner law firm walks you through every guarantee before you sign.</p>
+<p class="tcg-law-note"><strong>Plus 3 more years</strong> of cover after each period ends. Our partner law firm walks you through every guarantee before you sign.</p>
 </div>
 </div>
 </section>
@@ -171,7 +172,7 @@
 <section id="kahilot" style="background: #FFFFFF; padding: 140px 22px">
 <div class="tcg-reveal" style="max-width: 980px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px">
 <h2 style="margin: 0; font-size: 80px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Choose your Kahila.</h2>
-<p style="margin: 0; font-size: 21px; line-height: 1.45; color: #6E6E73; max-width: 620px">Your Kahila (community) is the group of families buying in the same area. Join the one where you want to live. Membership is free.</p>
+<p style="margin: 0; font-size: 21px; line-height: 1.45; color: #6E6E73; max-width: 620px">Your Kahila (community) is the families buying in the same area. Join free and watch real videos of the actual apartments for sale there right now, at the builder's cost.</p>
 </div>
 <div class="tcg-reveal" style="max-width: 1100px; margin: 72px auto 0; display: flex; flex-wrap: wrap; gap: 20px">
 
@@ -179,21 +180,21 @@
 <img class="tcg-card-img" src="https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=1400&q=70" alt="The sea seen from the cliff-top promenade in Netanya" loading="lazy">
 <span class="tcg-card-shade" aria-hidden="true"></span>
 <span class="tcg-card-top"><span class="tcg-card-kicker">The Netanya Kahila (community)</span><span class="tcg-card-title">Home by the sea.</span><span class="tcg-card-sub">Finished apartments a few minutes from the beach. Netanya and Hadera.</span></span>
-<span class="tcg-card-go">Enter the Netanya Kahila ›</span>
+<span class="tcg-card-go">Join free · watch the Netanya apartments ›</span>
 </a>
 
 <a href="/center/" class="tcg-card">
 <img class="tcg-card-img" src="https://images.unsplash.com/photo-1719757658840-f225d174282c?auto=format&fit=crop&w=1400&q=70" alt="Two people on a bench looking out to sea in Old Jaffa" loading="lazy">
 <span class="tcg-card-shade" aria-hidden="true"></span>
 <span class="tcg-card-top"><span class="tcg-card-kicker">The Tel Aviv–Jaffa Kahila (community)</span><span class="tcg-card-title">Minutes from Tel Aviv.</span><span class="tcg-card-sub">Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel.</span></span>
-<span class="tcg-card-go">Enter the Tel Aviv–Jaffa Kahila ›</span>
+<span class="tcg-card-go">Join free · watch the Tel Aviv–Jaffa apartments ›</span>
 </a>
 
 <a href="/jerusalem/" class="tcg-card">
 <img class="tcg-card-img" src="https://images.unsplash.com/photo-1643801510485-f24fcabbb453?auto=format&fit=crop&w=1400&q=70" alt="The stone walls of Jerusalem’s Old City" loading="lazy">
 <span class="tcg-card-shade" aria-hidden="true"></span>
 <span class="tcg-card-top"><span class="tcg-card-kicker">The Jerusalem Kahila (community)</span><span class="tcg-card-title">Come home.</span><span class="tcg-card-sub">Jerusalem, Beit Shemesh and Modi&#39;in.</span></span>
-<span class="tcg-card-go">Enter the Jerusalem Kahila ›</span>
+<span class="tcg-card-go">Join free · watch the Jerusalem apartments ›</span>
 </a>
 
 </div>
@@ -205,7 +206,7 @@
 <h2 style="margin: 0; font-size: 80px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Visit it.<br>Get the keys.</h2>
 <p style="margin: 0; font-size: 21px; line-height: 1.45; color: #6E6E73; max-width: 660px">Ready apartments, one swift signing, a licensed broker, a partner law firm and a bank partner. Your money is held in trust until the deal is done.</p>
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px; margin-top: 12px">
-<a href="#kahilot" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 28px; min-height: 50px; border-radius: 999px; font-size: 17px; font-weight: 600; display: inline-flex; align-items: center">Choose your Kahila</a>
+<a href="#kahilot" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 28px; min-height: 50px; border-radius: 999px; font-size: 17px; font-weight: 600; display: inline-flex; align-items: center">Join free · watch the apartments</a>
 <a href="/how-it-works/" style="color: #A8522F; text-decoration: none; font-size: 17px">See every safeguard ›</a>
 </div>
 </div>
@@ -227,6 +228,7 @@
 <p style="flex-basis: 100%; margin: 6px 0 0; line-height: 1.5">The Closing Group is a marketing and coordination platform, not a buying group (kvutzat rechisha). We do not buy, own, sell or finance property, and we do not hold buyers’ money. Each buyer signs their own contract with the builder. Legal and banking services are provided by independent firms. <a href="/terms/" style="color: #424245">Terms</a></p>
 </div>
 </footer>
-</div><script src="/assets/site.js" defer></script><script src="/assets/map.js" defer></script>
+</div><script src="/assets/scene.js" defer></script><script src="/assets/slides.js" defer></script><script src="/assets/map.js" defer></script>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>
