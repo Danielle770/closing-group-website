@@ -6,7 +6,7 @@
  *   - What does holding the unsold apartments cost the builder per month, and over 3/6/9/12 months?
  */
 const { num } = require('./engine');
-const { ils, ilsK, pct } = require('./highlights');
+const { ils, ilsK, pct, homeLabel } = require('./highlights');
 
 const BUILDER_DEFAULTS = {
   primePct: 4.75,                // Bank of Israel 3.25% + 1.5% (rate decision 21 Oct 2026)
@@ -75,7 +75,7 @@ function negotiate(a, userCfg = {}) {
 
   const share = (u) => u.fairValue / fairTotal;
   const perUnit = units.map((u) => ({
-    id: u.id, rooms: u.rooms, sizeM2: u.sizeM2, floor: u.floor, listPrice: u.listPrice, fairValue: u.fairValue,
+    id: u.id, rooms: u.rooms, bedrooms: u.bedrooms, bathrooms: u.bathrooms, sizeM2: u.sizeM2, floor: u.floor, listPrice: u.listPrice, fairValue: u.fairValue,
     opening: round5k(opening * share(u)), target: round5k(target * share(u)), walkAway: round5k(walkAway * share(u)),
   }));
 
@@ -118,7 +118,7 @@ function renderBrief(a, ng) {
     const diff = ng.withUs.target - s.net;
     return `<tr><td>${s.months} months</td><td>${ils(s.net)}</td><td>${ils(ng.breakeven[i].price)}</td><td class="${diff >= 0 ? 'good' : 'bad'}">${diff >= 0 ? '+' : ''}${ils(diff)}</td></tr>`;
   }).join('');
-  const rows = ng.perUnit.map((u) => `<tr><td><strong>${esc(u.id)}</strong></td><td>${u.rooms} · ${u.sizeM2} m² · fl ${u.floor}</td><td>${u.listPrice ? ils(u.listPrice) : '–'}</td><td>${ils(u.fairValue)}</td><td>${ils(u.opening)}</td><td class="good">${ils(u.target)}</td><td>${ils(u.walkAway)}</td></tr>`).join('');
+  const rows = ng.perUnit.map((u) => `<tr><td><strong>${esc(u.id)}</strong></td><td>${homeLabel(u)} · ${u.sizeM2} m² · fl ${u.floor}</td><td>${u.listPrice ? ils(u.listPrice) : '–'}</td><td>${ils(u.fairValue)}</td><td>${ils(u.opening)}</td><td class="good">${ils(u.target)}</td><td>${ils(u.walkAway)}</td></tr>`).join('');
   const listDisc = ng.listTotal ? ` (${pct((1 - ng.target / ng.listTotal) * 100)} below the builder's list)` : '';
 
   return head('Negotiation brief') + `

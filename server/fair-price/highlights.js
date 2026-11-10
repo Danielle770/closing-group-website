@@ -17,6 +17,13 @@ const FACILITY_LABELS = {
   playground: 'Playground', synagogue: 'Synagogue in the building', sukkahBalcony: 'Sukkah balconies', gatedParking: 'Gated underground parking',
 };
 
+/* Israeli 'rooms' count the living room: 4 rooms = 3 bedrooms + living room. Buyers abroad think in bedrooms. */
+function bedroomsOf(u) { return u.bedrooms !== undefined && u.bedrooms !== '' ? num(u.bedrooms) : Math.max(num(u.rooms) - 1, 0); }
+function homeLabel(u) {
+  const b = bedroomsOf(u), ba = num(u.bathrooms);
+  return `${b} bedroom${b === 1 ? '' : 's'}${ba ? ` · ${ba} bathroom${ba === 1 ? '' : 's'}` : ''}`;
+}
+
 function directionsOf(u) {
   return String(u.directions || u.direction || '').toUpperCase().split(/[\s,/+]+/).filter((d) => DIRECTION_NAMES[d]);
 }
@@ -107,9 +114,9 @@ function unitHighlights(u, a) {
     const smallerPpm = median(smaller.map((c) => c.rawPpm));
     const smallerPrice = median(smaller.map((c) => num(c.price)));
     if (u.price <= smallerPrice * 1.05) {
-      out.push(`A ${rooms}-room home for about the price of a ${rooms - 1}-room nearby (typical ${rooms - 1}-room: ${ilsK(smallerPrice)}).`);
+      out.push(`A ${rooms - 1}-bedroom home for about the price of a ${rooms - 2}-bedroom nearby (typical ${rooms - 2}-bedroom: ${ilsK(smallerPrice)}).`);
     } else if (u.pricePerM2 <= smallerPpm) {
-      out.push(`Per m², this ${rooms}-room costs ${u.pricePerM2 < smallerPpm * 0.98 ? 'less than' : 'the same as'} a typical ${rooms - 1}-room nearby (${ils(smallerPpm)}/m²).`);
+      out.push(`Per m², this ${rooms - 1}-bedroom costs ${u.pricePerM2 < smallerPpm * 0.98 ? 'less than' : 'the same as'} a typical ${rooms - 2}-bedroom nearby (${ils(smallerPpm)}/m²).`);
     }
   }
 
@@ -117,7 +124,7 @@ function unitHighlights(u, a) {
   const same = comps.filter((c) => num(c.rooms) === rooms);
   if (same.length >= 3) {
     const typical = median(same.map((c) => num(c.sizeM2)));
-    if (num(u.sizeM2) >= typical * 1.08) out.push(`${Math.round(num(u.sizeM2) - typical)} m² larger than a typical ${rooms}-room nearby (${Math.round(typical)} m²).`);
+    if (num(u.sizeM2) >= typical * 1.08) out.push(`${Math.round(num(u.sizeM2) - typical)} m² larger than a typical ${rooms - 1}-bedroom nearby (${Math.round(typical)} m²).`);
   }
 
   if (num(u.parking) >= 1) out.push(`${num(u.parking) > 1 ? num(u.parking) + ' parking spaces' : 'Parking space'} included (worth about ${ilsK(num(u.parking) * cfg.parkingValue)}).`);
@@ -137,4 +144,4 @@ function unitHighlights(u, a) {
 
 function monthYear(d) { return d ? d.toLocaleString('en-GB', { month: 'short', year: 'numeric' }) : ''; }
 
-module.exports = { dealHighlights, unitHighlights, ils, ilsK, pct, monthYear, directionsOf, DIRECTION_NAMES };
+module.exports = { bedroomsOf, homeLabel, dealHighlights, unitHighlights, ils, ilsK, pct, monthYear, directionsOf, DIRECTION_NAMES };

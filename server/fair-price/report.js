@@ -1,7 +1,7 @@
 'use strict';
 /* Builds the fair price report as one self-contained HTML page in The Closing Group's design. */
 const { num } = require('./engine');
-const { dealHighlights, unitHighlights, ils, ilsK, pct, monthYear, directionsOf, DIRECTION_NAMES } = require('./highlights');
+const { bedroomsOf, homeLabel, dealHighlights, unitHighlights, ils, ilsK, pct, monthYear, directionsOf, DIRECTION_NAMES } = require('./highlights');
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const dateStr = (d) => { const x = new Date(d); return isNaN(x) ? esc(d) : x.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); };
@@ -18,7 +18,7 @@ function render(a, { internal = true } = {}) {
   const unitRows = units.map((u) => `
 <tr>
 <td><strong>${esc(u.id || '')}</strong></td>
-<td>${num(u.rooms)}</td><td>${num(u.sizeM2)}${num(u.balconyM2) ? ` + ${num(u.balconyM2)}` : ''}</td>
+<td>${bedroomsOf(u)}${num(u.bathrooms) ? ' / ' + num(u.bathrooms) : ''}</td><td>${num(u.sizeM2)}${num(u.balconyM2) ? ` + ${num(u.balconyM2)}` : ''}</td>
 <td>${num(u.floor)}</td><td>${esc(directionsOf(u).join(' ') || '–')}</td>
 <td>${num(u.parking)} / ${num(u.storage)}</td>
 <td>${u.price ? ils(u.price) : '–'}</td>
@@ -28,14 +28,14 @@ function render(a, { internal = true } = {}) {
 
   const unitCards = units.map((u) => {
     const hs = unitHighlights(u, a);
-    return `<article class="card"><div class="card-head"><h3>${esc(u.id ? 'Apartment ' + u.id : num(u.rooms) + '-room apartment')}</h3><span class="tag">${num(u.rooms)} rooms · ${num(u.sizeM2)} m² · floor ${num(u.floor)}</span></div>
+    return `<article class="card"><div class="card-head"><h3>${esc(u.id ? 'Apartment ' + u.id : bedroomsOf(u) + '-bedroom apartment')}</h3><span class="tag">${homeLabel(u)} · ${num(u.sizeM2)} m² · floor ${num(u.floor)}</span></div>
 ${u.price && u.saving > 0 ? `<div class="save">You save ${ils(u.saving)}<span>${ils(u.fairPerM2 - u.pricePerM2)} less per m² · ${pct(u.savingPct)} below fair value</span></div>` : `<div class="save target">Target: ${ils(u.negotiationTarget)} or less<span>fair value ${ils(u.fairValue)}</span></div>`}
 <ul>${hs.slice(1).map((h) => `<li>${esc(h)}</li>`).join('')}</ul></article>`;
   }).join('');
 
   const compRows = comps.map((c) => `
 <tr><td>${dateStr(c.date)}</td><td>${esc(internal ? (c.street || c.address || '') : (c.street || '').replace(/\s*\d+.*$/, ''))}</td><td>${c.distanceM !== null ? c.distanceM + ' m' : '–'}</td>
-<td>${num(c.rooms) || '–'}</td><td>${num(c.sizeM2)}</td><td>${c.floor !== undefined && c.floor !== '' ? num(c.floor) : '–'}</td>
+<td>${num(c.rooms) ? bedroomsOf(c) : '–'}</td><td>${num(c.sizeM2)}</td><td>${c.floor !== undefined && c.floor !== '' ? num(c.floor) : '–'}</td>
 <td>${ils(num(c.price))}</td><td>${ils(c.rawPpm)}</td><td>${ils(c.basePpm)}${c.sameBuilding ? ' <span class="muted">same building</span>' : ''}</td></tr>`).join('');
 
   return `<!doctype html>
@@ -98,7 +98,7 @@ ${hasPrice && totals.saving > 0 && totals.units > 1 ? `<div class="lbl" style="c
 <section><div class="wrap">
 <h2>Apartment by apartment</h2>
 <div class="grid" style="margin-bottom:28px">${unitCards}</div>
-<div class="tbl"><table><thead><tr><th>Apt</th><th>Rooms</th><th>m² (+ balcony)</th><th>Floor</th><th>Faces</th><th>Parking / storage</th><th>${hasPrice ? 'Price' : 'Price'}</th><th>Fair value</th><th>${hasPrice ? 'Saving' : 'Negotiation target'}</th></tr></thead><tbody>${unitRows}</tbody></table></div>
+<div class="tbl"><table><thead><tr><th>Apt</th><th>Bedrooms / baths</th><th>m² (+ balcony)</th><th>Floor</th><th>Faces</th><th>Parking / storage</th><th>${hasPrice ? 'Price' : 'Price'}</th><th>Fair value</th><th>${hasPrice ? 'Saving' : 'Negotiation target'}</th></tr></thead><tbody>${unitRows}</tbody></table></div>
 </div></section>
 
 <section class="soft"><div class="wrap">
@@ -124,7 +124,7 @@ ${stats.sameBuilding && stats.sameBuilding.weight ? `<li>Sales in this same buil
 
 <section><div class="wrap">
 <h2>The sales we compared</h2>
-<div class="tbl"><table><thead><tr><th>Date</th><th>Street</th><th>Distance</th><th>Rooms</th><th>m²</th><th>Floor</th><th>Price</th><th>₪ per m²</th><th>Adjusted ₪/m²</th></tr></thead><tbody>${compRows}</tbody></table></div>
+<div class="tbl"><table><thead><tr><th>Date</th><th>Street</th><th>Distance</th><th>Bedrooms</th><th>m²</th><th>Floor</th><th>Price</th><th>₪ per m²</th><th>Adjusted ₪/m²</th></tr></thead><tbody>${compRows}</tbody></table></div>
 <p class="note" style="margin-top:22px">Source: real estate sales reported to the Israel Tax Authority${a.project.compsSource ? ' (' + esc(a.project.compsSource) + ')' : ''}. This report is an estimate to support a buying decision. It is not a formal appraisal (shuma) and not financial advice. Final prices are set only in the signed contract.</p>
 </div></section>
 </body></html>`;

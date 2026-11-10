@@ -46,7 +46,8 @@
       "directions": "W N",
       "parking": 1,
       "storage": 1,
-      "listPrice": 2600000
+      "listPrice": 2600000,
+      "bathrooms": 2
     },
     {
       "id": "6B",
@@ -57,7 +58,8 @@
       "directions": "S W E",
       "parking": 2,
       "storage": 1,
-      "listPrice": 3050000
+      "listPrice": 3050000,
+      "bathrooms": 2
     },
     {
       "id": "7A",
@@ -68,7 +70,8 @@
       "directions": "W N",
       "parking": 1,
       "storage": 1,
-      "listPrice": 2650000
+      "listPrice": 2650000,
+      "bathrooms": 2
     },
     {
       "id": "8C",
@@ -79,7 +82,8 @@
       "directions": "S",
       "parking": 1,
       "storage": 0,
-      "listPrice": 2050000
+      "listPrice": 2050000,
+      "bathrooms": 1
     },
     {
       "id": "9P",
@@ -91,7 +95,8 @@
       "parking": 2,
       "storage": 1,
       "listPrice": 4100000,
-      "view": "Penthouse with a 60 m² roof terrace and open sea views."
+      "view": "Penthouse with a 60 m² roof terrace and open sea views.",
+      "bathrooms": 3
     }
   ]
 }

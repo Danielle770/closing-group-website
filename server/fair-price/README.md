@@ -11,6 +11,7 @@ node run.js examples/deal.example.json examples/sales.example.csv report.html --
 
 - `deal.json`: project, building, location, apartments, and optional `assumptions` overrides.
 - `sales.csv`: reported sales near the building. Columns: `date, street, distanceM (or lat,lng), rooms, sizeM2, floor, price, newBuild, parking, storage`.
+- In `deal.json`, give each apartment `rooms` (the Israeli count, which includes the living room) and `bathrooms`. Reports always show bedrooms (rooms − 1) and bathrooms; add `bedrooms` to override.
 - All assumptions (floor premium, parking value, etc.) are in `engine.js` `DEFAULTS` and printed in every report.
 
 Add `--builder` to also produce:
