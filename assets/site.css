@@ -48,6 +48,7 @@ header { background: rgba(18,18,19,0.9) !important; }
 .tcg-hero-text { display: flex; flex-direction: column; gap: 18px; max-width: 560px; padding: 40px 0; animation: tcgrise 1s cubic-bezier(.2,.8,.2,1) both; }
 .tcg-eyebrow { font-size: 15px; font-weight: 600; color: #F0A47A; letter-spacing: .01em; }
 .tcg-hero h1 { margin: 0; font-size: 64px; line-height: 1.04; color: #F5F5F7; }
+.tcg-hero-see { margin: -4px 0 0; font-family: "Newsreader", Georgia, serif; font-style: italic; font-size: 28px; color: #F3D9A8; letter-spacing: .01em; }
 .tcg-hero-lead { margin: 0; font-size: 21px; line-height: 1.45; color: #C7C7CC; }
 .tcg-hero-facts { margin: 0; font-size: 15px; color: #D9AE6A; letter-spacing: .02em; }
 .tcg-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
