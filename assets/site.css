@@ -58,27 +58,29 @@ header { background: rgba(18,18,19,0.9) !important; }
 .tcg-btn:hover { background: #BE6239; transform: translateY(-2px); }
 .tcg-link { color: #F0A47A; text-decoration: none; font-size: 17px; }
 
-.tcg-map-wrap { position: relative; height: min(88vh, 940px); min-height: 560px; border-radius: 28px; overflow: hidden; -webkit-mask-image: radial-gradient(120% 95% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(120% 95% at 50% 50%, #000 62%, transparent 100%); }
+.tcg-map-wrap { position: relative; height: min(88vh, 940px); min-height: 560px; border-radius: 28px; overflow: hidden; background: #020306; }
 #tcg-map { width: 100%; height: 100%; display: block; }
-#tcg-map .tcg-coast-shine { stroke-dasharray: 60 940; animation: tcgshine 14s linear infinite; opacity: .8; }
-@keyframes tcgshine { to { stroke-dashoffset: -1000; } }
-#tcg-map .tcg-sea { font: italic 30px "Newsreader", Georgia, serif; fill: #D9AE6A; fill-opacity: .4; letter-spacing: .3em; }
-#tcg-map .tcg-water { font: italic 15px "Newsreader", Georgia, serif; fill: #D9AE6A; fill-opacity: .45; }
-#tcg-map .tcg-glow { opacity: .55; transition: opacity .6s; transform-box: fill-box; transform-origin: center; animation: tcgbreathe 5s ease-in-out infinite; }
-@keyframes tcgbreathe { 50% { transform: scale(1.18); opacity: .8; } }
-#tcg-map .tcg-pin { cursor: pointer; outline: none; transition: opacity .5s; }
-#tcg-map .tcg-core { fill: #F6C987; stroke: #fff; stroke-opacity: .7; stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; transition: transform .3s; }
-#tcg-map .tcg-ring { fill: none; stroke: #F6C987; stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; animation: tcgring 2.6s ease-out infinite; }
-#tcg-map .tcg-ring2 { animation-delay: 1.3s; }
-@keyframes tcgring { from { transform: scale(1); opacity: .9; } to { transform: scale(3.4); opacity: 0; } }
-#tcg-map .tcg-label { font: 600 25px "Inter", -apple-system, sans-serif; fill: #F3D9A8; letter-spacing: .04em; paint-order: stroke; stroke: #05080d; stroke-width: 5px; stroke-linejoin: round; transition: fill .3s; }
-#tcg-map .tcg-pin:hover .tcg-core, #tcg-map .tcg-pin:focus-visible .tcg-core { transform: scale(1.6); }
+#tcg-map .tcg-sea { font: italic 15px "Newsreader", Georgia, serif; fill: #C9A35C; fill-opacity: .4; letter-spacing: .25em; }
+#tcg-map .tcg-nb { font: 600 10px "Inter", -apple-system, sans-serif; fill: #C9A35C; fill-opacity: .35; letter-spacing: .3em; text-transform: uppercase; }
+#tcg-map .tcg-burst { transform-box: fill-box; transform-origin: center; animation: tcgbreathe 6s ease-in-out infinite; }
+#tcg-map .tcg-il-glow { opacity: .55; animation: tcgglow 4s ease-in-out infinite; }
+@keyframes tcgglow { 50% { opacity: .9; } }
+@keyframes tcgbreathe { 50% { transform: scale(1.12); opacity: .75; } }
+#tcg-map .tcg-sheen { animation: tcgsheen 7s cubic-bezier(.45,0,.2,1) infinite; }
+@keyframes tcgsheen { 0% { transform: skewX(-18deg) translateX(0); } 60%, 100% { transform: skewX(-18deg) translateX(420px); } }
+#tcg-map .tcg-pin { cursor: pointer; outline: none; opacity: 0; transition: opacity .8s; }
+#tcg-map.is-near .tcg-pin { opacity: 1; }
+#tcg-map .tcg-core { fill: #FFF8EA; stroke: #3A2408; stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; transition: transform .3s; }
+#tcg-map .tcg-ring { fill: none; stroke: #FFF3D2; stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; animation: tcgring 2.4s ease-out infinite; }
+#tcg-map .tcg-ring2 { animation-delay: 1.2s; }
+@keyframes tcgring { from { transform: scale(1); opacity: .95; } to { transform: scale(3.6); opacity: 0; } }
+#tcg-map .tcg-label { font: 600 8.5px "Inter", -apple-system, sans-serif; fill: #FFF1CF; letter-spacing: .03em; paint-order: stroke; stroke: #120B03; stroke-width: 1.8px; stroke-linejoin: round; transition: fill .3s; }
+#tcg-map .tcg-pin:hover .tcg-core, #tcg-map .tcg-pin:focus-visible .tcg-core { transform: scale(1.7); }
 #tcg-map .tcg-pin:hover .tcg-label, #tcg-map .tcg-pin:focus-visible .tcg-label { fill: #fff; }
 #tcg-map .tcg-pin:focus-visible .tcg-hit { stroke: #F0A47A; stroke-width: 2; vector-effect: non-scaling-stroke; }
-#tcg-map .tcg-sub { opacity: 0; pointer-events: none; transition: opacity .6s .4s; }
-#tcg-map .tcg-sublabel { font-family: "Inter", -apple-system, sans-serif; font-weight: 600; fill: #FBE7C2; paint-order: stroke; stroke: #05080d; stroke-linejoin: round; }
+#tcg-map .tcg-sub { opacity: 0; pointer-events: none; transition: opacity .6s .5s; }
+#tcg-map .tcg-sublabel { font-family: "Inter", -apple-system, sans-serif; font-weight: 600; fill: #FFF6E0; paint-order: stroke; stroke: #120B03; stroke-linejoin: round; }
 #tcg-map.is-zoomed .tcg-pin { opacity: 0; pointer-events: none; }
-#tcg-map.is-zoomed .tcg-glow:not(.is-on) { opacity: 0; }
 #tcg-map .tcg-sub.is-on { opacity: 1; }
 .tcg-map-hint { position: absolute; left: 0; right: 0; bottom: 22px; margin: 0; text-align: center; font-size: 13px; color: #D9AE6A; letter-spacing: .08em; text-transform: uppercase; opacity: .8; transition: opacity .4s; pointer-events: none; }
 .tcg-map-wrap.is-zoomed .tcg-map-hint { opacity: 0; }
