@@ -1,0 +1,3 @@
+# Background clips (downloaded on the server by server/fetch-media.sh)
+*.mp4
+*.jpg

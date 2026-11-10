@@ -279,3 +279,10 @@ header { background: rgba(18,18,19,0.9) !important; }
   .tcg-card-pop { width: 220px; }
 }
 @media (prefers-reduced-motion: reduce) { .tcg-map-wrap, .tcg-card-pop { animation: none !important; } }
+
+/* Cinematic background clips behind the Center and Jerusalem hero headlines */
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;animation:tcgdrift 30s ease-in-out infinite alternate;pointer-events:none}
+.hero-shade{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.42) 45%,rgba(0,0,0,.78) 100%);pointer-events:none}
+.hero-shade ~ *{position:relative;z-index:1}
+@keyframes tcgdrift{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(1.1) translate3d(-1.5%,-1%,0)}}
+@media (prefers-reduced-motion: reduce){.hero-video{display:none}}
