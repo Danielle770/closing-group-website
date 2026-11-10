@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Closing Group · Homes in Israel at the builder's cost</title>
+<title>The Closing Group · Pick a real, finished apartment at the builder's cost</title>
 <meta name="description" content="Families abroad join together on one platform, so each can buy from a builder's remaining stock at a group price. No agent fees. No legal fees.">
 <meta property="og:title" content="The Closing Group · Homes in Israel at the builder's cost">
 <meta property="og:description" content="Families abroad join together on one platform, so each can buy from a builder's remaining stock at a group price. No agent fees. No legal fees.">
@@ -34,54 +34,91 @@
 </div>
 </header>
 
-<!-- Hero -->
-<section style="background: radial-gradient(900px 600px at 50% 105%, rgba(168,82,47,0.35), rgba(168,82,47,0) 65%), radial-gradient(700px 420px at 50% 60%, rgba(233,184,114,0.16), rgba(233,184,114,0) 70%), #000000; color: #F5F5F7; padding: 160px 22px 160px; text-align: center; overflow: hidden">
-<div class="tcg-reveal" style="max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 18px">
-<span style="font-size: 17px; font-weight: 600; color: #F0A47A">Buy new homes in Israel, together</span>
-<h1 style="margin: 0; font-size: 96px; font-weight: 700; line-height: 1.04; letter-spacing: -0.03em">Homes in Israel.<br>At the builder's cost.</h1>
-<p style="margin: 0; font-size: 28px; font-weight: 500; line-height: 1.25; letter-spacing: -0.01em">No agent fees. No legal fees. Just the group price.</p>
-<p style="margin: 4px 0 0; font-size: 21px; line-height: 1.45; color: #A1A1A6; max-width: 640px">Families abroad join together on one platform, so each can buy from a builder's remaining stock at a group price.</p>
-<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px; margin-top: 18px">
-<a href="#kahilot" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 28px; min-height: 50px; border-radius: 999px; font-size: 17px; font-weight: 600; display: inline-flex; align-items: center">Choose your kahila</a>
-<a href="/how-it-works/" style="color: #F0A47A; text-decoration: none; font-size: 17px">How it works ›</a>
+<!-- Hero: statement + live map of the Kahilot -->
+<section class="tcg-hero" aria-labelledby="tcg-hero-title">
+<div class="tcg-hero-text">
+<span class="tcg-eyebrow">Israel's first platform for communities buying at the builder's cost</span>
+<h1 id="tcg-hero-title">Pick a real, finished apartment.<br>At the builder's cost.</h1>
+<p class="tcg-hero-lead">Join your Kahila (community), see the exact apartment you'd buy on video, and buy it together with families like yours.</p>
+<p class="tcg-hero-facts">No agent fees · No legal fees · Ready to visit</p>
+<div class="tcg-chips" role="group" aria-label="Explore a Kahila (community) on the map">
+<button type="button" class="tcg-chip" data-region="netanya">Netanya</button>
+<button type="button" class="tcg-chip" data-region="center">Tel Aviv–Jaffa</button>
+<button type="button" class="tcg-chip" data-region="jerusalem">Jerusalem</button>
+</div>
+<div class="tcg-hero-cta">
+<a href="#kahilot" class="tcg-btn">Join a Kahila (community)</a>
+<a href="/how-it-works/" class="tcg-link">How it works ›</a>
 </div>
 </div>
-
+<div class="tcg-map-wrap">
+<svg id="tcg-map" viewBox="0 120 1000 1400" preserveAspectRatio="xMidYMid slice" role="group" aria-label="Map of Israel with our Kahilot (communities). Choose a city to zoom in." data-regions='{"netanya":{"k":6.5,"cx":445.9,"cy":579.7},"center":{"k":11,"cx":412.05,"cy":748},"jerusalem":{"k":4.2,"cx":548.05,"cy":891.8}}'>
+<defs>
+<radialGradient id="tcgSea" cx="38%" cy="45%" r="75%"><stop offset="0" stop-color="#0E2A44"/><stop offset=".55" stop-color="#071526"/><stop offset="1" stop-color="#02050A"/></radialGradient>
+<radialGradient id="tcgGold"><stop offset="0" stop-color="#F2C27B" stop-opacity=".55"/><stop offset=".45" stop-color="#C98B4A" stop-opacity=".18"/><stop offset="1" stop-color="#C98B4A" stop-opacity="0"/></radialGradient>
+<filter id="tcgRelief" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="5" seed="11" result="n"/>
+<feDiffuseLighting in="n" surfaceScale="7" diffuseConstant="1.1" lighting-color="#4A3D2E" result="lit"><feDistantLight azimuth="300" elevation="35"/></feDiffuseLighting>
+<feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="1" seed="3" result="grain"/>
+<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .08 0" result="g2"/>
+<feComposite in="g2" in2="lit" operator="over"/>
+</filter>
+<filter id="tcgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>
+<path id="tcgLandPath" d="M-40,1262.5L-37.5,1262.1L34.4,1233.2L87.1,1202.6L121.4,1176.6L149.7,1149.7L168.7,1129.2L167.7,1127.9L169.8,1128.8L183.7,1114.9L220.8,1070.5L228.3,1059.9L227.3,1057.8L227.9,1056.8L229,1056L227.5,1057.9L229.3,1059.1L229.4,1056.6L233,1055L260.4,1015.1L271.1,997.7L270,995.6L271.4,993.7L270.2,995.7L273,995.8L272,994.3L276.4,990.8L288.5,968.7L288.3,971.6L291.4,967.6L313.1,928.8L322.6,908.8L321.8,907.8L322.3,908.3L322.3,908.3L323.3,909.2L323.3,906.2L328.6,895.1L326.4,891.9L325.9,890L327.3,879.5L326.1,890.2L328.8,894.2L330.5,892.6L328.8,890L331.3,890.4L329.2,888.3L332.3,889L328.5,886.8L333.5,886.5L330.5,885.3L330.6,883.9L334.3,883.3L334.5,882.9L334.2,882.4L334.4,879.7L334.3,882.4L335.1,882.3L353.8,835.6L360.9,824.5L374.2,786.1L378.5,765.9L385.6,757.3L388.8,742.9L389.3,744.5L393.3,734.7L393.3,733.6L391.9,731.7L392.1,730.9L393.1,733.1L393.9,733.2L392.6,731.4L396.7,723.4L402.5,703.5L401.2,702.7L401.7,700.7L402.1,702.8L412.7,668.1L421.4,630.8L427.9,630.8L427.9,616.3L423.8,620.5L426.3,609.9L429.5,609.9L427.9,603.3L427.8,603.2L444.7,530.8L443.2,528.9L442.5,525.7L444.4,529L445.4,526.3L443.4,525.9L444.8,525.9L446.7,519.8L447,509.1L450.4,504.8L457.7,469.7L458.5,464.7L469.8,477.9L469.8,452.5L459.8,461.1L459.3,460.6L459.3,461.6L458.9,461.9L460.5,451.9L459.1,446.8L462.1,441.7L462.4,430.3L466.3,412.4L464.7,409.1L465.1,403.3L469.8,406.1L473.1,400.6L469.9,393.9L471,393.8L473.5,387.9L479.3,339.4L478.6,326.5L490.4,320.3L495.7,323.2L495.5,322.2L499.9,321.9L495.8,323.2L499.3,322.9L498.9,324.9L502.9,326.5L504.5,326.5L507.8,325.4L507.8,325.6L504.2,326.7L499.8,326.2L496,323.9L495.9,326.3L502.1,330.9L504.5,328.1L505.4,333.1L507.4,329.1L508.4,334L509.2,334L509.3,333.3L509.5,332.9L510.9,332L509.3,333.9L511.8,332.7L513.1,337.5L513.6,337.8L511.6,337.8L511.6,340.6L514.1,338.1L514.9,338.6L513.7,336.2L517.1,333.2L515.2,333.9L510.8,331.1L515,331.3L520.5,327.2L530.7,309.9L538.5,279.2L536.8,273L531.1,273L534.3,265L538,237.1L548.5,198.9L550.5,169.7L555.2,162.4L568.8,155.8L579.7,134.2L585.7,133.7L588.8,130.6L593.3,115.9L596.9,113.6L601,94.3L600.6,83L596.3,76.2L591.1,75.7L590.8,71L596,72.7L600.1,70.4L603.8,64.2L606.2,52.2L608.6,51.1L611.5,43.9L616.7,37.9L619.6,11.3L627,-7L631.3,-26.8L637.7,-36.1L643.2,-37L644.4,-40L644.8,-40L644.8,-40L644.8,-40L644.8,-40L1040,-40L1040,2245L482.4,2245L481.9,2244.3L485,2239L482.8,2233.8L490.4,2227.2L487.2,2222.3L487.9,2214.9L484.5,2206.9L488.7,2200.2L488.5,2193.1L496.3,2177.5L498.4,2168.1L498.6,2169.9L500.5,2168.8L500,2162L494.3,2157.6L494.7,2156.1L494.3,2155.5L493.6,2155.7L494.4,2157.1L494,2157.6L490.7,2153.1L488.5,2154.7L484.5,2152.4L486.3,2149.3L485.1,2149.3L484.5,2152.7L481.2,2150.5L483.9,2148.4L480.3,2148L481.1,2151.4L478.2,2150.7L458.9,2178.5L451.8,2183.8L446.4,2183.2L438.1,2187.3L435.9,2191.7L432.9,2192.9L428.9,2209L424.8,2214.5L420.9,2216.5L418,2215.2L420.4,2219.8L412.5,2226.2L413,2232.4L409.1,2232.3L410,2238.1L406.7,2245L-40,2245ZM467.7,394.2L469.3,394L468,395Z" vector-effect="non-scaling-stroke" pathLength="1000"/><clipPath id="tcgLand"><use href="#tcgLandPath"/></clipPath>
+</defs>
+<rect x="-60" y="-60" width="1120" height="2340" fill="url(#tcgSea)"/>
+<g clip-path="url(#tcgLand)"><rect x="-60" y="-60" width="1120" height="2340" fill="#16120D"/><rect x="-60" y="-60" width="1120" height="2340" filter="url(#tcgRelief)" opacity=".9"/></g>
+<use href="#tcgLandPath" fill="none" stroke="#D9A85E" stroke-opacity=".35" stroke-width="7" filter="url(#tcgBlur)"/>
+<use class="tcg-coast" href="#tcgLandPath" fill="none" stroke="#D9AE6A" stroke-width="1.2"/>
+<use class="tcg-coast-shine" href="#tcgLandPath" fill="none" stroke="#FFE2A8" stroke-width="2"/>
+<path d="M756,923.7L777.2,923.7L777.3,944.7L778.7,955.1L775.1,965.6L772.4,986.5L771.9,1007.5L762.7,1023.5L762.7,1028.4L764.9,1049.3L763.7,1059.8L767.4,1070.2L772.1,1080.7L769.6,1091.2L771.4,1112.1L762.7,1122.8L759.7,1133L762.7,1133L762.7,1140.1L751.2,1153.9L756.8,1164.4L753.3,1174.9L741.8,1177.2L741.8,1142.4L720.9,1142.4L720.9,1153.9L708.3,1153.9L720.9,1167.2L727.2,1174.9L720.9,1182.4L710.4,1188.6L700,1181.4L696.4,1174.9L698.1,1153.9L700,1153.9L700,1144.6L689.3,1133L689,1112.1L689.4,1091.2L690.3,1070.2L689,1059.8L693.4,1049.3L698.6,1038.8L692.3,1028.4L700,1017.3L700,1003.4L713.7,986.5L712.8,965.6L720.9,957.8L731.4,955.1L731.1,944.7L726.2,925L741.8,930.9ZM658.1,1237.6L679,1225L689.5,1221.3L700,1222.5L720.9,1219.7L720.9,1238L729.9,1237.6L722.2,1226.4L741.8,1231.7L746.5,1237.6L751.8,1258.6L741.8,1271.2L734.4,1279.5L744.2,1279.5L741.8,1291.1L733.7,1300.4L720.9,1314.6L720.9,1284.7L709.7,1300.4L709.6,1321.4L700,1324.5L700,1342.3L698.2,1342.3L693.1,1363.2L697.4,1377.4L679,1373.4L671.4,1363.2L679,1352.5L679,1342.3L672.1,1342.3L679,1332.7L690.2,1321.4L689.6,1300.4L685.4,1290L690.9,1279.5L689.5,1269L679,1265.9L668.4,1258.6L679,1246.2L689.3,1237.6ZM700,1244.2L700,1272.5L714.5,1258.6ZM773.1,296L783.7,286.7L796.1,296L804.6,305.8L809.9,316.9L805.1,327.3L806.4,337.8L804.6,346.1L799.7,358.7L802.3,369.2L799.1,379.7L783.7,394.9L767.7,379.7L769.3,358.7L762.7,358.7L762.7,351.4L749.2,337.8L748,316.9L762.7,302.4Z" fill="#0B2036" stroke="#D9AE6A" stroke-opacity=".6" stroke-width="1" vector-effect="non-scaling-stroke"/>
+<text class="tcg-sea" x="142.9" y="792.3" text-anchor="middle" transform="rotate(-78 142.9 792.3)">Mediterranean Sea</text>
+<text class="tcg-water" x="811.2" y="328.1">Sea of Galilee</text>
+<text class="tcg-water" x="783.9" y="1100.2">Dead Sea</text>
+<circle class="tcg-glow" data-region="netanya" cx="430.1" cy="611.4" r="90" fill="url(#tcgGold)"/><circle class="tcg-glow" data-region="center" cx="396.1" cy="744.3" r="90" fill="url(#tcgGold)"/><circle class="tcg-glow" data-region="jerusalem" cx="601.8" cy="922.2" r="90" fill="url(#tcgGold)"/><g class="tcg-sub" data-region="netanya" aria-hidden="true"><circle class="tcg-ring" cx="430.1" cy="611.4" r="2.46"/><circle class="tcg-core" cx="430.1" cy="611.4" r="1.54"/><text x="427.02" y="612.69" text-anchor="end" font-size="3.69" stroke-width="0.77" class="tcg-sublabel">Netanya</text><circle class="tcg-ring" cx="461.7" cy="548" r="2.46"/><circle class="tcg-core" cx="461.7" cy="548" r="1.54"/><text x="464.78" y="549.29" text-anchor="start" font-size="3.69" stroke-width="0.77" class="tcg-sublabel">Hadera</text></g><g class="tcg-sub" data-region="center" aria-hidden="true"><circle class="tcg-ring" cx="396.1" cy="744.3" r="1.45"/><circle class="tcg-core" cx="396.1" cy="744.3" r="0.91"/><text x="394.28" y="745.06" text-anchor="end" font-size="2.18" stroke-width="0.45" class="tcg-sublabel">Tel Aviv–Jaffa</text><circle class="tcg-ring" cx="409.8" cy="746" r="1.45"/><circle class="tcg-core" cx="409.8" cy="746" r="0.91"/><text x="409.8" y="744.18" text-anchor="middle" font-size="2.18" stroke-width="0.45" class="tcg-sublabel">Ramat Gan</text><circle class="tcg-ring" cx="410.7" cy="751.7" r="1.45"/><circle class="tcg-core" cx="410.7" cy="751.7" r="0.91"/><text x="410.7" y="755.05" text-anchor="middle" font-size="2.18" stroke-width="0.45" class="tcg-sublabel">Givatayim</text><circle class="tcg-ring" cx="428" cy="748.5" r="1.45"/><circle class="tcg-core" cx="428" cy="748.5" r="0.91"/><text x="429.82" y="749.26" text-anchor="start" font-size="2.18" stroke-width="0.45" class="tcg-sublabel">Givat Shmuel</text></g><g class="tcg-sub" data-region="jerusalem" aria-hidden="true"><circle class="tcg-ring" cx="601.8" cy="922.2" r="3.81"/><circle class="tcg-core" cx="601.8" cy="922.2" r="2.38"/><text x="606.56" y="924.2" text-anchor="start" font-size="5.71" stroke-width="1.19" class="tcg-sublabel">Jerusalem</text><circle class="tcg-ring" cx="494.3" cy="934.1" r="3.81"/><circle class="tcg-core" cx="494.3" cy="934.1" r="2.38"/><text x="494.3" y="942.86" text-anchor="middle" font-size="5.71" stroke-width="1.19" class="tcg-sublabel">Beit Shemesh</text><circle class="tcg-ring" cx="505" cy="849.5" r="3.81"/><circle class="tcg-core" cx="505" cy="849.5" r="2.38"/><text x="505" y="844.74" text-anchor="middle" font-size="5.71" stroke-width="1.19" class="tcg-sublabel">Modi’in</text></g><g class="tcg-pin" data-region="netanya" tabindex="0" role="button" aria-label="Netanya Kahila (community): Netanya and Hadera. Zoom in."><circle class="tcg-hit" cx="430.1" cy="611.4" r="34" fill="transparent"/><circle class="tcg-ring" cx="430.1" cy="611.4" r="9"/><circle class="tcg-ring tcg-ring2" cx="430.1" cy="611.4" r="9"/><circle class="tcg-core" cx="430.1" cy="611.4" r="7"/><text x="448.1" y="618.4" text-anchor="start" class="tcg-label">Netanya</text></g><g class="tcg-pin" data-region="center" tabindex="0" role="button" aria-label="Tel Aviv–Jaffa Kahila (community): Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel. Zoom in."><circle class="tcg-hit" cx="396.1" cy="744.3" r="34" fill="transparent"/><circle class="tcg-ring" cx="396.1" cy="744.3" r="9"/><circle class="tcg-ring tcg-ring2" cx="396.1" cy="744.3" r="9"/><circle class="tcg-core" cx="396.1" cy="744.3" r="7"/><text x="378.1" y="751.3" text-anchor="end" class="tcg-label">Tel Aviv–Jaffa</text></g><g class="tcg-pin" data-region="jerusalem" tabindex="0" role="button" aria-label="Jerusalem Kahila (community): Jerusalem, Beit Shemesh and Modi’in. Zoom in."><circle class="tcg-hit" cx="601.8" cy="922.2" r="34" fill="transparent"/><circle class="tcg-ring" cx="601.8" cy="922.2" r="9"/><circle class="tcg-ring tcg-ring2" cx="601.8" cy="922.2" r="9"/><circle class="tcg-core" cx="601.8" cy="922.2" r="7"/><text x="619.8" y="929.2" text-anchor="start" class="tcg-label">Jerusalem</text></g>
+</svg>
+<p class="tcg-map-hint" aria-hidden="true">Tap a glowing city to explore</p>
+<div class="tcg-panel" id="tcg-panel" hidden aria-live="polite">
+<div class="tcg-panel-photo"><img alt="" src="" loading="lazy"></div>
+<div class="tcg-panel-body">
+<span class="tcg-panel-kicker"></span>
+<h2 class="tcg-panel-title"></h2>
+<p class="tcg-panel-cities"></p>
+<p class="tcg-panel-status"></p>
+<div class="tcg-panel-actions"><a class="tcg-btn tcg-panel-go" href="#"></a><button type="button" class="tcg-back">← All of Israel</button></div>
+</div>
+</div>
+</div>
+<script type="application/json" id="tcg-kahilot">{"netanya": {"name": "The Netanya Kahila", "cities": "Netanya and Hadera", "status": "First apartments ready to view", "href": "/netanya/", "img": "https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=1400&q=70", "alt": "The sea seen from the cliff-top promenade in Netanya"}, "center": {"name": "The Tel Aviv–Jaffa Kahila", "cities": "Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel", "status": "Now forming", "href": "/center/", "img": "https://images.unsplash.com/photo-1719757658840-f225d174282c?auto=format&fit=crop&w=1400&q=70", "alt": "Two people on a bench looking out to sea in Old Jaffa"}, "jerusalem": {"name": "The Jerusalem Kahila", "cities": "Jerusalem, Beit Shemesh and Modi’in", "status": "Now forming", "href": "/jerusalem/", "img": "https://images.unsplash.com/photo-1643801510485-f24fcabbb453?auto=format&fit=crop&w=1400&q=70", "alt": "The stone walls of Jerusalem’s Old City"}}</script>
 </section>
 
 <!-- Choose your kahila -->
 <section id="kahilot" style="background: #FFFFFF; padding: 140px 22px">
 <div class="tcg-reveal" style="max-width: 980px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px">
-<h2 style="margin: 0; font-size: 80px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Choose your kahila.</h2>
-<p style="margin: 0; font-size: 21px; line-height: 1.45; color: #6E6E73; max-width: 620px">Join the families buying where you want to live. Membership is free.</p>
+<h2 style="margin: 0; font-size: 80px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Choose your Kahila.</h2>
+<p style="margin: 0; font-size: 21px; line-height: 1.45; color: #6E6E73; max-width: 620px">Your Kahila (community) is the group of families buying in the same area. Join the one where you want to live. Membership is free.</p>
 </div>
 <div class="tcg-reveal" style="max-width: 1100px; margin: 72px auto 0; display: flex; flex-wrap: wrap; gap: 20px">
 
-<a href="/netanya/" style="flex: 1 1 300px; min-width: 0; text-decoration: none; color: #F5F5F7; background: linear-gradient(160deg, #0A2E36 0%, #000000 100%); border-radius: 28px; padding: 40px 32px; min-height: 380px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 24px">
-<div style="display: flex; flex-direction: column; gap: 10px">
-<span style="font-size: 15px; font-weight: 600; color: #F0A47A">The Netanya Kahila</span>
-<span style="font-size: 40px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Home by the sea.</span>
-<span style="font-size: 17px; line-height: 1.45; color: #D2D2D7">Finished apartments a few minutes from the beach.</span>
-</div>
-<span style="font-size: 17px; color: #F5F5F7; font-weight: 600">Enter the Netanya kahila ›</span>
+<a href="/netanya/" class="tcg-card">
+<img class="tcg-card-img" src="https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=1400&q=70" alt="The sea seen from the cliff-top promenade in Netanya" loading="lazy">
+<span class="tcg-card-shade" aria-hidden="true"></span>
+<span class="tcg-card-top"><span class="tcg-card-kicker">The Netanya Kahila (community)</span><span class="tcg-card-title">Home by the sea.</span><span class="tcg-card-sub">Finished apartments a few minutes from the beach. Netanya and Hadera.</span></span>
+<span class="tcg-card-go">Enter the Netanya Kahila ›</span>
 </a>
 
-<a href="/center/" style="flex: 1 1 300px; min-width: 0; text-decoration: none; color: #F5F5F7; background: linear-gradient(160deg, #2A2017 0%, #000000 100%); border-radius: 28px; padding: 40px 32px; min-height: 380px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 24px">
-<div style="display: flex; flex-direction: column; gap: 10px">
-<span style="font-size: 15px; font-weight: 600; color: #F0A47A">The Center Kahila</span>
-<span style="font-size: 40px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Minutes from Tel Aviv.</span>
-<span style="font-size: 17px; line-height: 1.45; color: #D2D2D7">Ramat Gan, Givat Shmuel and Kiryat Ono.</span>
-</div>
-<span style="font-size: 17px; color: #F5F5F7; font-weight: 600">Enter the Center kahila ›</span>
+<a href="/center/" class="tcg-card">
+<img class="tcg-card-img" src="https://images.unsplash.com/photo-1719757658840-f225d174282c?auto=format&fit=crop&w=1400&q=70" alt="Two people on a bench looking out to sea in Old Jaffa" loading="lazy">
+<span class="tcg-card-shade" aria-hidden="true"></span>
+<span class="tcg-card-top"><span class="tcg-card-kicker">The Tel Aviv–Jaffa Kahila (community)</span><span class="tcg-card-title">Minutes from Tel Aviv.</span><span class="tcg-card-sub">Tel Aviv–Jaffa, Ramat Gan, Givatayim and Givat Shmuel.</span></span>
+<span class="tcg-card-go">Enter the Tel Aviv–Jaffa Kahila ›</span>
 </a>
 
-<a href="/jerusalem/" style="flex: 1 1 300px; min-width: 0; text-decoration: none; color: #F5F5F7; background: linear-gradient(160deg, #3A2414 0%, #000000 100%); border-radius: 28px; padding: 40px 32px; min-height: 380px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 24px">
-<div style="display: flex; flex-direction: column; gap: 10px">
-<span style="font-size: 15px; font-weight: 600; color: #F0A47A">The Jerusalem Kahila</span>
-<span style="font-size: 40px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Come home.</span>
-<span style="font-size: 17px; line-height: 1.45; color: #D2D2D7">Jerusalem, Beit Shemesh and Modi&#39;in.</span>
-</div>
-<span style="font-size: 17px; color: #F5F5F7; font-weight: 600">Enter the Jerusalem kahila ›</span>
+<a href="/jerusalem/" class="tcg-card">
+<img class="tcg-card-img" src="https://images.unsplash.com/photo-1643801510485-f24fcabbb453?auto=format&fit=crop&w=1400&q=70" alt="The stone walls of Jerusalem’s Old City" loading="lazy">
+<span class="tcg-card-shade" aria-hidden="true"></span>
+<span class="tcg-card-top"><span class="tcg-card-kicker">The Jerusalem Kahila (community)</span><span class="tcg-card-title">Come home.</span><span class="tcg-card-sub">Jerusalem, Beit Shemesh and Modi&#39;in.</span></span>
+<span class="tcg-card-go">Enter the Jerusalem Kahila ›</span>
 </a>
 
 </div>
@@ -115,7 +152,7 @@
 <h2 style="margin: 0; font-size: 80px; font-weight: 700; line-height: 1.05; letter-spacing: -0.03em">Visit it.<br>Get the keys.</h2>
 <p style="margin: 0; font-size: 21px; line-height: 1.45; color: #6E6E73; max-width: 660px">Ready apartments, one swift signing, a licensed broker, a partner law firm and a bank partner. Your money is held in trust until the deal is done.</p>
 <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px; margin-top: 12px">
-<a href="#kahilot" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 28px; min-height: 50px; border-radius: 999px; font-size: 17px; font-weight: 600; display: inline-flex; align-items: center">Choose your kahila</a>
+<a href="#kahilot" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 28px; min-height: 50px; border-radius: 999px; font-size: 17px; font-weight: 600; display: inline-flex; align-items: center">Choose your Kahila</a>
 <a href="/how-it-works/" style="color: #A8522F; text-decoration: none; font-size: 17px">See every safeguard ›</a>
 </div>
 </div>
@@ -137,6 +174,6 @@
 <p style="flex-basis: 100%; margin: 6px 0 0; line-height: 1.5">The Closing Group is a marketing and coordination platform, not a buying group (kvutzat rechisha). We do not buy, own, sell or finance property, and we do not hold buyers’ money. Each buyer signs their own contract with the builder. Legal and banking services are provided by independent firms. <a href="/terms/" style="color: #424245">Terms</a></p>
 </div>
 </footer>
-</div><script src="/assets/site.js" defer></script>
+</div><script src="/assets/site.js" defer></script><script src="/assets/map.js" defer></script>
 </body>
 </html>
