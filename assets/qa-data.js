@@ -1,4 +1,4 @@
-/* The Closing Group: public Questions & Answers. One source for the Q&A page and the chat. */
+/* The Closing Group: public Questions & Answers (45). One source for the Q&A page and the chat. */
 window.CG_QA = [
 {
 "c": "Who we are",
@@ -239,6 +239,12 @@ window.CG_QA = [
 "q": "How do I get money to Israel?",
 "a": "Through Bank Hapoalim's foreign residents department, which walks you through opening an account. If you already have an Israeli bank account, you don't need another. First you send the bank the right documents (American citizens need a few extra), then the channel opens and the money comes in. Once it's in Israel and everything is agreed, it's a normal purchase: you pay the builder through our law firm, following the lawyer's instructions. Exchange rates and financing are between you and the bank.",
 "k": "money transfer abroad bank account open send funds"
+},
+{
+"c": "The process",
+"q": "I live abroad. Can I sign without flying to Israel?",
+"a": "Yes. You sign once your money is in Israel and everything is agreed, after you've seen every step, every expected tax and everything that will happen in the process. If you can't fly in, you sign remotely, with a power of attorney from the Israeli embassy. Our law firm, Evyatar Himi, is beside you the whole way: they check every contract and explain everything in plain English. One signing day, everyone together.",
+"k": "sign remotely abroad fly travel come to israel power of attorney embassy signing day without flying"
 },
 {
 "c": "The process",

@@ -3,7 +3,7 @@
    No live chat and no calls at odd hours. */
 (function () {
   if (window.cgChatOpen) return;
-  var V = '20261111c';
+  var V = '20261111d';
   var STOP = 'a an and are as at be but by can do does for from get got have how i if in is it its me my of on or our so that the their them there they this to was we what when where which who why will with would you your yours im ive id please tell know about'.split(' ');
   var state = { asked: [] };
   var ref = (function () { try { var r = new URLSearchParams(location.search).get('ref'); if (r) localStorage.setItem('cg_ref', r.slice(0, 80)); return r || localStorage.getItem('cg_ref') || ''; } catch (e) { return ''; } })();
@@ -18,10 +18,10 @@
   var panel = document.createElement('div');
   panel.id = 'cgc-panel'; panel.className = 'cgc-panel'; panel.hidden = true; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'false'); panel.setAttribute('aria-labelledby', 'cgc-title');
   panel.innerHTML =
-    '<div class="cgc-head"><div><b id="cgc-title">Ask us anything</b><span>We answer from our Questions &amp; Answers, and a real person follows up.</span></div><button type="button" class="cgc-x" aria-label="Close">×</button></div>' +
+    '<div class="cgc-head"><div><b id="cgc-title">Ask us anything</b><span>Answers right away. No details needed.</span></div><button type="button" class="cgc-x" aria-label="Close">×</button></div>' +
     '<div class="cgc-log" id="cgc-log" aria-live="polite"></div>' +
-    '<form class="cgc-form" id="cgc-askform" autocomplete="off"><label class="cgc-label" for="cgc-q">Your question</label><div class="cgc-ask"><input id="cgc-q" type="text" maxlength="300" placeholder="For example: is my deposit safe?"><button class="cgc-send" type="submit">Ask</button></div>' +
-    '<button type="button" class="cgc-link" id="cgc-leave">Leave your question for our team</button></form>';
+    '<form class="cgc-form" id="cgc-askform" autocomplete="off"><label class="cgc-label" for="cgc-q">Your question</label><div class="cgc-ask"><input id="cgc-q" type="text" maxlength="300" placeholder="Ask anything…"><button class="cgc-send" type="submit">Ask</button></div>' +
+    '<button type="button" class="cgc-link" id="cgc-leave">Want us to call you back?</button></form>';
   document.body.appendChild(panel); document.body.appendChild(btn);
 
   var log = panel.querySelector('#cgc-log'), askForm = panel.querySelector('#cgc-askform'), qIn = panel.querySelector('#cgc-q');
@@ -33,7 +33,7 @@
   function words(t) {
     return String(t).toLowerCase().replace(/[^a-z0-9א-ת\s]/g, ' ').split(/\s+/).filter(function (w) { return w.length > 2 && STOP.indexOf(w) < 0; });
   }
-  function hit(w, list) { for (var i = 0; i < list.length; i++) { var x = list[i]; if (x === w || (w.length > 3 && x.length > 3 && (x.indexOf(w.slice(0, 5)) === 0 || w.indexOf(x.slice(0, 5)) === 0))) return true; } return false; }
+  function hit(w, list) { for (var i = 0; i < list.length; i++) { var x = list[i]; if (x === w || (w.length > 4 && x.length > 4 && (x.indexOf(w.slice(0, 5)) === 0 || w.indexOf(x.slice(0, 5)) === 0))) return true; } return false; }
   function search(text) {
     var qw = words(text); if (!qw.length) return [];
     return (window.CG_QA || []).map(function (x, i) {
@@ -56,14 +56,14 @@
       var r = search(text);
       track('chat_question', { question: text.slice(0, 200), matched: r.length ? window.CG_QA[r[0].i].q : null });
       if (!r.length) {
-        add('I don\'t have an answer to that one yet. Leave your question and your WhatsApp number, and our team will get back to you at a time that suits you.');
-        showLeave(text); return;
+        var no = add('I don\'t have an answer to that one yet. You can ask me something else, or <button type="button" class="cgc-link cgc-more">want us to call you back?</button> Our team will answer you at a time that suits you.');
+        no.querySelector('.cgc-more').onclick = function () { showLeave(text); }; return;
       }
       var x = window.CG_QA[r[0].i];
       add('<b class="cgc-q">' + esc(x.q) + '</b>' + esc(x.a));
       var rel = r.slice(1, 3).map(function (z) { return z.i; });
       if (rel.length) { add('Related questions:'); chips(rel); }
-      var more = add('Want a person to follow up? <button type="button" class="cgc-link cgc-more">Leave your WhatsApp number</button> and we\'ll get back to you at a time that suits you.');
+      var more = add('Ask me anything else, or <button type="button" class="cgc-link cgc-more">want us to call you back?</button>');
       more.querySelector('.cgc-more').onclick = function () { showLeave(text); };
     });
   }
@@ -71,16 +71,17 @@
     if (log.querySelector('#cgc-leaveform')) { var t = log.querySelector('#cgc-lq'); if (question && !t.value) t.value = question; log.querySelector('#cgc-ln').focus(); return; }
     var f = document.createElement('form'); f.id = 'cgc-leaveform'; f.className = 'cgc-form cgc-msg'; f.noValidate = true;
     f.style.cssText = 'max-width:100%;border:1px solid #E8E8ED;background:#FFFFFF;padding:12px';
-    f.innerHTML = '<b>Leave your question</b><p class="cgc-fine" style="font-size:13px">We get back to you on WhatsApp at a time that suits you. No calls at odd hours. Your details go only to our team.</p>' +
-      '<label class="cgc-label" for="cgc-ln">Your name</label><input id="cgc-ln" type="text" autocomplete="name" maxlength="120">' +
-      '<label class="cgc-label" for="cgc-lw">Your WhatsApp number, with country code</label><input id="cgc-lw" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 212 555 0100" maxlength="40">' +
+    f.innerHTML = '<b>Want us to call you back?</b><p class="cgc-fine" style="font-size:13px">Leave your WhatsApp number and we\'ll get back to you at a time that suits you. No calls at odd hours. Both details are optional, and they go only to our team.</p>' +
+      '<label class="cgc-label" for="cgc-ln">Your name <span class="cgc-opt">(optional)</span></label><input id="cgc-ln" type="text" autocomplete="name" maxlength="120">' +
+      '<label class="cgc-label" for="cgc-lw">Your WhatsApp number, with country code <span class="cgc-opt">(optional)</span></label><input id="cgc-lw" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 212 555 0100" maxlength="40">' +
       '<label class="cgc-label" for="cgc-lq">Your question</label><textarea id="cgc-lq" maxlength="1500"></textarea>' +
       '<div class="cgc-hp" aria-hidden="true"><label for="cgc-lweb">Website</label><input id="cgc-lweb" type="text" tabindex="-1" autocomplete="off"></div>' +
-      '<p class="cgc-err" id="cgc-lerr" role="alert" hidden></p><button class="cgc-gold" type="submit">Send. We\'ll call you back</button>';
+      '<p class="cgc-err" id="cgc-lerr" role="alert" hidden></p><button class="cgc-gold" type="submit">Send</button><button type="button" class="cgc-link cgc-cancel">No thanks, keep asking</button>';
     log.appendChild(f);
     f.querySelector('#cgc-lq').value = question || state.asked.slice(-3).join(' / ');
     f.querySelector('#cgc-ln').focus();
     log.scrollTop = log.scrollHeight;
+    f.querySelector('.cgc-cancel').onclick = function () { f.remove(); qIn.focus(); };
     f.addEventListener('submit', function (e) {
       e.preventDefault();
       var err = f.querySelector('#cgc-lerr'), b = f.querySelector('.cgc-gold');
@@ -88,7 +89,7 @@
         website: f.querySelector('#cgc-lweb').value, page: location.pathname, ref: ref };
       err.hidden = true;
       if (!data.question) { err.textContent = 'Please write your question.'; err.hidden = false; f.querySelector('#cgc-lq').focus(); return; }
-      if (!/^\+?[\d\s().-]{8,}$/.test(data.whatsapp)) { err.textContent = 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.'; err.hidden = false; f.querySelector('#cgc-lw').focus(); return; }
+      if (data.whatsapp && !/^\+?[\d\s().-]{8,}$/.test(data.whatsapp)) { err.textContent = 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.'; err.hidden = false; f.querySelector('#cgc-lw').focus(); return; }
       b.disabled = true; b.textContent = 'Sending…';
       var ctrl = window.AbortController ? new AbortController() : null; var timer = setTimeout(function () { ctrl && ctrl.abort(); }, 15000);
       fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: ctrl && ctrl.signal })
@@ -97,11 +98,11 @@
           clearTimeout(timer);
           if (j.ok) {
             track('chat_inquiry_sent', { page: location.pathname, ref: ref || null });
-            f.outerHTML = '<div class="cgc-msg cgc-ok"><b>Thank you' + (data.full_name ? ', ' + esc(data.full_name.split(' ')[0]) : '') + '.</b> We have your question. Someone from our team will message you on WhatsApp at a time that suits you, as soon as possible.</div>';
+            f.outerHTML = '<div class="cgc-msg cgc-ok"><b>Thank you' + (data.full_name ? ', ' + esc(data.full_name.split(' ')[0]) : '') + '.</b> We have your question. ' + (data.whatsapp ? 'Someone from our team will message you on WhatsApp at a time that suits you, as soon as possible.' : 'Without a number we can\'t call you back, but it helps us improve our answers. Keep asking anything.') + '</div>';
             log.scrollTop = log.scrollHeight; return;
           }
           if (j.status === 404 || j.status >= 500) throw new Error('down');
-          err.textContent = j.error || 'Something went wrong. Please try again.'; err.hidden = false; b.disabled = false; b.textContent = 'Send. We\'ll call you back';
+          err.textContent = j.error || 'Something went wrong. Please try again.'; err.hidden = false; b.disabled = false; b.textContent = 'Send';
         })
         .catch(function () {
           clearTimeout(timer);
@@ -113,7 +114,7 @@
   var started = false;
   function start() {
     if (started) return; started = true;
-    add('Hi! Ask me anything about buying with a Kahila. I answer from our Questions &amp; Answers, and if you\'d like a person to follow up, leave your WhatsApp number and we\'ll get back to you at a time that suits you.');
+    add('Hi! Ask me anything about buying with a Kahila and I\'ll answer right away. No details needed.');
     loadQA(function () {
       var most = (window.CG_QA_MOST || []).slice(0, 4), idx = [];
       most.forEach(function (q) { (window.CG_QA || []).forEach(function (x, i) { if (x.q === q) idx.push(i); }); });
@@ -123,7 +124,7 @@
   function open(q) {
     panel.hidden = false; document.documentElement.classList.add('cgc-open'); btn.setAttribute('aria-expanded', 'true');
     start(); track('chat_opened', { page: location.pathname });
-    if (q) { answer(q); showLeave(q); } else setTimeout(function () { qIn.focus(); }, 30);
+    if (q) { answer(q); setTimeout(function () { showLeave(q); }, 60); } else setTimeout(function () { qIn.focus(); }, 30);
   }
   function close() { panel.hidden = true; document.documentElement.classList.remove('cgc-open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); }
   window.cgChatOpen = open;

@@ -54,9 +54,19 @@ db.exec(`CREATE TABLE IF NOT EXISTS members (
 db.exec(`CREATE TABLE IF NOT EXISTS inquiries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at TEXT NOT NULL,
-  full_name TEXT, whatsapp TEXT NOT NULL, question TEXT NOT NULL,
+  full_name TEXT, whatsapp TEXT, question TEXT NOT NULL,
   page TEXT, ref TEXT, ip TEXT, status TEXT NOT NULL DEFAULT 'new'
 )`);
+// Older installs required a WhatsApp number on inquiries; it is optional now.
+if (db.prepare("SELECT 1 FROM pragma_table_info('inquiries') WHERE name='whatsapp' AND \"notnull\"=1").get()) {
+  db.exec(`BEGIN;
+    ALTER TABLE inquiries RENAME TO inquiries_old;
+    CREATE TABLE inquiries (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL, full_name TEXT, whatsapp TEXT,
+      question TEXT NOT NULL, page TEXT, ref TEXT, ip TEXT, status TEXT NOT NULL DEFAULT 'new');
+    INSERT INTO inquiries SELECT id, created_at, full_name, whatsapp, question, page, ref, ip, status FROM inquiries_old;
+    DROP TABLE inquiries_old;
+    COMMIT;`);
+}
 db.exec(`CREATE TABLE IF NOT EXISTS qa_opens (question TEXT PRIMARY KEY, opens INTEGER NOT NULL DEFAULT 0, updated_at TEXT)`);
 
 const now = () => new Date().toISOString();
@@ -311,16 +321,16 @@ app.post('/api/inquiry', (req, res) => {
   if (clean(b.website)) return res.json({ ok: true });
   const question = clean(String(b.question || '').replace(/\r?\n/g, ' / '), 1500);
   const name = clean(b.full_name, 120);
-  const whatsapp = normalisePhone(b.whatsapp);
+  const whatsapp = b.whatsapp ? normalisePhone(b.whatsapp) : null; // optional: visitors leave a number only if they want a call back
   if (!question) return res.status(400).json({ ok: false, error: 'Please write your question.' });
-  if (!whatsapp) return res.status(400).json({ ok: false, error: 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.' });
+  if (b.whatsapp && !whatsapp) return res.status(400).json({ ok: false, error: 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.' });
   const t = now();
   db.prepare('INSERT INTO inquiries (created_at, full_name, whatsapp, question, page, ref, ip) VALUES (?,?,?,?,?,?,?)')
     .run(t, name, whatsapp, question, clean(b.page, 200), clean(b.ref, 80), req.ip);
   if (cfg.adminEmail) {
-    const lines = [`New inquiry from ${name || 'a visitor'}`, `WhatsApp: ${whatsapp}`, `Question: ${question}`, `Page: ${clean(b.page, 200) || '-'}`,
-      `Referred by: ${clean(b.ref, 80) || '-'}`, '', 'They asked to be called back at a time that suits them. Check their time zone before calling.'];
-    sendMail(cfg.adminEmail, `New inquiry: ${name || whatsapp}`, lines.join('\n'),
+    const lines = [`New inquiry from ${name || 'a visitor'}`, `WhatsApp: ${whatsapp || 'not given (no call back possible)'}`, `Question: ${question}`, `Page: ${clean(b.page, 200) || '-'}`,
+      `Referred by: ${clean(b.ref, 80) || '-'}`, '', whatsapp ? 'They asked to be called back at a time that suits them. Check their time zone before calling.' : 'No number left: this is a question our answers did not cover.'];
+    sendMail(cfg.adminEmail, `New inquiry: ${name || whatsapp || 'question only'}`, lines.join('\n'),
       emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(lines.join('\n'))}</pre>`))
       .catch((e) => console.error('inquiry mail error:', e.message));
   }

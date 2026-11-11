@@ -44,3 +44,5 @@
 }
 @media (prefers-reduced-motion: reduce) { .cgc-btn { transition: none; } }
 @media print { .cgc-btn, .cgc-panel { display: none !important; } }
+.cgc-opt { font-weight: 400; color: #6E6E73; }
+.cgc-cancel { align-self: center; margin-top: 2px; }
