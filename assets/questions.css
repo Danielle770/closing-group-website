@@ -1,0 +1,53 @@
+/* Questions & Answers page: black, gold accents */
+.qa-page { background: #0A0A0A; color: #F5F5F7; }
+.qa-wrap { max-width: 900px; margin: 0 auto; padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px)); }
+.qa-hero { padding-block: 72px 24px; }
+.qa-kicker { display: block; font-size: 14px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #D4AF37; margin-bottom: 14px; }
+.qa-hero h1 { margin: 0; font-size: 56px; line-height: 1.06; color: #FFFFFF; text-wrap: balance; }
+.qa-lead { margin: 18px 0 0; max-width: 680px; font-size: 19px; line-height: 1.55; color: #C7C7CC; }
+.qa-search-label { display: block; margin: 34px 0 8px; font-size: 15px; font-weight: 600; color: #F5F5F7; }
+.qa-search { width: 100%; padding: 16px 18px; font: 18px/1.3 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; border-radius: 14px; border: 1px solid #D4AF37; background: #161617; color: #F5F5F7; }
+.qa-search::placeholder { color: #8E8E93; }
+.qa-search:focus { outline: 3px solid rgba(212,175,55,.45); outline-offset: 2px; }
+.qa-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.qa-chip { min-height: 40px; border: 1px solid #3A3A3C; background: #161617; color: #F5F5F7; border-radius: 999px; padding: 0 15px; font: 500 14px/1 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; cursor: pointer; }
+.qa-chip[aria-pressed="true"] { background: #D4AF37; border-color: #D4AF37; color: #0A0A0A; font-weight: 700; }
+.qa-body { padding-block: 16px 80px; }
+.qa-most { border: 1px solid #D4AF37; border-radius: 18px; padding: 20px 22px; margin-bottom: 26px; background: #14120B; }
+.qa-most h2 { margin: 0 0 8px; font-family: inherit !important; font-size: 14px !important; font-weight: 700 !important; letter-spacing: .1em !important; text-transform: uppercase; color: #D4AF37; }
+.qa-most ol { margin: 0; padding: 0; list-style: none; counter-reset: m; }
+.qa-most li { counter-increment: m; border-bottom: 1px solid #262626; }
+.qa-most li:last-child { border-bottom: 0; }
+.qa-most button { width: 100%; display: flex; gap: 10px; text-align: left; background: none; border: 0; color: #F5F5F7; font: 500 17px/1.4 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; padding: 11px 0; cursor: pointer; }
+.qa-most button::before { content: counter(m) "."; color: #D4AF37; font-weight: 700; min-width: 1.4em; }
+.qa-most button:hover { color: #F3D48A; }
+.qa-count { margin: 0 0 6px; font-size: 14px; color: #8E8E93; }
+.qa-cat { margin: 28px 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #D4AF37; }
+.qa-card { background: #161617; border: 1px solid #2C2C2E; border-radius: 16px; margin: 0 0 10px; overflow: hidden; }
+.qa-card[open] { border-color: rgba(212,175,55,.55); }
+.qa-card summary { cursor: pointer; padding: 17px 52px 17px 18px; font-size: 17px; font-weight: 600; line-height: 1.4; list-style: none; position: relative; }
+.qa-card summary::-webkit-details-marker { display: none; }
+.qa-card summary::after { content: "+"; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 400; color: #D4AF37; }
+.qa-card[open] summary::after { content: "−"; }
+.qa-card summary:focus-visible { outline: 3px solid #D4AF37; outline-offset: -3px; border-radius: 16px; }
+.qa-a { padding: 0 18px 18px; font-size: 16px; line-height: 1.65; color: #E8E8ED; }
+.qa-a p { margin: 0 0 14px; }
+.qa-a .qa-ask { background: none; border: 1px solid #D4AF37; color: #F3D48A; border-radius: 999px; min-height: 40px; padding: 0 16px; font: 600 14px/1 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; cursor: pointer; }
+.qa-a .qa-ask:hover { background: #D4AF37; color: #0A0A0A; }
+.qa-empty { text-align: center; color: #A1A1A6; padding: 32px 0; font-size: 17px; }
+.qa-still { margin-top: 44px; text-align: center; border-top: 1px solid #262626; padding-top: 44px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.qa-still h2 { margin: 0; font-size: 36px; color: #FFFFFF; }
+.qa-still p { margin: 0; max-width: 520px; font-size: 17px; line-height: 1.55; color: #C7C7CC; }
+.qa-still .tcg-btn { border: 0; cursor: pointer; padding: 0 28px; min-height: 52px; border-radius: 999px; font-size: 17px; display: inline-flex; align-items: center; }
+.qa-sources { margin: 48px 0 0; font-size: 13px; line-height: 1.6; color: #8E8E93; }
+.qa-sources b { color: #C7C7CC; }
+@media (max-width: 734px) {
+  .qa-hero { padding-block: 44px 16px; }
+  .qa-hero h1 { font-size: 38px !important; }
+  .qa-still h2 { font-size: 28px !important; }
+}
+/* Override older global heading and section rules */
+.qa-page .qa-cat { font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif !important; font-size: 13px !important; font-weight: 700 !important; line-height: 1.3 !important; letter-spacing: .1em !important; }
+.qa-page .qa-hero { padding-top: 72px !important; padding-bottom: 24px !important; }
+.qa-page .qa-body { padding-top: 16px !important; padding-bottom: 80px !important; }
+@media (max-width: 734px) { .qa-page .qa-hero { padding-top: 44px !important; padding-bottom: 16px !important; } }
