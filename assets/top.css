@@ -90,3 +90,33 @@ header.cg-top { position: static !important; top: auto !important; z-index: auto
 footer { background: #0A0A0A !important; color: #A1A1A6 !important; border-top: 0 !important; }
 footer a { color: #D2D2D7 !important; }
 footer p, footer span { color: #A1A1A6; }
+
+/* Group saving on the Netanya page */
+.k-group-saving { margin-top: 28px; padding: 22px 24px; border: 1px solid #D4AF37; border-radius: 18px; background: rgba(212,175,55,.08); display: flex; flex-direction: column; gap: 6px; }
+.k-gs-label { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #D4AF37; }
+.k-gs-big { margin: 0; font-size: 22px; line-height: 1.35; color: #F5F5F7; }
+.k-gs-big b { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: 40px; color: #F3D48A; display: block; line-height: 1.1; }
+.k-gs-per { margin: 0; font-size: 17px; color: #D2D2D7; }
+.k-gs-per b { color: #FFFFFF; }
+.k-gs-fine { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: #A1A1A6; }
+
+/* Back button + community switcher, under the top bar */
+.cg-sub { background: #FFFFFF; border-bottom: 1px solid var(--cg-line); }
+.cg-sub-in { max-width: 1240px; margin: 0 auto; padding: 10px max(22px, env(safe-area-inset-right, 0px)) 10px max(22px, env(safe-area-inset-left, 0px)); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; }
+.cg-back { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--cg-ink); border-radius: 999px; background: #FFFFFF; color: var(--cg-ink); font: 600 15px/1 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; cursor: pointer; text-decoration: none; }
+.cg-back:hover { background: #F5F5F7; }
+.cg-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cg-switch > span { font-size: 14px; font-weight: 600; color: var(--cg-ink-2); margin-right: 2px; }
+.cg-switch a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--cg-ink); border-radius: 999px; color: var(--cg-ink) !important; text-decoration: none; font-size: 15px; font-weight: 600; white-space: nowrap; }
+.cg-switch a:hover { background: #F5F5F7; }
+.cg-switch a[aria-current="page"] { background: var(--cg-gold); border-color: var(--cg-gold); color: #0A0A0A !important; }
+.cg-switch-foot { background: #FFFFFF; padding: 32px 22px; border-top: 1px solid var(--cg-line); }
+.cg-switch-foot .cg-switch { max-width: 1100px; margin: 0 auto; justify-content: center; }
+@media (max-width: 600px) {
+  .cg-sub-in { gap: 8px 6px; justify-content: flex-start; padding-top: 8px; padding-bottom: 10px; }
+  .cg-sub .cg-switch { display: contents; }
+  .cg-sub .cg-switch > span { order: 0; flex: 1 0 auto; text-align: right; font-size: 13px; }
+  .cg-sub-in::after { content: ""; order: 0; flex-basis: 100%; height: 0; }
+  .cg-sub .cg-back { order: -1; min-height: 36px; padding: 0 13px; font-size: 14px; }
+  .cg-sub .cg-switch a { order: 1; min-height: 36px; padding: 0 9px; font-size: 12.5px; letter-spacing: -.01em; }
+}
