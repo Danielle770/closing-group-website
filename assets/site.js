@@ -1,6 +1,40 @@
 // The Closing Group — sign-up forms.
-// 1) POST /api/join  2) if a WhatsApp code was sent, show a code box  3) POST /api/verify-whatsapp
+// 1) POST /api/join  2) show the welcome at once (no email link to click)  3) WhatsApp code box only if a code was sent
 (function () {
+  // Referral: ?ref=<leader> on any page is remembered and sent with the sign-up
+  var REF = (function () {
+    try { var r = new URLSearchParams(location.search).get("ref"); if (r) localStorage.setItem("cg_ref", r.slice(0, 80)); return r || localStorage.getItem("cg_ref") || ""; }
+    catch (e) { return ""; }
+  })();
+  var KAHILA = { netanya: "Netanya", center: "Center", jerusalem: "Jerusalem" };
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+  function welcomeHTML(area, firstName) {
+    var k = KAHILA[area];
+    var head = "You're in! Welcome to The Closing Group Israel" + (k ? " — and to your " + k + " Kahila!" : "!");
+    var deal = area === "netanya"
+      ? "<p><b>We're putting together a group to buy 9 apartments in Netanya — at the builder's cost, below the list price.</b> Our goal is to save roughly ₪390,000–₪488,000 on a regular apartment. Parking and storage are included.</p>"
+      : "<p><b>We're gathering families for a group in " + (k ? "the " + k + " area" : "your area") + ".</b> When a builder agrees to sell his last finished apartments at his cost, you'll be among the first to know.</p>";
+    return '<div class="tcg-welcome" role="status" tabindex="-1">' +
+      '<p class="tcg-welcome-head"><span aria-hidden="true">🎉 </span>' + esc(head) + "</p>" +
+      (firstName ? "<p>Good to have you, " + esc(firstName) + ". You're one of the first people in — and that's a good place to be. Here's what happens next:</p>" : "<p>You're one of the first people in — and that's a good place to be. Here's what happens next:</p>") +
+      deal +
+      "<p><b>You don't pay anything now, and you don't commit to anything.</b> When the group opens, we'll show you the real apartments, the real prices and the fair-price check. If you choose one, your ₪50,000 deposit goes straight into our partner law firm's trust account — never to us. Buyers pay no broker fee and no legal fee; the builder pays.</p>" +
+      "<p><b>What you need to do now: nothing.</b> We'll message you the moment there's news — when the builder agrees, when the group opens, when the last apartments are left. One message at a time, only when it matters.</p>" +
+      '<p>Questions? Tap the binoculars <span aria-hidden="true">🔭</span> at the bottom of the page and ask anything.</p>' +
+      '<p class="tcg-welcome-sign">Welcome aboard,<br>Ram &amp; The Closing Group</p></div>';
+  }
+  function showWelcome(form, area, firstName, returning) {
+    var box = document.createElement("div");
+    box.innerHTML = returning
+      ? '<div class="tcg-welcome" role="status" tabindex="-1"><p class="tcg-welcome-head">Welcome back' + (firstName ? ", " + esc(firstName) : "") + "! You're already in" + (KAHILA[area] ? " the " + KAHILA[area] + " Kahila" : "") + ".</p><p>We've updated your details. We'll message you the moment there's real news.</p></div>"
+      : welcomeHTML(area, firstName);
+    var el = box.firstChild;
+    form.parentNode.replaceChild(el, form);
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    try { window.posthog && window.posthog.capture && window.posthog.capture("kahila_joined", { kahila: area, ref: REF || null, returning: !!returning }); } catch (e) {}
+  }
+
   function fieldName(input) {
     if (input.name) return input.name;
     var label = input.closest("label");
@@ -11,6 +45,7 @@
     if (text.indexOf("name") > -1) return "full_name";
     if (text.indexOf("country") > -1) return "country_city";
     if (text.indexOf("community") > -1) return "community";
+    if (text.indexOf("sent you") > -1) return "referred_by";
     return "field";
   }
 
@@ -47,7 +82,7 @@
       var code = input.value.replace(/\D/g, "");
       if (code.length < 4) { message(form, "Please enter the code from WhatsApp."); return; }
       post("/api/verify-whatsapp", { email: email, code: code }).then(function (j) {
-        if (j.ok) { box.remove(); message(form, "WhatsApp verified. Last step: click the link we emailed you, and you're in the kahila.", true); }
+        if (j.ok) { box.remove(); showWelcome(form, form.getAttribute("data-area") || "home", "", false); }
         else message(form, j.error || "That code did not work. Please try again.");
       }).catch(function () { message(form, "Connection problem. Please try again."); });
     });
@@ -69,7 +104,7 @@
 
     function submit(e) {
       if (e) e.preventDefault();
-      var data = { area: form.getAttribute("data-area") || "home", page: location.pathname };
+      var data = { area: form.getAttribute("data-area") || "home", page: location.pathname, ref: REF };
       form.querySelectorAll("input").forEach(function (i) {
         if (i.closest(".tcg-code")) return;
         data[fieldName(i)] = i.type === "checkbox" ? i.checked : i.value.trim();
@@ -82,13 +117,12 @@
         .then(function (j) {
           if (j.status === 404 || j.status === 502 || j.status === 503) { message(form, "Registration opens very soon. Please check back in a few days."); return; }
           if (!j.ok) { message(form, j.error || "Something went wrong. Please try again."); return; }
+          var first = (data.full_name || "").split(" ")[0];
           if (j.whatsapp === "sent") {
-            message(form, "Almost there. We sent a code to your WhatsApp and a link to your email.", true);
+            message(form, "You're in! One optional extra: enter the code we sent to your WhatsApp.", true);
             showCodeStep(form, data.email);
-          } else if (j.emailVerified) {
-            message(form, "You're already in the kahila. We've updated your details.", true);
           } else {
-            message(form, "Almost there. Click the link we sent to your email, and you're in the kahila.", true);
+            showWelcome(form, data.area, first, j.isNew === false);
           }
         })
         .catch(function () { message(form, "Connection problem. Please try again."); })

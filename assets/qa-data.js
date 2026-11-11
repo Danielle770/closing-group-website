@@ -231,7 +231,7 @@ window.CG_QA = [
 {
 "c": "The process",
 "q": "What happens after I join?",
-"a": "You join free on the website — name, email, WhatsApp, where you're from. We verify your email and WhatsApp. When your kahila opens, you choose your apartment and place the ₪50,000 deposit into the law firm's trust account. Once the group is full, we negotiate one price with the builder, then everyone visits, signs their own contract on the same day, and gets the keys.",
+"a": "You join free on the website (name, email and WhatsApp; where you're from is optional), and you're in straight away. When your kahila opens, you choose your apartment and place the ₪50,000 deposit into the law firm's trust account. Once the group is full, we negotiate one price with the builder, then everyone visits, signs their own contract on the same day, and gets the keys.",
 "k": "after join what happens next steps process"
 },
 {

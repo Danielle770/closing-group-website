@@ -140,3 +140,12 @@ footer p, footer span { color: #A1A1A6; }
 .cg-firm-note { margin: 18px 0 0; font-size: 14px; line-height: 1.5; color: #A1A1A6; }
 @media (max-width: 860px) { .cg-firm { grid-template-columns: 1fr; padding: 28px 22px; } .cg-firm-title { font-size: 30px !important; } }
 .cg-six .tcg-step:last-child p { font-family: inherit !important; font-style: normal !important; font-size: 16px !important; color: #F3D48A !important; }
+
+/* Welcome, shown the moment someone joins */
+.tcg-welcome { background: #FFFFFF; color: #1D1D1F; border: 2px solid #D4AF37; border-radius: 20px; padding: 26px 24px; display: flex; flex-direction: column; gap: 12px; text-align: left; font-size: 16px; line-height: 1.6; }
+.tcg-welcome:focus { outline: none; }
+.tcg-welcome:focus-visible { outline: 3px solid #8A6A12; outline-offset: 3px; }
+.tcg-welcome p { margin: 0; color: #1D1D1F; }
+.tcg-welcome b { color: #0A0A0A; }
+.tcg-welcome-head { font-family: "Newsreader", Georgia, serif; font-size: 26px !important; line-height: 1.2 !important; color: #0A0A0A !important; }
+.tcg-welcome-sign { color: #424245 !important; }

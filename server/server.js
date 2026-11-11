@@ -51,6 +51,9 @@ db.exec(`CREATE TABLE IF NOT EXISTS members (
   email_token TEXT, unsubscribe_token TEXT NOT NULL
 )`);
 
+for (const col of ['ref', 'referred_by']) {
+  if (!db.prepare("SELECT 1 FROM pragma_table_info('members') WHERE name=?").get(col)) db.exec(`ALTER TABLE members ADD COLUMN ${col} TEXT`);
+}
 db.exec(`CREATE TABLE IF NOT EXISTS inquiries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at TEXT NOT NULL,
@@ -141,12 +144,36 @@ async function sendVerifyEmail(m) {
 <p style="font-size:14px;color:#6E6E73;line-height:1.5">If you didn't sign up, you can ignore this email.</p>`, m.consent_alerts ? unsub : null));
 }
 
+// Welcome: the same words the member sees on screen. Goes out once email sending works.
+async function sendWelcomeEmail(m) {
+  const k = { netanya: 'Netanya', center: 'Center', jerusalem: 'Jerusalem' }[m.area];
+  const unsub = m.consent_alerts ? `${cfg.siteUrl}/api/unsubscribe?token=${m.unsubscribe_token}` : null;
+  const first = m.full_name ? m.full_name.split(' ')[0] : '';
+  const deal = m.area === 'netanya'
+    ? "We're putting together a group to buy 9 apartments in Netanya — at the builder's cost, below the list price. Our goal is to save roughly ₪390,000–₪488,000 on a regular apartment. Parking and storage are included."
+    : `We're gathering families for a group in ${k ? 'the ' + k + ' area' : 'your area'}. When a builder agrees to sell his last finished apartments at his cost, you'll be among the first to know.`;
+  const paras = [
+    `You're one of the first people in — and that's a good place to be. Here's what happens next:`,
+    deal,
+    "You don't pay anything now, and you don't commit to anything. When the group opens, we'll show you the real apartments, the real prices and the fair-price check. If you choose one, your ₪50,000 deposit goes straight into our partner law firm's trust account — never to us. Buyers pay no broker fee and no legal fee; the builder pays.",
+    "What you need to do now: nothing. We'll message you the moment there's news — when the builder agrees, when the group opens, when the last apartments are left. One message at a time, only when it matters.",
+    'Questions? Just reply to this email, or tap the binoculars on the website and ask anything.',
+  ];
+  const head = `You're in! Welcome to The Closing Group Israel${k ? ` — and to your ${k} Kahila!` : '!'}`;
+  const text = `${first ? `Hi ${first},\n\n` : ''}${head}\n\n${paras.join('\n\n')}\n\nWelcome aboard,\nRam & The Closing Group\n${cfg.siteUrl}${unsub ? `\n\nStop alerts: ${unsub}` : ''}`;
+  const html = emailLayout(`<h1 style="font-family:Georgia,serif;font-weight:500;font-size:28px;line-height:1.2;margin:0 0 18px">${esc(head)}</h1>
+${paras.map((p, i) => `<p style="font-size:16px;line-height:1.6;margin:0 0 14px">${i === 1 || i === 2 || i === 3 ? '<b>' + esc(p.split('. ')[0]) + '.</b> ' + esc(p.split('. ').slice(1).join('. ')) : esc(p)}</p>`).join('\n')}
+<p style="margin:22px 0 0"><a href="${cfg.siteUrl}/${k ? m.area + '/' : ''}" style="display:inline-block;background:#D4AF37;color:#0A0A0A;text-decoration:none;padding:13px 24px;border-radius:999px;font-weight:700">See your Kahila</a></p>
+<p style="font-size:16px;line-height:1.6;margin:22px 0 0">Welcome aboard,<br>Ram &amp; The Closing Group</p>`, unsub);
+  await sendMail(m.email, k ? `Welcome to your ${k} Kahila · The Closing Group` : 'Welcome to The Closing Group', text, html);
+}
+
 async function notifyAdmin(m, isNew) {
   if (!cfg.adminEmail) return;
   const lines = [
     `${isNew ? 'New member' : 'Member updated'}: ${m.full_name || '-'}`,
     `Email: ${m.email}`, `WhatsApp: ${m.whatsapp || '-'}`, `Area: ${AREAS[m.area] || m.area}`,
-    `From: ${m.country_city || '-'}`, `Community: ${m.community || '-'}`, `Alerts consent: ${m.consent_alerts ? 'yes' : 'no'}`,
+    `From: ${m.country_city || '-'}`, `Community: ${m.community || '-'}`, `Who sent them: ${m.referred_by || '-'}`, `Referral link: ${m.ref || '-'}`, `Alerts consent: ${m.consent_alerts ? 'yes' : 'no'}`,
   ];
   await sendMail(cfg.adminEmail, `${isNew ? 'New kahila member' : 'Kahila member updated'}: ${m.full_name || m.email}`, lines.join('\n'),
     emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(lines.join('\n'))}</pre>`));
@@ -218,14 +245,16 @@ app.post('/api/join', async (req, res) => {
         country_city=COALESCE(NULLIF(?, ''), country_city), community=COALESCE(NULLIF(?, ''), community),
         consent_terms_at=?, consent_alerts=?, consent_alerts_at=CASE WHEN ?=1 THEN ? ELSE consent_alerts_at END, consent_ip=?, consent_version=?,
         email_token=CASE WHEN email_verified_at IS NULL THEN ? ELSE email_token END,
+        email_verified_at=COALESCE(email_verified_at, ?), ref=COALESCE(NULLIF(?, ''), ref), referred_by=COALESCE(NULLIF(?, ''), referred_by),
         whatsapp_verified_at=CASE WHEN ? IS NOT NULL AND ? != IFNULL(whatsapp,'') THEN NULL ELSE whatsapp_verified_at END
         WHERE email=?`).run(t, area, clean(b.page, 100), clean(b.full_name, 120), whatsapp, clean(b.country_city, 120), clean(b.community, 120),
-        t, alerts, alerts, t, req.ip, CONSENT_VERSION, token(), whatsapp, whatsapp, email);
+        t, alerts, alerts, t, req.ip, CONSENT_VERSION, token(), t, clean(b.ref, 80), clean(b.referred_by, 80), whatsapp, whatsapp, email);
     } else {
       db.prepare(`INSERT INTO members (created_at, updated_at, area, page, full_name, email, whatsapp, country_city, community,
-        consent_terms_at, consent_alerts, consent_alerts_at, consent_ip, consent_version, email_token, unsubscribe_token)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(t, t, area, clean(b.page, 100), clean(b.full_name, 120), email, whatsapp,
-        clean(b.country_city, 120), clean(b.community, 120), t, alerts, alerts ? t : null, req.ip, CONSENT_VERSION, token(), token());
+        consent_terms_at, consent_alerts, consent_alerts_at, consent_ip, consent_version, email_token, unsubscribe_token, email_verified_at, ref, referred_by)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(t, t, area, clean(b.page, 100), clean(b.full_name, 120), email, whatsapp,
+        clean(b.country_city, 120), clean(b.community, 120), t, alerts, alerts ? t : null, req.ip, CONSENT_VERSION, token(), token(), t,
+        clean(b.ref, 80) || null, clean(b.referred_by, 80) || null);
     }
   } catch (e) {
     console.error('db error', e);
@@ -233,15 +262,16 @@ app.post('/api/join', async (req, res) => {
   }
 
   const m = findByEmail.get(email);
-  // Send emails in the background so the visitor never waits on the mail server
-  if (!m.email_verified_at) sendVerifyEmail(m).catch((e) => console.error('mail error:', e.message));
+  // No verification email: joining = enrolled at once. The welcome email goes in the background,
+  // so joining never waits on (or depends on) the mail server.
+  if (!existing) sendWelcomeEmail(m).catch((e) => console.error('welcome mail error:', e.message));
   notifyAdmin(m, !existing).catch((e) => console.error('admin mail error:', e.message));
 
   let wa = 'skipped';
   if (whatsappEnabled && m.whatsapp && !m.whatsapp_verified_at) {
     try { await Promise.race([startWhatsapp(m.whatsapp), new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 10000))]); wa = 'sent'; } catch (e) { console.error('whatsapp error', e.message); wa = 'failed'; }
   } else if (m.whatsapp_verified_at) wa = 'verified';
-  res.json({ ok: true, emailVerified: !!m.email_verified_at, whatsapp: wa });
+  res.json({ ok: true, emailVerified: true, isNew: !existing, whatsapp: wa });
 });
 
 app.post('/api/verify-whatsapp', async (req, res) => {
@@ -292,7 +322,7 @@ app.get('/api/admin/members.csv', (req, res) => {
   const ok = cfg.adminPassword && user === 'admin' && pass && pass.length === cfg.adminPassword.length &&
     crypto.timingSafeEqual(Buffer.from(pass), Buffer.from(cfg.adminPassword));
   if (!ok) { res.set('WWW-Authenticate', 'Basic realm="The Closing Group members"'); return res.status(401).send('Login required'); }
-  const cols = ['created_at', 'area', 'full_name', 'email', 'whatsapp', 'country_city', 'community', 'consent_alerts', 'email_verified_at', 'whatsapp_verified_at'];
+  const cols = ['created_at', 'area', 'full_name', 'email', 'whatsapp', 'country_city', 'community', 'referred_by', 'ref', 'consent_alerts', 'email_verified_at', 'whatsapp_verified_at'];
   const q = (v) => { const s = v == null ? '' : String(v); return /^[=+\-@]/.test(s) && !/^\+\d+$/.test(s) ? `"'${s.replace(/"/g, '""')}"` : `"${s.replace(/"/g, '""')}"`; };
   const rows = db.prepare(`SELECT ${cols.join(',')} FROM members ORDER BY created_at DESC`).all();
   res.set('Content-Type', 'text/csv; charset=utf-8');
