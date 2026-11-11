@@ -28,7 +28,7 @@
 
   function loadQA(cb) {
     if (window.CG_QA) return cb();
-    var s = document.createElement('script'); s.src = '/assets/qa-data.js?v=' + V; s.onload = cb; s.onerror = cb; document.head.appendChild(s);
+    var s = document.createElement('script'); s.src = document.querySelector('script[src*="chat.js"]').src.replace(/chat\.js.*$/, 'qa-data.js'); s.onload = cb; s.onerror = cb; document.head.appendChild(s);
   }
   function words(t) {
     return String(t).toLowerCase().replace(/[^a-z0-9א-ת\s]/g, ' ').split(/\s+/).filter(function (w) { return w.length > 2 && STOP.indexOf(w) < 0; });
