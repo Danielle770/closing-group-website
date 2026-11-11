@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/assets/site.css?v=20261110c">
 <link rel="stylesheet" href="/assets/refresh.css?v=20261110c">
 <style>.tcg-card-img,.tcg-panel-photo img{visibility:hidden}.tcg-card{background:linear-gradient(160deg,#3a2a17,#0b0b0c)}.tcg-panel-photo{background:linear-gradient(160deg,#5a3d1c,#14100b)}</style>
+<link rel="stylesheet" href="/assets/top.css?v=20261111a">
 </head>
 <body>
 
@@ -22,17 +23,11 @@
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', Arial, sans-serif; color: #1D1D1F; background: #FFFFFF; width: 100%; -webkit-font-smoothing: antialiased">
 
 <!-- Nav -->
-<header style="position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.72); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08)">
-<div style="max-width: 1024px; margin: 0 auto; padding: 0 22px; min-height: 52px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
-<a href="#" style="color: #F5F5F7; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: -0.01em">The Closing Group <span style="color: #A1A1A6; font-weight: 500">Israel</span></a>
-<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 13px">
-<a href="/netanya/" style="color: #D2D2D7; text-decoration: none">Netanya</a>
-<a href="/center/" style="color: #D2D2D7; text-decoration: none">Center</a>
-<a href="/jerusalem/" style="color: #D2D2D7; text-decoration: none">Jerusalem</a>
-<a href="/why-now/" style="color: #D2D2D7; text-decoration: none">Why now</a>
-<a href="/how-it-works/" style="color: #D2D2D7; text-decoration: none">How it works</a>
-<a href="#kahilot" class="tcg-navbtn">See the apartments</a>
-</nav>
+<header class="cg-top">
+<div class="cg-top-in">
+<a class="cg-logo" href="/" aria-current="page"><span class="cg-logo-mark" aria-hidden="true">CG</span>The Closing Group <span class="cg-logo-sub">Israel</span></a>
+<button type="button" class="cg-burger" aria-expanded="false" aria-controls="cg-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+<nav class="cg-nav" id="cg-menu" aria-label="Main"><a href="/netanya/">Netanya</a><a href="/center/">Center</a><a href="/jerusalem/">Jerusalem</a><a href="/why-now/">Why now</a><a href="/how-it-works/">How it works</a><a href="#kahilot" class="cg-cta">See the apartments</a></nav>
 </div>
 </header>
 
@@ -230,5 +225,6 @@
 </footer>
 </div><script src="/assets/scene.js?v=20261110c" defer></script><script src="/assets/slides.js?v=20261110c" defer></script><script src="/assets/map.js?v=20261110c" defer></script>
 <script src="/assets/site.js?v=20261110c" defer></script>
+<script src="/assets/nav.js?v=20261111a" defer></script>
 </body>
 </html>

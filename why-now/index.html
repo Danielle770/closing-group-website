@@ -42,19 +42,15 @@
 .why-cta a.btn{display:inline-flex;align-items:center;min-height:50px;padding:0 28px;border-radius:999px;background:#A8522F;color:#fff;text-decoration:none;font-weight:600;font-size:17px}
 @media(max-width:734px){.why-hero h1{font-size:46px}.why-in h2,.why-cta h2{font-size:38px}.why-sec{padding:80px 22px}}
 </style>
+<link rel="stylesheet" href="/assets/top.css?v=20261111a">
 </head>
 <body>
 <div style="background:#FFFFFF;min-height:100vh">
-<header style="position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08)">
-<div style="max-width: 1024px; margin: 0 auto; padding: 0 22px; min-height: 52px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
-<a href="/" style="color: #F5F5F7; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: -0.01em">The Closing Group <span style="color: #A1A1A6; font-weight: 500">Israel</span></a>
-<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 13px">
-<a href="/netanya/" style="color: #D2D2D7; text-decoration: none">Netanya</a>
-<a href="/center/" style="color: #D2D2D7; text-decoration: none">Center</a>
-<a href="/jerusalem/" style="color: #D2D2D7; text-decoration: none">Jerusalem</a>
-<a href="/why-now/" style="color: #D2D2D7; text-decoration: none">Why now</a>
-<a href="/how-it-works/" style="color: #D2D2D7; text-decoration: none">How it works</a>
-</nav>
+<header class="cg-top">
+<div class="cg-top-in">
+<a class="cg-logo" href="/"><span class="cg-logo-mark" aria-hidden="true">CG</span>The Closing Group <span class="cg-logo-sub">Israel</span></a>
+<button type="button" class="cg-burger" aria-expanded="false" aria-controls="cg-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+<nav class="cg-nav" id="cg-menu" aria-label="Main"><a href="/netanya/">Netanya</a><a href="/center/">Center</a><a href="/jerusalem/">Jerusalem</a><a href="/why-now/" aria-current="page">Why now</a><a href="/how-it-works/">How it works</a><a href="/#kahilot" class="cg-cta">See the apartments</a></nav>
 </div>
 </header>
 <main id="main" style="background:#fff">
@@ -94,5 +90,6 @@
 </div>
 </footer>
 </div>
+<script src="/assets/nav.js?v=20261111a" defer></script>
 </body>
 </html>

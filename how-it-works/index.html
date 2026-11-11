@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css?v=20261110c">
+<link rel="stylesheet" href="/assets/top.css?v=20261111a">
 </head>
 <body>
 
@@ -21,18 +22,12 @@
 
 <!-- Dark header -->
 <div style="position: relative; overflow: hidden; color: #F5EEE2; background: radial-gradient(900px 480px at 80% 0%, rgba(233,184,114,0.28) 0%, rgba(233,184,114,0) 60%), radial-gradient(900px 600px at 20% 120%, rgba(168,82,47,0.35) 0%, rgba(168,82,47,0) 62%), linear-gradient(180deg, #07090E 0%, #0D1119 55%, #17131A 100%)">
-<header style="max-width: 1240px; margin: 0 auto; padding: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
-<a href="/" style="text-decoration: none; color: #F5EEE2; display: flex; flex-direction: column; gap: 3px">
-<span style="font-family: 'Newsreader', Georgia, serif; font-size: 25px; font-weight: 600">The Closing Group</span>
-<span style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #E9B872; font-weight: 700">Israel · Clearing in bulk · Buying at cost</span>
-</a>
-<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 15px; font-weight: 500">
-<a href="/netanya/" style="color: #E6DED0; text-decoration: none">Netanya</a>
-<a href="/center/" style="color: #E6DED0; text-decoration: none">Center</a>
-<a href="/jerusalem/" style="color: #E6DED0; text-decoration: none">Jerusalem</a>
-<a href="/why-now/" style="color: #E6DED0; text-decoration: none">Why now</a>
-<a href="/netanya/#join" style="background: #E9B872; color: #1A140D; text-decoration: none; padding: 12px 24px; border-radius: 999px; font-weight: 700; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Join a kahila</a>
-</nav>
+<header class="cg-top">
+<div class="cg-top-in">
+<a class="cg-logo" href="/"><span class="cg-logo-mark" aria-hidden="true">CG</span>The Closing Group <span class="cg-logo-sub">Israel</span></a>
+<button type="button" class="cg-burger" aria-expanded="false" aria-controls="cg-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+<nav class="cg-nav" id="cg-menu" aria-label="Main"><a href="/netanya/">Netanya</a><a href="/center/">Center</a><a href="/jerusalem/">Jerusalem</a><a href="/why-now/">Why now</a><a href="/how-it-works/" aria-current="page">How it works</a><a href="/#kahilot" class="cg-cta">See the apartments</a></nav>
+</div>
 </header>
 <section style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 88px; display: flex; flex-direction: column; gap: 20px">
 <span style="font-size: 12px; letter-spacing: 0.2em; color: #E9B872; font-weight: 800">HOW IT WORKS</span>
@@ -192,5 +187,6 @@
 </div>
 </footer>
 </div><script src="/assets/site.js?v=20261110c" defer></script>
+<script src="/assets/nav.js?v=20261111a" defer></script>
 </body>
 </html>

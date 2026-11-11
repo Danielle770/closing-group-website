@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css?v=20261110e">
 <link rel="stylesheet" href="/assets/kahila.css?v=20261110e">
+<link rel="stylesheet" href="/assets/top.css?v=20261111a">
 </head>
 <body class="no-js">
 
@@ -21,17 +22,11 @@
 <div class="k-page">
 
 <!-- Thin translucent nav -->
-<header style="position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.72); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08)">
-<div style="max-width: 1024px; margin: 0 auto; padding: 0 22px; min-height: 52px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
-<a href="/" style="color: #F5F5F7; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: -0.01em">The Closing Group <span style="color: #A1A1A6; font-weight: 500">Israel</span></a>
-<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-size: 13px">
-<a href="#kahila" style="color: #D2D2D7; text-decoration: none">The kahila</a>
-<a href="#apartments" style="color: #D2D2D7; text-decoration: none">Apartments</a>
-<a href="#fairprice" style="color: #D2D2D7; text-decoration: none">Fair price</a>
-<a href="/why-now/" style="color: #D2D2D7; text-decoration: none">Why now</a>
-<a href="/how-it-works/" style="color: #D2D2D7; text-decoration: none">How it works</a>
-<a href="#join" style="background: #A8522F; color: #FFFFFF; text-decoration: none; padding: 0 16px; min-height: 32px; border-radius: 999px; font-weight: 600; display: inline-flex; align-items: center">Join</a>
-</nav>
+<header class="cg-top">
+<div class="cg-top-in">
+<a class="cg-logo" href="/"><span class="cg-logo-mark" aria-hidden="true">CG</span>The Closing Group <span class="cg-logo-sub">Israel</span></a>
+<button type="button" class="cg-burger" aria-expanded="false" aria-controls="cg-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+<nav class="cg-nav" id="cg-menu" aria-label="Main"><a href="/netanya/" aria-current="page">Netanya</a><a href="/center/">Center</a><a href="/jerusalem/">Jerusalem</a><a href="/why-now/">Why now</a><a href="/how-it-works/">How it works</a><a href="#join" class="cg-cta">Join free</a></nav>
 </div>
 </header>
 
@@ -81,7 +76,7 @@
 </section>
 
 <!-- ===== Rolling photo strip ===== -->
-<div class="k-strip" aria-label="Photos of Netanya">
+<div class="k-strip" role="region" tabindex="0" aria-label="Photos of Netanya">
 <div class="k-strip-track"><figure class="k-ph"><img src="https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=900&q=70" alt="The sea seen from the cliff-top promenade in Netanya" loading="lazy"><figcaption>The cliff-top promenade</figcaption></figure><figure class="k-ph"><img src="https://images.pexels.com/photos/8099026/pexels-photo-8099026.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Turquoise water and sandy shore below Netanya" loading="lazy"><figcaption>Minutes to the sand</figcaption></figure><figure class="k-ph"><img src="https://images.pexels.com/photos/31570354/pexels-photo-31570354.jpeg?auto=compress&cs=tinysrgb&w=900" alt="The beach and breakwater in Netanya on a sunny day" loading="lazy"><figcaption>The beaches below the esplanade</figcaption></figure><figure class="k-ph"><img src="https://images.pexels.com/photos/19400722/pexels-photo-19400722.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Netanya's coastline, beaches and seafront skyline from the air" loading="lazy"><figcaption>The seafront from above</figcaption></figure><figure class="k-ph" aria-hidden="true"><img src="https://images.unsplash.com/photo-1705601562708-eeef3d7718a0?auto=format&fit=crop&w=900&q=70" alt="" loading="lazy"><figcaption>The cliff-top promenade</figcaption></figure><figure class="k-ph" aria-hidden="true"><img src="https://images.pexels.com/photos/8099026/pexels-photo-8099026.jpeg?auto=compress&cs=tinysrgb&w=900" alt="" loading="lazy"><figcaption>Minutes to the sand</figcaption></figure><figure class="k-ph" aria-hidden="true"><img src="https://images.pexels.com/photos/31570354/pexels-photo-31570354.jpeg?auto=compress&cs=tinysrgb&w=900" alt="" loading="lazy"><figcaption>The beaches below the esplanade</figcaption></figure><figure class="k-ph" aria-hidden="true"><img src="https://images.pexels.com/photos/19400722/pexels-photo-19400722.jpeg?auto=compress&cs=tinysrgb&w=900" alt="" loading="lazy"><figcaption>The seafront from above</figcaption></figure></div>
 </div>
 
@@ -233,5 +228,6 @@
 </footer>
 </div><script src="/assets/site.js?v=20261110e" defer></script>
 <script src="/assets/kahila.js?v=20261110e" defer></script>
+<script src="/assets/nav.js?v=20261111a" defer></script>
 </body>
 </html>
