@@ -21,7 +21,7 @@ window.CG_QA = [
 {
 "c": "Who we are",
 "q": "Are you a real company?",
-"a": "The Closing Group is run by Ram Evenhaim as a licensed broker. Our partner law firm and bank are independent Israeli firms, and we'll name them here as soon as the agreements are signed. Everything is in writing before you pay anything — and your money never goes to us, it goes to the law firm's trust account.",
+"a": "The Closing Group is run by Ram Evenhaim as a licensed broker. Our partner law firm is Evyatar Himi (Ir Yamim, Netanya) and our bank is Bank Hapoalim, one of Israel's biggest banks. Both are independent of us. Everything is in writing before you pay anything — and your money never goes to us, it goes to the law firm's trust account.",
 "k": "real legit scam company registered trust"
 },
 {
@@ -87,7 +87,7 @@ window.CG_QA = [
 {
 "c": "Money & deposits",
 "q": "Where does my money go?",
-"a": "Never to us. Your deposit goes straight to our partner Israeli law firm's trust account. The rest is paid under your own sale contract with the builder, through the bank's payment vouchers. The Closing Group never holds buyers' money.",
+"a": "Never to us. Your deposit goes straight to our partner Israeli law firm's trust account. The rest is paid under your own sale contract with the builder, and our law firm confirms the exact payment route with you before you sign. The Closing Group never holds buyers' money.",
 "k": "where money go pay who receive hold"
 },
 {
@@ -119,6 +119,18 @@ window.CG_QA = [
 "q": "What if the builder goes bankrupt?",
 "a": "That's exactly what Israeli law is built for. A builder who takes more than 7% of the price before handover must give you security for your money — usually a bank guarantee or an insurance policy — for every payment you make. If the builder can't deliver, the guarantee pays you back. And your deposit never leaves the law firm's trust account in the first place.",
 "k": "bankrupt builder fails collapse guarantee safe money"
+},
+{
+"c": "Money & deposits",
+"q": "Which bank do you work with?",
+"a": "Bank Hapoalim, one of the biggest banks in Israel. Its foreign residents department walks you through opening an account, step by step. If you already have a bank account in Israel, you don't need to open another one. Once your money is in Israel, it's a normal purchase through our law firm.",
+"k": "bank hapoalim which bank account open israeli account"
+},
+{
+"c": "Money & deposits",
+"q": "Can I pay without coming to Israel?",
+"a": "Yes. Your deposit goes from abroad straight into our law firm's trust account; you don't need an Israeli account or a visit for that. For the full price, you send the bank the right documents first (Americans need a few extra), the channel opens, and the money comes to Israel. Our law firm confirms the exact route for each payment before you sign. When everything is agreed and you've seen every step, every expected tax and everything that will happen, you sign remotely with a power of attorney from the Israeli embassy.",
+"k": "pay abroad remote without coming visit fly wire transfer power of attorney embassy sign remotely"
 },
 {
 "c": "Legality & protection",
@@ -153,7 +165,7 @@ window.CG_QA = [
 {
 "c": "Legality & protection",
 "q": "Who is the law firm?",
-"a": "An independent Israeli law firm. We'll publish its name here as soon as our agreement is signed. They draft all the group contracts, handle every purchase contract with the builder, give you a checklist (taxes, amounts, transfer timeframes), and represent the buyers through to completion. You can also use your own lawyer instead — that's your choice.",
+"a": "Evyatar Himi, a law firm in Ir Yamim, Netanya. They bring 20 years in Israeli real estate, work with overseas clients every day, and have lawyers and notaries under one roof. They draft all the group contracts, handle every purchase contract with the builder, give you a checklist (taxes, amounts, transfer timeframes) and represent the buyers through to completion. Questions for the lawyer go through us, and we bring you the answer. You can also use your own lawyer instead; that's your choice.",
 "k": "law firm lawyer who name"
 },
 {
@@ -189,7 +201,7 @@ window.CG_QA = [
 {
 "c": "Fees & taxes",
 "q": "What if I need a mortgage?",
-"a": "We introduce you to a bank that can help — accounts, transfers from abroad, and mortgages. The mortgage itself is between you and the bank.",
+"a": "We introduce you to Bank Hapoalim, one of Israel's biggest banks. Its foreign residents department helps with accounts, transfers from abroad and mortgages. The mortgage itself is between you and the bank.",
 "k": "mortgage loan finance bank borrow"
 },
 {
@@ -225,7 +237,7 @@ window.CG_QA = [
 {
 "c": "The process",
 "q": "How do I get money to Israel?",
-"a": "We introduce you to a bank that can help you open an account and transfer funds from abroad. Exchange rates and financing are between you and the bank. The law firm gives you a checklist with the amounts and the timeframes for transferring.",
+"a": "Through Bank Hapoalim's foreign residents department, which walks you through opening an account. If you already have an Israeli bank account, you don't need another. First you send the bank the right documents (American citizens need a few extra), then the channel opens and the money comes in. Once it's in Israel and everything is agreed, it's a normal purchase: you pay the builder through our law firm, following the lawyer's instructions. Exchange rates and financing are between you and the bank.",
 "k": "money transfer abroad bank account open send funds"
 },
 {

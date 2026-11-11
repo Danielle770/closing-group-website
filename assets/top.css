@@ -120,3 +120,23 @@ footer p, footer span { color: #A1A1A6; }
   .cg-sub .cg-back { order: -1; min-height: 36px; padding: 0 13px; font-size: 14px; }
   .cg-sub .cg-switch a { order: 1; min-height: 36px; padding: 0 9px; font-size: 12.5px; letter-spacing: -.01em; }
 }
+
+/* Six steps (home): three across, two rows */
+.tcg-steps.cg-six { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.tcg-steps.cg-six .tcg-step:last-child { grid-column: auto; }
+@media (max-width: 734px) { .tcg-steps.cg-six { grid-template-columns: 1fr !important; } }
+
+/* Your law firm: a black box with gold accents */
+.cg-firm-wrap { margin-top: 48px; }
+.cg-firm { background: #0A0A0A; color: #F5F5F7; border: 1px solid rgba(212,175,55,.5); border-radius: 26px; padding: 36px 34px; display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr); gap: 28px 40px; text-align: left; }
+.cg-firm-kicker { display: block; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #D4AF37; margin-bottom: 10px; }
+.cg-firm-title { margin: 0; font-size: 38px !important; line-height: 1.1 !important; color: #FFFFFF; text-align: left; }
+.cg-firm-name { margin: 0 0 14px; font-size: 18px; color: #D2D2D7; }
+.cg-firm-name b { color: #F3D48A; font-size: 22px; font-family: "Newsreader", Georgia, serif; font-weight: 500; }
+.cg-firm-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.cg-firm-points li { position: relative; padding-left: 28px; font-size: 16px; line-height: 1.55; color: #C7C7CC; }
+.cg-firm-points li::before { content: "✓"; position: absolute; left: 0; top: 0; color: #D4AF37; font-weight: 700; }
+.cg-firm-points b { color: #FFFFFF; }
+.cg-firm-note { margin: 18px 0 0; font-size: 14px; line-height: 1.5; color: #A1A1A6; }
+@media (max-width: 860px) { .cg-firm { grid-template-columns: 1fr; padding: 28px 22px; } .cg-firm-title { font-size: 30px !important; } }
+.cg-six .tcg-step:last-child p { font-family: inherit !important; font-style: normal !important; font-size: 16px !important; color: #F3D48A !important; }
