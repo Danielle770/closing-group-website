@@ -94,7 +94,7 @@ window.CG_QA = [
 "c": "Money & deposits",
 "q": "Where does my deposit sit?",
 "a": "In the law firm's trust account (חשבון נאמנות). A trust account is a separate account the firm holds for clients — the money is yours, it can't be used for anything else, and it's released only when the deal completes.",
-"k": "deposit sit trust account escrow hold where"
+"k": "deposit sit trust account escrow hold where safe secure protected"
 },
 {
 "c": "Money & deposits",
@@ -106,7 +106,7 @@ window.CG_QA = [
 "c": "Money & deposits",
 "q": "Do I get my deposit back if the group doesn't close?",
 "a": "Yes. If the kahila doesn't fill and the deal doesn't happen, your deposit is returned in full, with no fee — that's in the reservation agreement you sign before you pay anything. The trust account is for holding only; nobody makes money from held money.",
-"k": "deposit back refund return guarantee close fail fill"
+"k": "deposit back refund return guarantee close fail fill safe lose"
 },
 {
 "c": "Money & deposits",

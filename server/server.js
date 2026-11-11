@@ -51,6 +51,14 @@ db.exec(`CREATE TABLE IF NOT EXISTS members (
   email_token TEXT, unsubscribe_token TEXT NOT NULL
 )`);
 
+db.exec(`CREATE TABLE IF NOT EXISTS inquiries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL,
+  full_name TEXT, whatsapp TEXT NOT NULL, question TEXT NOT NULL,
+  page TEXT, ref TEXT, ip TEXT, status TEXT NOT NULL DEFAULT 'new'
+)`);
+db.exec(`CREATE TABLE IF NOT EXISTS qa_opens (question TEXT PRIMARY KEY, opens INTEGER NOT NULL DEFAULT 0, updated_at TEXT)`);
+
 const now = () => new Date().toISOString();
 const token = () => crypto.randomBytes(24).toString('hex');
 const clean = (v, max = 200) => (typeof v === 'string' ? v.replace(/[\u0000-\u001f]/g, '').trim().slice(0, max) : '');
@@ -280,6 +288,64 @@ app.get('/api/admin/members.csv', (req, res) => {
   res.set('Content-Type', 'text/csv; charset=utf-8');
   res.set('Content-Disposition', 'attachment; filename="kahila-members.csv"');
   res.send('﻿' + [cols.join(','), ...rows.map((r) => cols.map((c) => q(r[c])).join(','))].join('\n'));
+});
+
+
+function isAdmin(req) {
+  const auth = req.get('authorization') || '';
+  const [user, pass] = Buffer.from(auth.replace(/^Basic /, ''), 'base64').toString().split(':');
+  return !!(cfg.adminPassword && user === 'admin' && pass && pass.length === cfg.adminPassword.length &&
+    crypto.timingSafeEqual(Buffer.from(pass), Buffer.from(cfg.adminPassword)));
+}
+function sendCsv(res, name, cols, rows) {
+  const q = (v) => { const s = v == null ? '' : String(v); return /^[=+\-@]/.test(s) && !/^\+\d+$/.test(s) ? `"'${s.replace(/"/g, '""')}"` : `"${s.replace(/"/g, '""')}"`; };
+  res.set('Content-Type', 'text/csv; charset=utf-8');
+  res.set('Content-Disposition', `attachment; filename="${name}"`);
+  res.send('\ufeff' + [cols.join(','), ...rows.map((r) => cols.map((c) => q(r[c])).join(','))].join('\n'));
+}
+
+// ---------- chat inquiries: name + WhatsApp + question; we call back at a time that suits them ----------
+app.post('/api/inquiry', (req, res) => {
+  const b = req.body || {};
+  if (limited('inq:' + req.ip, 6, 10 * 60e3)) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again in a few minutes.' });
+  if (clean(b.website)) return res.json({ ok: true });
+  const question = clean(String(b.question || '').replace(/\r?\n/g, ' / '), 1500);
+  const name = clean(b.full_name, 120);
+  const whatsapp = normalisePhone(b.whatsapp);
+  if (!question) return res.status(400).json({ ok: false, error: 'Please write your question.' });
+  if (!whatsapp) return res.status(400).json({ ok: false, error: 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.' });
+  const t = now();
+  db.prepare('INSERT INTO inquiries (created_at, full_name, whatsapp, question, page, ref, ip) VALUES (?,?,?,?,?,?,?)')
+    .run(t, name, whatsapp, question, clean(b.page, 200), clean(b.ref, 80), req.ip);
+  if (cfg.adminEmail) {
+    const lines = [`New inquiry from ${name || 'a visitor'}`, `WhatsApp: ${whatsapp}`, `Question: ${question}`, `Page: ${clean(b.page, 200) || '-'}`,
+      `Referred by: ${clean(b.ref, 80) || '-'}`, '', 'They asked to be called back at a time that suits them. Check their time zone before calling.'];
+    sendMail(cfg.adminEmail, `New inquiry: ${name || whatsapp}`, lines.join('\n'),
+      emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(lines.join('\n'))}</pre>`))
+      .catch((e) => console.error('inquiry mail error:', e.message));
+  }
+  res.json({ ok: true });
+});
+
+// ---------- Q&A: count which answers people open, to show a real "Most asked" list ----------
+app.post('/api/qa-event', express.text({ type: '*/*', limit: '2kb' }), (req, res) => {
+  if (limited('qa:' + req.ip, 40, 10 * 60e3)) return res.status(204).end();
+  let b = req.body; try { if (typeof b === 'string') b = JSON.parse(b); } catch { b = {}; }
+  const q = clean((b || {}).question, 200);
+  if (q.length > 5) db.prepare(`INSERT INTO qa_opens (question, opens, updated_at) VALUES (?, 1, ?)
+    ON CONFLICT(question) DO UPDATE SET opens = opens + 1, updated_at = excluded.updated_at`).run(q, now());
+  res.status(204).end();
+});
+app.get('/api/qa-top', (req, res) => {
+  const rows = db.prepare('SELECT question FROM qa_opens WHERE opens >= 3 ORDER BY opens DESC LIMIT 6').all();
+  res.set('Cache-Control', 'public, max-age=600');
+  res.json({ top: rows.map((r) => r.question) });
+});
+
+app.get('/api/admin/inquiries.csv', (req, res) => {
+  if (!isAdmin(req)) { res.set('WWW-Authenticate', 'Basic realm="The Closing Group"'); return res.status(401).send('Login required'); }
+  const cols = ['created_at', 'full_name', 'whatsapp', 'question', 'page', 'ref', 'status'];
+  sendCsv(res, 'inquiries.csv', cols, db.prepare(`SELECT ${cols.join(',')} FROM inquiries ORDER BY created_at DESC`).all());
 });
 
 app.use('/api', (req, res) => res.status(404).json({ ok: false, error: 'Not found' }));

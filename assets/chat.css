@@ -1,0 +1,46 @@
+/* Floating "Ask us anything" chat: gold binoculars, bottom right, every page */
+.cgc-btn { position: fixed; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 80; width: 62px; height: 62px; border-radius: 50%; border: 0; background: #D4AF37; color: #0A0A0A; cursor: pointer; display: grid; place-items: center; box-shadow: 0 10px 28px -8px rgba(0,0,0,.45), 0 0 0 4px rgba(255,255,255,.9); transition: transform .25s cubic-bezier(.2,.8,.2,1), background .2s; }
+.cgc-btn:hover { transform: translateY(-3px) scale(1.04); background: #E2C25A; }
+.cgc-btn:focus-visible { outline: 3px solid #0A0A0A; outline-offset: 3px; }
+.cgc-btn svg { width: 34px; height: 34px; }
+.cgc-btn .cgc-tip { position: absolute; right: 74px; top: 50%; transform: translateY(-50%); white-space: nowrap; background: #0A0A0A; color: #FFFFFF; font: 600 14px/1 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; padding: 10px 14px; border-radius: 999px; pointer-events: none; opacity: 0; transition: opacity .25s; }
+.cgc-btn:hover .cgc-tip, .cgc-btn.cgc-hint .cgc-tip { opacity: 1; }
+.cgc-open .cgc-btn .cgc-tip { opacity: 0 !important; }
+
+.cgc-panel { position: fixed; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(94px + env(safe-area-inset-bottom, 0px)); z-index: 81; width: min(380px, calc(100vw - 36px)); max-height: min(620px, calc(100vh - 120px)); background: #FFFFFF; color: #1D1D1F; border-radius: 20px; box-shadow: 0 24px 60px -12px rgba(0,0,0,.45); display: flex; flex-direction: column; overflow: hidden; font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; }
+.cgc-panel[hidden] { display: none !important; }
+.cgc-head { background: #0A0A0A; color: #F5F5F7; padding: 14px 14px 14px 18px; display: flex; align-items: flex-start; gap: 12px; }
+.cgc-head > div { flex: 1; min-width: 0; }
+.cgc-head b { display: block; font-size: 16px; }
+.cgc-head span { display: block; font-size: 13px; color: #A1A1A6; margin-top: 2px; }
+.cgc-x { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #262626; color: #FFFFFF; font-size: 20px; line-height: 1; cursor: pointer; }
+.cgc-x:focus-visible { outline: 2px solid #D4AF37; outline-offset: 2px; }
+.cgc-log { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px 6px; display: flex; flex-direction: column; gap: 10px; }
+.cgc-msg { background: #F5F5F7; border-radius: 14px; padding: 10px 13px; max-width: 92%; }
+.cgc-msg.me { align-self: flex-end; background: #FBF4DE; border: 1px solid #D4AF37; }
+.cgc-msg b.cgc-q { display: block; margin-bottom: 4px; }
+.cgc-msg a { color: #7A5B0E; }
+.cgc-rel { display: flex; flex-wrap: wrap; gap: 6px; }
+.cgc-chip { border: 1px solid #D4AF37; background: #FFFFFF; color: #1D1D1F; border-radius: 999px; padding: 7px 12px; font: 500 13.5px/1.25 inherit; font-family: inherit; cursor: pointer; text-align: left; }
+.cgc-chip:hover { background: #FBF4DE; }
+.cgc-form { border-top: 1px solid #E8E8ED; padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; }
+.cgc-ask { display: flex; gap: 8px; }
+.cgc-form input, .cgc-form textarea { width: 100%; border: 1px solid #C7C7CC; border-radius: 12px; padding: 10px 12px; font: 16px/1.35 inherit; font-family: inherit; color: #1D1D1F; background: #FFFFFF; }
+.cgc-form input:focus, .cgc-form textarea:focus { outline: 2px solid #D4AF37; outline-offset: 0; border-color: #D4AF37; }
+.cgc-form textarea { min-height: 60px; resize: vertical; }
+.cgc-send { flex: none; border: 0; border-radius: 12px; background: #0A0A0A; color: #FFFFFF; font: 600 15px/1 inherit; font-family: inherit; padding: 0 16px; min-height: 44px; cursor: pointer; }
+.cgc-gold { width: 100%; border: 0; border-radius: 999px; background: #D4AF37; color: #0A0A0A; font: 700 16px/1 inherit; font-family: inherit; min-height: 48px; cursor: pointer; }
+.cgc-gold:disabled { opacity: .6; cursor: wait; }
+.cgc-label { font-size: 13px; font-weight: 600; color: #424245; margin-bottom: -4px; }
+.cgc-fine { margin: 0; font-size: 12px; color: #6E6E73; line-height: 1.45; }
+.cgc-err { margin: 0; font-size: 13px; color: #B3261E; }
+.cgc-ok { background: #E9F7EE; border: 1px solid #34C759; border-radius: 14px; padding: 12px; }
+.cgc-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.cgc-link { background: none; border: 0; padding: 0; color: #7A5B0E; text-decoration: underline; font: inherit; cursor: pointer; align-self: flex-start; }
+@media (max-width: 520px) {
+  .cgc-panel { right: 0; left: 0; bottom: 0; width: 100%; max-height: 86vh; border-radius: 20px 20px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .cgc-open .cgc-btn { display: none; }
+  .cgc-btn { width: 58px; height: 58px; }
+}
+@media (prefers-reduced-motion: reduce) { .cgc-btn { transition: none; } }
+@media print { .cgc-btn, .cgc-panel { display: none !important; } }
