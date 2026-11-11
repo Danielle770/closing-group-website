@@ -5,7 +5,7 @@
 header.cg-top { position: static !important; top: auto !important; z-index: auto; background: #FFFFFF !important; border-bottom: 1px solid var(--cg-line); backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 .cg-top-in { max-width: 1240px; margin: 0 auto; padding: 14px max(22px, env(safe-area-inset-right, 0px)) 14px max(22px, env(safe-area-inset-left, 0px)); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .cg-logo { display: inline-flex; align-items: center; gap: 10px; color: var(--cg-ink) !important; text-decoration: none; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
-.cg-logo-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--cg-gold); color: #1D1D1F; display: inline-grid; place-items: center; font-family: "Newsreader", Georgia, serif; font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+.cg-logo-mark { width: 34px; height: 34px; border-radius: 8px; display: block; }
 .cg-logo span.cg-logo-sub { color: var(--cg-gold-ink); font-weight: 500; }
 .cg-nav { display: flex; align-items: center; gap: 6px; }
 .cg-nav a { color: var(--cg-ink) !important; text-decoration: none; font-size: 16px; font-weight: 500; padding: 10px 12px; border-bottom: 2px solid transparent; transition: border-color .2s, color .2s; }
