@@ -387,10 +387,15 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
 <script>
 const APTS = [
   { id: "65", tag: "Penthouse", title: "Apartment 65", short: "Penthouse · 18th floor",
-    text: "The top of the building. Four bedrooms, every one a suite with its own bathroom, and a wide balcony that looks out over the city to the sea.",
-    facts: [["Floor", "18"],["Bedrooms", "4, all en-suite"], ["View", "Sea and city"], ["Handover", "Estimated March 2027"]],
+    text: "The top of the building. Four bedrooms: three en-suite, plus a mamad (safe room). A large lounge and dining room, and a huge balcony that looks out over the city to the sea.",
+    facts: [["Floor", "18"], ["Bedrooms", "4: 3 en-suite + mamad"], ["Living", "Lounge and dining room"], ["Size", "To be confirmed"], ["Balcony", "Huge (size to be confirmed)"], ["Floor plan", "Coming soon"], ["View", "Sea and city"], ["Handover", "Estimated March 2027"]],
     view: "img/view-65.jpg", room: "img/room-65.jpg", roomcap: "The living space, with the balcony and the sea beyond the glass.",
     video: "media/apt-65.mp4", len: "1:28" },
+  { id: "ph17", label: "Penthouse 17", name: "the 17th-floor penthouse", tag: "Penthouse", title: "Penthouse, 17th floor", short: "Penthouse · 17th floor",
+    text: "The second penthouse. Four bedrooms: three en-suite, plus a mamad (safe room). A large lounge and dining room, and a huge balcony with the sea across the rooftops. This one is still in an earlier stage of works than the others: the film shows building materials inside and on the balcony.",
+    facts: [["Floor", "17"], ["Bedrooms", "4: 3 en-suite + mamad"], ["Living", "Lounge and dining room"], ["Size", "To be confirmed"], ["Balcony", "Huge (size to be confirmed)"], ["Floor plan", "Coming soon"], ["View", "Sea and city"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-ph17.jpg", room: "img/room-ph17.jpg", roomcap: "The living room today, with building materials still being stored inside.",
+    video: "media/penthouse-17.mp4", len: "1:23" },
   { id: "61", tag: "Apartment", title: "Apartment 61", short: "16th floor · 125 m²",
     text: "High up on the 16th floor, with a large balcony of about 16 m² looking across Netanya.",
     facts: [["Floor", "16"], ["Size", "125 m²"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
@@ -423,7 +428,7 @@ APTS.forEach((a, i) => {
   b.id = "tab-" + a.id;
   b.setAttribute("role", "tab");
   b.setAttribute("aria-controls", "apt-panel");
-  b.innerHTML = `<img src="${a.view}" alt="" loading="lazy"><span><b>Apt ${a.id}</b><small>${a.short}</small></span>`;
+  b.innerHTML = `<img src="${a.view}" alt="" loading="lazy"><span><b>${a.label || "Apt " + a.id}</b><small>${a.short}</small></span>`;
   b.addEventListener("click", () => show(a.id, true));
   b.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
@@ -445,8 +450,8 @@ function show(id, user) {
   });
   $("apt-panel").setAttribute("aria-labelledby", "tab-" + a.id);
   $("p-view").src = a.view;
-  $("p-view").alt = "View from the balcony of apartment " + a.id;
-  $("p-viewlabel").textContent = "VIEW FROM THE BALCONY · APT " + a.id;
+  $("p-view").alt = "View from the balcony of " + (a.name || "apartment " + a.id);
+  $("p-viewlabel").textContent = "VIEW FROM THE BALCONY · " + (a.label || "APT " + a.id).toUpperCase();
   $("p-tag").textContent = a.tag;
   $("p-title").textContent = a.title;
   $("p-text").textContent = a.text;
@@ -455,15 +460,15 @@ function show(id, user) {
   v.pause();
   v.poster = a.room;
   v.src = a.video;
-  v.setAttribute("aria-label", "Walk-through of apartment " + a.id);
-  $("p-tourtext").textContent = `Walk-through of apartment ${a.id}, ${a.len}. No sound: just the apartment as it is today.`;
+  v.setAttribute("aria-label", "Walk-through of " + (a.name || "apartment " + a.id));
+  $("p-tourtext").textContent = `Walk-through of ${a.name || "apartment " + a.id}, ${a.len}. No sound: just the apartment as it is today.`;
   $("p-room").src = a.room;
   $("p-room").alt = a.roomcap;
   $("p-roomcap").textContent = a.roomcap;
   if (user) { try { history.replaceState(null, "", "#apt-" + a.id); } catch (e) {} }
 }
 
-const fromHash = (location.hash.match(/^#apt-(\d+)$/) || [])[1];
+const fromHash = (location.hash.match(/^#apt-(\w+)$/) || [])[1];
 show(fromHash || "65", false);
 if (fromHash) document.getElementById("apartments").scrollIntoView();
 
