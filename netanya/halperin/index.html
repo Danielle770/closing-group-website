@@ -1,0 +1,487 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Halperin Street Netanya</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: white and black bands that alternate like the main site, a full-width sea-view film at the top,
+   and an apartment picker at the centre — choose an apartment, see the view from its balcony. One look, light with black bands. */
+:root {
+  --paper: #ffffff;
+  --paper-2: #f6f4ee;
+  --ink: #111110;
+  --mute: #5f5b52;
+  --line: #e4dfd2;
+  --band: #0c0c0b;
+  --band-2: #1a1916;
+  --band-ink: #f4f1e8;
+  --band-mute: #b9b3a3;
+  --gold: #d4af37;
+  --gold-text: #8a6a10;
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --step-1: clamp(15px, 1vw + 11px, 17px);
+  --step-2: clamp(20px, 1.4vw + 14px, 24px);
+  --step-3: clamp(28px, 2.6vw + 16px, 40px);
+  --step-4: clamp(36px, 4.6vw + 16px, 64px);
+  --radius: 14px;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: var(--step-1); line-height: 1.6; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.12; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.band { padding-block: clamp(56px, 8vw, 104px); }
+.band.dark { background: var(--band); color: var(--band-ink); }
+.band.soft { background: var(--paper-2); }
+.eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--gold-text); }
+.dark .eyebrow { color: var(--gold); }
+.lede { color: var(--mute); max-width: 62ch; }
+.dark .lede { color: var(--band-mute); }
+.section-head { display: grid; gap: 12px; margin-bottom: clamp(28px, 4vw, 48px); max-width: 760px; }
+.section-head h2 { font-size: var(--step-3); }
+.btn { display: inline-flex; align-items: center; gap: 8px; background: var(--gold); color: #0a0a0a; text-decoration: none; font-weight: 700; padding: 14px 26px; border-radius: 999px; border: 0; font-size: 16px; cursor: pointer; }
+.btn.ghost { background: transparent; color: inherit; border: 1.5px solid currentColor; }
+
+/* Top bar */
+.topbar { background: var(--paper); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
+.brand .mark { width: 34px; height: 34px; border-radius: 50%; background: var(--band); color: var(--gold); display: grid; place-items: center; font-family: var(--font-display); font-size: 15px; }
+.topbar nav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 15px; }
+.topbar nav a { text-decoration: none; color: var(--mute); }
+.topbar nav a:hover { color: var(--ink); }
+
+/* Hero */
+.hero { position: relative; background: var(--band); color: #fff; overflow: hidden; }
+.hero video, .hero .hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,7,.15) 0%, rgba(8,8,7,.25) 45%, rgba(8,8,7,.82) 100%); }
+.hero .wrap { position: relative; z-index: 1; padding-block: clamp(120px, 22vw, 260px) clamp(36px, 5vw, 56px); display: grid; gap: 18px; }
+.hero .eyebrow { color: var(--gold); }
+.hero h1 { font-size: var(--step-4); max-width: 15ch; }
+.hero p.sub { font-size: var(--step-2); font-family: var(--font-display); color: #efe9da; max-width: 34ch; }
+.hero .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.hero .btn.ghost { color: #fff; }
+
+/* Facts strip */
+.facts { background: var(--band); color: var(--band-ink); border-top: 1px solid #2a2823; }
+.facts ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.facts li { padding: 22px 18px; border-right: 1px solid #2a2823; display: grid; gap: 2px; }
+.facts li:last-child { border-right: 0; }
+.facts b { font-family: var(--font-display); font-weight: 400; font-size: var(--step-2); color: var(--gold); }
+.facts span { font-size: 14px; color: var(--band-mute); }
+
+/* Rooms explainer */
+.rooms { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.rooms h2 { font-size: var(--step-3); margin-block: 10px 16px; }
+.roomcount { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.roomcount div { aspect-ratio: 1; border-radius: 10px; border: 1.5px solid var(--line); display: grid; place-items: center; text-align: center; font-size: 13px; padding: 6px; line-height: 1.25; color: var(--mute); }
+.roomcount div.bed { border-color: var(--gold); color: var(--ink); background: #fbf6e6; }
+.roomcount div.live { background: var(--band); color: var(--band-ink); border-color: var(--band); }
+.baths { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.baths span { font-size: 14px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: var(--paper); }
+.rooms .note { font-size: 14px; color: var(--mute); margin-top: 14px; }
+
+/* Apartment picker */
+.picker { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 22px; }
+.pick { all: unset; cursor: pointer; display: grid; gap: 8px; padding: 8px; border-radius: 12px; border: 1.5px solid #2a2823; background: var(--band-2); color: var(--band-ink); }
+.pick img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; }
+.pick b { font-family: var(--font-display); font-weight: 400; font-size: 20px; }
+.pick small { color: var(--band-mute); font-size: 13px; display: block; line-height: 1.3; }
+.pick[aria-selected="true"] { border-color: var(--gold); background: #24211a; }
+.pick:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.panel { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); }
+.viewfig { margin: 0; position: relative; border-radius: var(--radius); overflow: hidden; background: #000; }
+.viewfig img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.viewfig figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 18px 14px; background: linear-gradient(180deg, transparent, rgba(0,0,0,.75)); font-family: var(--font-display); font-size: var(--step-2); color: #fff; }
+.viewfig figcaption small { display: block; font-family: var(--font-body); font-size: 13px; color: #e9e2cc; letter-spacing: .04em; }
+.spec { display: grid; gap: 16px; align-content: start; }
+.spec h3 { font-size: var(--step-3); }
+.tag { display: inline-block; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: #0a0a0a; background: var(--gold); padding: 4px 10px; border-radius: 999px; }
+.spec dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; font-size: 15px; }
+.spec dt { color: var(--band-mute); }
+.spec dd { margin: 0; }
+.tour { margin-top: 22px; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); align-items: start; }
+.tour video { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius); background: #000; display: block; }
+.tour .room img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); display: block; }
+.tour .room p, .tour .tourtext { font-size: 14px; color: var(--band-mute); margin-top: 8px; }
+
+/* Included */
+.included { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 18px; }
+.inc { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--paper); display: grid; grid-template-rows: auto 1fr; }
+.inc img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.inc .body { padding: 16px 18px 20px; display: grid; gap: 6px; align-content: start; }
+.inc h3 { font-size: 21px; }
+.inc p { font-size: 15px; color: var(--mute); }
+.inc.text { background: var(--band); color: var(--band-ink); border-color: var(--band); grid-template-rows: 1fr; }
+.inc.text .body { padding: 22px; gap: 10px; }
+.inc.text p { color: var(--band-mute); }
+.inc.text ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 15px; }
+.inc.text h3 { color: var(--gold); }
+
+/* Location */
+.loc { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; }
+.loc video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); background: #000; display: block; }
+.loc .side { display: grid; gap: 18px; }
+.cap { font-size: 14px; color: var(--mute); margin-top: 8px; }
+.dark .cap { color: var(--band-mute); }
+.dist { display: flex; align-items: baseline; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+.dist b { font-family: var(--font-display); font-weight: 400; font-size: var(--step-4); line-height: 1; color: var(--gold-text); }
+
+/* Status + group */
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); }
+.status-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 12px; }
+.status-list li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; font-size: 15px; }
+.status-list li::before { content: ""; width: 12px; height: 12px; border-radius: 50%; margin-top: 7px; background: var(--gold); }
+.status-list li.todo::before { background: transparent; border: 2px solid var(--band-mute); }
+.steps { list-style: none; counter-reset: s; margin: 18px 0 0; padding: 0; display: grid; gap: 14px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; font-size: 15px; }
+.steps li::before { content: counter(s); width: 30px; height: 30px; border-radius: 50%; background: var(--gold); color: #0a0a0a; font-weight: 700; display: grid; place-items: center; font-size: 14px; }
+.saving { margin-top: 22px; border: 1px solid var(--gold); border-radius: var(--radius); padding: 18px 20px; background: #24211a; }
+.saving b { font-family: var(--font-display); font-weight: 400; font-size: var(--step-3); color: var(--gold); display: block; line-height: 1.1; }
+.saving small { color: var(--band-mute); font-size: 13px; display: block; margin-top: 6px; }
+
+/* CTA + footer */
+.cta { text-align: center; display: grid; gap: 16px; justify-items: center; }
+.cta h2 { font-size: var(--step-3); max-width: 22ch; }
+.cta .actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+footer { background: var(--band); color: var(--band-mute); font-size: 13px; }
+footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
+
+@media (max-width: 860px) {
+  .rooms, .panel, .tour, .loc, .two { grid-template-columns: minmax(0, 1fr); }
+  .picker { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+@media (max-width: 520px) {
+  .facts li { border-right: 0; border-bottom: 1px solid #2a2823; padding: 16px 4px; }
+  .topbar nav { display: none; }
+  .roomcount div { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="https://closinggroupisrael.com/netanya/"><span class="mark">CG</span> The Closing Group · Netanya Kahila</a>
+    <nav aria-label="On this page">
+      <a href="#apartments">Apartments</a>
+      <a href="#included">What's included</a>
+      <a href="#location">Location</a>
+      <a href="#group">How the group works</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" aria-label="Halperin Street, Netanya">
+  <img class="hero-poster" src="img/view-65.jpg" alt="">
+  <video id="heroVideo" src="media/hero.mp4" poster="img/view-65.jpg" muted loop playsinline autoplay aria-hidden="true"></video>
+  <div class="wrap">
+    <span class="eyebrow">Netanya Kahila · Halperin Street</span>
+    <h1>A home by the sea in Netanya, bought together.</h1>
+    <p class="sub">About 250 metres from the beach. Sea views from the upper floors. Four bedrooms in every apartment.</p>
+    <div class="actions">
+      <a class="btn" href="#apartments">See the apartments</a>
+      <a class="btn ghost" href="https://closinggroupisrael.com/netanya/">Join the Netanya Kahila</a>
+    </div>
+  </div>
+</section>
+
+<section class="facts" aria-label="Key facts">
+  <div class="wrap">
+    <ul>
+      <li><b>~250 m</b><span>to the beach</span></li>
+      <li><b>4 bedrooms</b><span>in every apartment</span></li>
+      <li><b>2.5 bathrooms</b><span>en-suite, family, guest WC</span></li>
+      <li><b>9 apartments</b><span>7 apartments + 2 penthouses</span></li>
+      <li><b>March 2027</b><span>estimated handover</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="rooms-h">
+  <div class="wrap rooms">
+    <div>
+      <span class="eyebrow">Reading an Israeli listing</span>
+      <h2 id="rooms-h">"5 rooms" in Israel means 4 bedrooms.</h2>
+      <p class="lede">Israel counts the living room as a room. So every apartment here, listed as a 5-room apartment, gives you four bedrooms plus a large living and dining space opening onto the balcony.</p>
+      <div class="baths" aria-label="Bathrooms">
+        <span>Master bedroom with en-suite bathroom</span>
+        <span>Family bathroom</span>
+        <span>Guest toilet</span>
+      </div>
+      <p class="note">Penthouses: four bedrooms, each one a suite with its own bathroom.</p>
+    </div>
+    <div class="roomcount" aria-label="Five rooms: living room plus four bedrooms">
+      <div class="live">Living &amp; dining</div>
+      <div class="bed">Bedroom 1<br>(suite)</div>
+      <div class="bed">Bedroom 2</div>
+      <div class="bed">Bedroom 3</div>
+      <div class="bed">Bedroom 4</div>
+    </div>
+  </div>
+</section>
+
+<section class="band dark" id="apartments" aria-labelledby="apts-h">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Choose your apartment</span>
+      <h2 id="apts-h">This is the view from your balcony.</h2>
+      <p class="lede">Pick an apartment to see the view from its balcony, its details, and a short walk-through filmed on 12 November 2026. The apartments are in their final stage of works, and the films show them exactly as they are today.</p>
+    </div>
+    <div class="picker" role="tablist" aria-label="Apartments" id="picker"></div>
+    <div id="apt-panel" role="tabpanel">
+      <div class="panel">
+        <figure class="viewfig">
+          <img id="p-view" src="img/view-65.jpg" alt="">
+          <figcaption><small id="p-viewlabel">VIEW FROM THE BALCONY · APT 65</small>Your morning, from here.</figcaption>
+        </figure>
+        <div class="spec">
+          <div><span class="tag" id="p-tag">Penthouse</span></div>
+          <h3 id="p-title">Apartment 65</h3>
+          <p class="lede" id="p-text"></p>
+          <dl id="p-dl"></dl>
+        </div>
+      </div>
+      <div class="tour">
+        <div>
+          <video id="p-video" controls preload="none" playsinline poster="img/room-65.jpg"></video>
+          <p class="tourtext" id="p-tourtext"></p>
+        </div>
+        <div class="room">
+          <img id="p-room" src="img/room-65.jpg" alt="">
+          <p id="p-roomcap"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band soft" id="included" aria-labelledby="inc-h">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What you get</span>
+      <h2 id="inc-h">Included in every apartment.</h2>
+      <p class="lede">These come with the apartment from the builder. Photos are from the apartments as they stand now, some still wrapped in protective film.</p>
+    </div>
+    <div class="included">
+      <article class="inc">
+        <img src="img/kitchen-dekel.jpg" alt="Kitchen cabinets still wrapped in Dekel protective film" loading="lazy">
+        <div class="body"><h3>Kitchen included</h3><p>Dekel master kitchen, fitted by the builder. Shown here still in its protective wrapping.</p></div>
+      </article>
+      <article class="inc">
+        <img src="img/ac-units.jpg" alt="Outdoor air-conditioning units on the service balcony behind louvres" loading="lazy">
+        <div class="body"><h3>Air conditioning</h3><p>Central air conditioning for the apartment, plus a separate unit for the master suite. The outdoor units sit on the service balcony, behind louvres.</p></div>
+      </article>
+      <article class="inc">
+        <img src="img/bathroom-tiles.jpg" alt="Bathroom with large-format wall tiles and a concealed cistern" loading="lazy">
+        <div class="body"><h3>2.5 bathrooms</h3><p>En-suite in the master bedroom, a family bathroom and a guest toilet. Large-format tiles and wall-hung toilets.</p></div>
+      </article>
+      <article class="inc">
+        <img src="img/room-45.jpg" alt="Glass doors opening from the living room onto the balcony" loading="lazy">
+        <div class="body"><h3>Balcony for barbecues</h3><p>A balcony off the living room, ready for a barbecue, with its own water tap for washing down.</p></div>
+      </article>
+      <article class="inc">
+        <img src="img/room-49.jpg" alt="Living room with large-format floor tiles" loading="lazy">
+        <div class="body"><h3>Large-format floors</h3><p>Large-format floor tiles through the living areas and bedrooms, already laid.</p></div>
+      </article>
+      <article class="inc text">
+        <div class="body">
+          <h3>Installed and ready</h3>
+          <ul>
+            <li>Hot water system</li>
+            <li>Gas installation for the kitchen and for hot water, ready to connect</li>
+            <li>Water tap on the balcony</li>
+            <li>One parking space per apartment</li>
+            <li>A storage room of your choice</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="location" aria-labelledby="loc-h">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Halperin Street, Netanya</span>
+      <h2 id="loc-h">From your front door to the sea.</h2>
+      <p class="lede">The beach is about 250 metres away. Here is the drive from the building to the promenade, the street outside, and the building itself.</p>
+    </div>
+    <div class="loc">
+      <div>
+        <video src="media/drive.mp4" controls preload="none" playsinline poster="img/view-42.jpg"></video>
+        <p class="cap">The drive from the building to the beachfront promenade (sound on for music).</p>
+      </div>
+      <div class="side">
+        <div>
+          <video class="ambient" src="media/building.mp4" muted loop playsinline preload="metadata" controls></video>
+          <p class="cap">The building, seen from the courtyard.</p>
+        </div>
+        <div>
+          <video class="ambient" src="media/street.mp4" muted loop playsinline preload="metadata" controls></video>
+          <p class="cap">Halperin Street.</p>
+        </div>
+      </div>
+    </div>
+    <div class="dist"><b>~250 m</b><span class="lede">to the beach, on foot.</span></div>
+  </div>
+</section>
+
+<section class="band dark" id="group" aria-labelledby="group-h">
+  <div class="wrap two">
+    <div>
+      <span class="eyebrow">Where things stand</span>
+      <h2 id="group-h" style="font-size: var(--step-3); margin-top: 10px;">Nearly finished, and we show it as it is.</h2>
+      <ul class="status-list">
+        <li>Floors, tiles, windows and balcony glass are in.</li>
+        <li>Kitchens are going in. The one in our photo is still wrapped in protective film.</li>
+        <li>Air-conditioning units are in place on the service balconies.</li>
+        <li class="todo">Final works continue in some bathrooms and on some balconies.</li>
+        <li class="todo">The lobby is still under construction (see the film below).</li>
+        <li class="todo">Estimated handover: March 2027.</li>
+      </ul>
+      <div style="margin-top: 22px;">
+        <video src="media/lobby.mp4" controls preload="none" playsinline muted style="width:100%;aspect-ratio:16/9;border-radius:var(--radius);background:#000;display:block;"></video>
+        <p class="cap">The lobby today, under construction.</p>
+      </div>
+    </div>
+    <div>
+      <span class="eyebrow">How the group works</span>
+      <h2 style="font-size: var(--step-3); margin-top: 10px;">Nine buyers, one builder, one price.</h2>
+      <ol class="steps">
+        <li>Join the Netanya Kahila for free. No payment and no commitment.</li>
+        <li>Choose your apartment. Your ₪50,000 deposit goes into the trust account of our partner law firm, Evyatar Himi, Ir Yamim, Netanya. It never goes to us.</li>
+        <li>We negotiate one group price with the builder, for everyone.</li>
+        <li>You sign with our law firm beside you. Abroad? Sign remotely with a power of attorney from the Israeli embassy.</li>
+        <li>Bank Hapoalim's foreign residents department helps with transfers from abroad.</li>
+      </ol>
+      <div class="saving">
+        <b>₪390,000–₪488,000</b>
+        Our goal: the saving on a regular apartment, about 12–15% below the builder's list price.
+        <small>A goal, not a guarantee. The final price is fixed only in the signed contract. The builder pays our fee. Buyers pay no broker fee.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="cta-h">
+  <div class="wrap cta">
+    <span class="eyebrow">Found the one?</span>
+    <h2 id="cta-h">Join the Netanya Kahila and we will walk you through every step.</h2>
+    <p class="lede">Joining is free. Have a question first? Ask in the chat on our website, and leave your WhatsApp number if you'd like us to call you back at a time that suits you.</p>
+    <div class="actions">
+      <a class="btn" href="https://closinggroupisrael.com/netanya/">Join the Netanya Kahila</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>The Closing Group Israel brings buyers together so a builder offers one group price. We coordinate; we don't own, buy or sell the apartments, and we never hold your money.</p>
+    <p>Films and photos taken on 12 November 2026, while the apartments were being finished. Nothing on this page is legal, tax, financial or investment advice.</p>
+  </div>
+</footer>
+
+<script>
+const APTS = [
+  { id: "65", tag: "Penthouse", title: "Apartment 65", short: "Penthouse · 18th floor",
+    text: "The top of the building. Four bedrooms, every one a suite with its own bathroom, and a wide balcony that looks out over the city to the sea.",
+    facts: [["Floor", "18"],["Bedrooms", "4, all en-suite"], ["View", "Sea and city"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-65.jpg", room: "img/room-65.jpg", roomcap: "The living space, with the balcony and the sea beyond the glass.",
+    video: "media/apt-65.mp4", len: "1:15" },
+  { id: "61", tag: "Apartment", title: "Apartment 61", short: "16th floor · 125 m²",
+    text: "High up on the 16th floor, with a large balcony of about 16 m² looking across Netanya.",
+    facts: [["Floor", "16"], ["Size", "125 m²"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-61.jpg", room: "img/room-61.jpg", roomcap: "The living room, opening onto the balcony.",
+    video: "media/apt-61.mp4", len: "1:21" },
+  { id: "49", tag: "Apartment", title: "Apartment 49", short: "125 m²",
+    text: "125 m² with a long living room that runs out to a glass-railed balcony.",
+    facts: [["Size", "125 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-49.jpg", room: "img/room-49.jpg", roomcap: "The living room, looking towards the balcony doors.",
+    video: "media/apt-49.mp4", len: "1:16" },
+  { id: "45", tag: "Apartment", title: "Apartment 45", short: "4 bedrooms",
+    text: "Four bedrooms, with full-height glass doors from the living room onto the balcony.",
+    facts: [["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-45.jpg", room: "img/room-45.jpg", roomcap: "Glass doors from the living room to the balcony.",
+    video: "media/apt-45.mp4", len: "1:26" },
+  { id: "42", tag: "Apartment", title: "Apartment 42", short: "4 bedrooms · sea glimpse",
+    text: "Four bedrooms, and a balcony with the sea on the horizon between the towers.",
+    facts: [["Bedrooms", "4"], ["Bathrooms", "2.5"], ["View", "Sea between the towers"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-42.jpg", room: "img/room-42.jpg", roomcap: "The living room and its wall of glass doors.",
+    video: "media/apt-42.mp4", len: "1:25" },
+];
+
+const picker = document.getElementById("picker");
+const $ = (id) => document.getElementById(id);
+let current = null;
+
+APTS.forEach((a, i) => {
+  const b = document.createElement("button");
+  b.className = "pick";
+  b.id = "tab-" + a.id;
+  b.setAttribute("role", "tab");
+  b.setAttribute("aria-controls", "apt-panel");
+  b.innerHTML = `<img src="${a.view}" alt="" loading="lazy"><span><b>Apt ${a.id}</b><small>${a.short}</small></span>`;
+  b.addEventListener("click", () => show(a.id, true));
+  b.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const next = (i + (e.key === "ArrowRight" ? 1 : APTS.length - 1)) % APTS.length;
+    show(APTS[next].id, true);
+    $("tab-" + APTS[next].id).focus();
+  });
+  picker.appendChild(b);
+});
+
+function show(id, user) {
+  const a = APTS.find((x) => x.id === id) || APTS[0];
+  if (current === a.id) return;
+  current = a.id;
+  APTS.forEach((x) => {
+    const t = $("tab-" + x.id);
+    t.setAttribute("aria-selected", x.id === a.id ? "true" : "false");
+    t.tabIndex = x.id === a.id ? 0 : -1;
+  });
+  $("apt-panel").setAttribute("aria-labelledby", "tab-" + a.id);
+  $("p-view").src = a.view;
+  $("p-view").alt = "View from the balcony of apartment " + a.id;
+  $("p-viewlabel").textContent = "VIEW FROM THE BALCONY · APT " + a.id;
+  $("p-tag").textContent = a.tag;
+  $("p-title").textContent = a.title;
+  $("p-text").textContent = a.text;
+  $("p-dl").innerHTML = a.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+  const v = $("p-video");
+  v.pause();
+  v.poster = a.room;
+  v.src = a.video;
+  v.setAttribute("aria-label", "Walk-through of apartment " + a.id);
+  $("p-tourtext").textContent = `Walk-through of apartment ${a.id}, ${a.len}. Sound on for music.`;
+  $("p-room").src = a.room;
+  $("p-room").alt = a.roomcap;
+  $("p-roomcap").textContent = a.roomcap;
+  if (user) { try { history.replaceState(null, "", "#apt-" + a.id); } catch (e) {} }
+}
+
+const fromHash = (location.hash.match(/^#apt-(\d+)$/) || [])[1];
+show(fromHash || "65", false);
+if (fromHash) document.getElementById("apartments").scrollIntoView();
+
+// Only one film plays at a time.
+document.addEventListener("play", (e) => {
+  document.querySelectorAll("video").forEach((v) => {
+    if (v !== e.target && v.id !== "heroVideo") v.pause();
+  });
+}, true);
+
+// Respect reduced motion: keep the hero still.
+const hero = $("heroVideo");
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  hero.removeAttribute("autoplay");
+  hero.pause();
+} else {
+  hero.play().catch(() => {});
+}
+</script>
+
+</body></html>
