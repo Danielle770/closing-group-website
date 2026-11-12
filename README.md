@@ -55,6 +55,17 @@ Until email is configured, the API logs emails to `journalctl -u closinggroup` i
 
 **Member list:** https://closinggroupisrael.com/api/admin/members.csv (username `admin`, password from the settings file). New-member alerts go to `ADMIN_EMAIL`.
 
+## Analytics (PostHog)
+
+Every page loads `assets/analytics.js` (PostHog US cloud, project "The Closing Group"). It records page views and page leaves with scroll depth, all clicks and form interactions, session replays (form inputs masked), heatmaps, dead and rage clicks, web vitals, JavaScript errors, traffic source / UTM / referrer, device, country and city, sections viewed, contact clicks (`contact_clicked`), sign-up funnel (`signup_form_started`, `signup_problem`, `kahila_joined`) and chat (`chat_opened`, `chat_question`, `chat_inquiry_sent`). Members are identified by email when they join. Visitors can switch it off on `/privacy/`.
+
+Data goes through our own domain at `/cgx/` (not blocked by privacy blockers, and keeps the security policy strict). **To switch it on, on the server, once:**
+
+1. Pull the latest code into `/var/www/closinggroupisrael.com/` as usual.
+2. Add the three `location ^~ /cgx/...` blocks from `server/nginx-closinggroup.conf` to the closinggroupisrael.com HTTPS server block.
+3. Run `sudo bash server/harden-nginx.sh` again, so the updated security policy (`server/nginx-security.conf`) is installed. It tests nginx and reloads.
+4. Check: `curl -sI https://closinggroupisrael.com/cgx/static/array.js` returns `200`, then open the site and see live events in PostHog → Activity.
+
 ## Still to come
 
 - **Fair price agent**: daily pull of reported deals near each project, price per m², fair value.

@@ -97,6 +97,7 @@
         .then(function (j) {
           clearTimeout(timer);
           if (j.ok) {
+            try { window.cgAnalytics && window.cgAnalytics.inquiry(data); } catch (e) {}
             track('chat_inquiry_sent', { page: location.pathname, ref: ref || null });
             f.outerHTML = '<div class="cgc-msg cgc-ok"><b>Thank you' + (data.full_name ? ', ' + esc(data.full_name.split(' ')[0]) : '') + '.</b> We have your question. ' + (data.whatsapp ? 'Someone from our team will message you on WhatsApp at a time that suits you, as soon as possible.' : 'Without a number we can\'t call you back, but it helps us improve our answers. Keep asking anything.') + '</div>';
             log.scrollTop = log.scrollHeight; return;

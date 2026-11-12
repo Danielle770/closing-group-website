@@ -28,6 +28,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="/assets/chat.css?v=20261111d">
 <link rel="stylesheet" href="/assets/top.css?v=20261112a">
+<script src="/assets/analytics.js?v=20261112a"></script>
 </head>
 <body>
 <div style="background:#FFFFFF;min-height:100vh">
@@ -40,7 +41,7 @@
 </header>
 <main class="legal" id="main">
 <h1>Privacy policy</h1>
-<p class="updated">Last updated: 11 November 2026</p>
+<p class="updated">Last updated: 12 November 2026</p>
 
 <p>This policy explains what personal information The Closing Group ("we", "us") collects through closinggroupisrael.com, why, and what your rights are. We follow the Israeli Protection of Privacy Law, 5741-1981 and its regulations. For visitors in the United Kingdom and European Union, we also respect the rights described in the GDPR.</p>
 
@@ -65,7 +66,27 @@ Phone / WhatsApp: <a href="tel:+972542222504">054-222-2504</a> (from abroad: +97
 <p>If you reached us through a link from a community leader (a link ending in <code>?ref=</code> and a name), or you tell us who sent you, we record that name with your sign-up or question so we can credit the leader. Your browser remembers the referral name on this site so it's still there if you sign up later.</p>
 <p>When you open an answer on our Questions &amp; Answers page, we count which answer was opened, without linking it to you, to show the most asked questions.</p>
 <p>You are not legally required to give us this information, but without your email and phone number we cannot verify your membership or tell you about groups.</p>
-<p>When you visit the site, our web server automatically records technical information such as your IP address, browser type and the pages requested, for security and to keep the site running. We do not currently use advertising or analytics cookies. If we add them, we will update this policy and ask for your consent where required.</p>
+<p>When you visit the site, our web server automatically records technical information such as your IP address, browser type and the pages requested, for security and to keep the site running.</p>
+
+<h2>Website analytics and session recordings</h2>
+<p>We use <strong>PostHog</strong>, an analytics service, to understand how people use the site so we can make it clearer and easier for buyers. It runs on every page and stores a small identifier in your browser (a cookie and local storage) so it can tell visits apart. It records:</p>
+<ul>
+<li>The pages you visit, how long you stay, how far you scroll and which sections you reach</li>
+<li>What you click and tap, including the menu, maps, kahila pages, Questions &amp; Answers and contact links (WhatsApp, phone, email)</li>
+<li>How you use our forms, for example when you start filling one in and whether a step did not work (we do not record what you type)</li>
+<li><strong>Session recordings</strong>: a replay of how the pages moved on your screen during the visit, used to find confusing or broken parts of the site. Everything typed into form fields is hidden in these recordings.</li>
+<li>Heatmaps of where visitors click and how far they scroll</li>
+<li>How you reached us: the website or ad that sent you, campaign tags in the link, and any community leader referral (<code>?ref=</code>)</li>
+<li>Technical details: device type, operating system, browser, language, screen size, page loading speed and errors</li>
+<li>Your approximate location (country and city), worked out from your IP address</li>
+</ul>
+<p><strong>When you join a kahila</strong>, we link your visits to your membership using your email address, and add the details you gave us in the form (name, email, WhatsApp number, country and city, community, kahila, who referred you and your alert choice) to your analytics profile. This lets us see which pages and answers helped members decide, and give you better service. If you leave a question in the chat, your name and WhatsApp number are added in the same way.</p>
+<p>PostHog stores this data on servers in the United States on our behalf, and does not use it for its own purposes or for advertising. We do not sell it and do not use it for advertising on other websites. Session recordings are kept for 30 days; other analytics data is kept while it is useful for improving the site and then deleted.</p>
+<div class="box" id="cg-analytics-choice">
+<p style="margin:0 0 12px"><strong>Your choice.</strong> You can switch analytics and session recording off for this browser at any time. <span class="cg-analytics-status" role="status" aria-live="polite"></span></p>
+<button type="button" style="min-height:44px;border:none;border-radius:999px;background:#A8522F;color:#fff;font-family:inherit;font-size:16px;font-weight:600;padding:0 22px;cursor:pointer">Switch analytics off</button>
+<p style="margin:12px 0 0;font-size:15px">You can also block or delete cookies in your browser settings, or ask us to delete the analytics data linked to you.</p>
+</div>
 
 <h2>Why we use it</h2>
 <ul>
@@ -73,6 +94,7 @@ Phone / WhatsApp: <a href="tel:+972542222504">054-222-2504</a> (from abroad: +97
 <li>To match you with groups and apartments in the areas you chose</li>
 <li>To send you alerts about new groups, last apartments and groups about to close, <strong>only if you agreed</strong> (by WhatsApp and email). You can unsubscribe at any time.</li>
 <li>To arrange viewings, introductions to our partner law firm and bank, and the purchase itself, if you decide to go ahead</li>
+<li>To understand how visitors use the site, fix problems and improve it (website analytics)</li>
 <li>To meet our legal obligations as a licensed broker, and to protect our rights</li>
 </ul>
 
@@ -81,7 +103,7 @@ Phone / WhatsApp: <a href="tel:+972542222504">054-222-2504</a> (from abroad: +97
 <ul>
 <li><strong>Our partner law firm, Evyatar Himi (Ir Yamim, Netanya), and our bank, Bank Hapoalim</strong>, when you ask to move forward with a purchase</li>
 <li><strong>The builder</strong>, only your name and the apartment you chose, and only once you commit to a group</li>
-<li><strong>Service providers</strong> that host our website and send our emails and WhatsApp messages, under confidentiality and only for these purposes</li>
+<li><strong>Service providers</strong> that host our website, provide our website analytics (PostHog) and send our emails and WhatsApp messages, under confidentiality and only for these purposes</li>
 <li><strong>Authorities</strong>, where the law requires it</li>
 </ul>
 <p>Some of these providers may store information outside Israel. We only use providers that protect personal information to an appropriate standard.</p>
@@ -121,7 +143,7 @@ Phone / WhatsApp: <a href="tel:+972542222504">054-222-2504</a> (from abroad: +97
 </div>
 </footer>
 </div>
-<script src="/assets/chat.js?v=20261111d" defer></script>
+<script src="/assets/chat.js?v=20261112a" defer></script>
 <script src="/assets/nav.js?v=20261111b" defer></script>
 </body>
 </html>

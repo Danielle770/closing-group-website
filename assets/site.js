@@ -54,6 +54,7 @@
     if (!el) { el = document.createElement("p"); el.className = "tcg-msg"; el.setAttribute("role", "status"); el.setAttribute("aria-live", "polite"); form.appendChild(el); }
     el.textContent = text;
     el.classList.toggle("ok", !!ok);
+    if (!ok) { try { window.cgAnalytics && window.cgAnalytics.track("signup_problem", { message: text, form_area: form.getAttribute("data-area") || "home" }); } catch (e) {} }
   }
 
   function post(url, data) {
@@ -117,6 +118,7 @@
         .then(function (j) {
           if (j.status === 404 || j.status === 502 || j.status === 503) { message(form, "Registration opens very soon. Please check back in a few days."); return; }
           if (!j.ok) { message(form, j.error || "Something went wrong. Please try again."); return; }
+          try { window.cgAnalytics && window.cgAnalytics.member(data); } catch (e) {}
           var first = (data.full_name || "").split(" ")[0];
           if (j.whatsapp === "sent") {
             message(form, "You're in! One optional extra: enter the code we sent to your WhatsApp.", true);
