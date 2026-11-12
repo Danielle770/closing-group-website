@@ -52,22 +52,24 @@
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
   window.addEventListener("resize", move);
   move();
-  // Builder's estimate countdowns: days until each estimated date (Israel time)
+  // Builder's estimate countdowns: days, hours, minutes until each estimated date (Israel time)
   var counts = document.querySelectorAll(".k-count-row[data-from]");
+  function unit(n, one, many) { return "<span><b>" + n + "</b><small>" + (n === 1 ? one : many) + "</small></span>"; }
   function tick() {
     var now = Date.now();
     Array.prototype.forEach.call(counts, function (row) {
       var to = new Date(row.getAttribute("data-from") + "T00:00:00+02:00").getTime();
-      var days = Math.ceil((to - now) / 86400000);
+      var mins = Math.ceil((to - now) / 60000);
       var num = row.querySelector(".k-count-num");
-      if (days > 0) {
-        num.innerHTML = "<b>" + days + "</b><small>" + (days === 1 ? "day" : "days") + "</small>";
+      if (mins > 0) {
+        var d = Math.floor(mins / 1440), h = Math.floor((mins % 1440) / 60), m = mins % 60;
+        num.innerHTML = unit(d, "day", "days") + unit(h, "hour", "hours") + unit(m, "minute", "minutes");
         row.classList.remove("is-due");
       } else {
-        num.innerHTML = "<b>Expected any day</b>";
+        num.innerHTML = "<span><b>Expected any day</b></span>";
         row.classList.add("is-due");
       }
     });
   }
-  if (counts.length) { tick(); setInterval(tick, 60000); }
+  if (counts.length) { tick(); setInterval(tick, 15000); }
 })();
