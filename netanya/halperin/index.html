@@ -312,7 +312,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
     <div class="loc">
       <div>
         <video src="media/drive.mp4" controls preload="none" playsinline poster="img/view-42.jpg"></video>
-        <p class="cap">The drive from the building to the beachfront promenade (sound on for music).</p>
+        <p class="cap">The drive from the building to the beachfront promenade.</p>
       </div>
       <div class="side">
         <div>
@@ -390,27 +390,27 @@ const APTS = [
     text: "The top of the building. Four bedrooms, every one a suite with its own bathroom, and a wide balcony that looks out over the city to the sea.",
     facts: [["Floor", "18"],["Bedrooms", "4, all en-suite"], ["View", "Sea and city"], ["Handover", "Estimated March 2027"]],
     view: "img/view-65.jpg", room: "img/room-65.jpg", roomcap: "The living space, with the balcony and the sea beyond the glass.",
-    video: "media/apt-65.mp4", len: "1:15" },
+    video: "media/apt-65.mp4", len: "1:28" },
   { id: "61", tag: "Apartment", title: "Apartment 61", short: "16th floor · 125 m²",
     text: "High up on the 16th floor, with a large balcony of about 16 m² looking across Netanya.",
     facts: [["Floor", "16"], ["Size", "125 m²"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
     view: "img/view-61.jpg", room: "img/room-61.jpg", roomcap: "The living room, opening onto the balcony.",
-    video: "media/apt-61.mp4", len: "1:21" },
+    video: "media/apt-61.mp4", len: "1:30" },
   { id: "49", tag: "Apartment", title: "Apartment 49", short: "125 m²",
     text: "125 m² with a long living room that runs out to a glass-railed balcony.",
     facts: [["Size", "125 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
     view: "img/view-49.jpg", room: "img/room-49.jpg", roomcap: "The living room, looking towards the balcony doors.",
-    video: "media/apt-49.mp4", len: "1:16" },
+    video: "media/apt-49.mp4", len: "1:27" },
   { id: "45", tag: "Apartment", title: "Apartment 45", short: "4 bedrooms",
     text: "Four bedrooms, with full-height glass doors from the living room onto the balcony.",
     facts: [["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
     view: "img/view-45.jpg", room: "img/room-45.jpg", roomcap: "Glass doors from the living room to the balcony.",
-    video: "media/apt-45.mp4", len: "1:26" },
+    video: "media/apt-45.mp4", len: "1:30" },
   { id: "42", tag: "Apartment", title: "Apartment 42", short: "4 bedrooms · sea glimpse",
     text: "Four bedrooms, and a balcony with the sea on the horizon between the towers.",
     facts: [["Bedrooms", "4"], ["Bathrooms", "2.5"], ["View", "Sea between the towers"], ["Handover", "Estimated March 2027"]],
     view: "img/view-42.jpg", room: "img/room-42.jpg", roomcap: "The living room and its wall of glass doors.",
-    video: "media/apt-42.mp4", len: "1:25" },
+    video: "media/apt-42.mp4", len: "1:29" },
 ];
 
 const picker = document.getElementById("picker");
@@ -456,7 +456,7 @@ function show(id, user) {
   v.poster = a.room;
   v.src = a.video;
   v.setAttribute("aria-label", "Walk-through of apartment " + a.id);
-  $("p-tourtext").textContent = `Walk-through of apartment ${a.id}, ${a.len}. Sound on for music.`;
+  $("p-tourtext").textContent = `Walk-through of apartment ${a.id}, ${a.len}. No sound: just the apartment as it is today.`;
   $("p-room").src = a.room;
   $("p-room").alt = a.roomcap;
   $("p-roomcap").textContent = a.roomcap;
