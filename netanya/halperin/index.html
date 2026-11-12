@@ -235,7 +235,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
       <div class="panel">
         <figure class="viewfig">
           <img id="p-view" src="img/view-65.jpg" alt="">
-          <figcaption><small id="p-viewlabel">VIEW FROM THE BALCONY · APT 65</small>Your morning, from here.</figcaption>
+          <figcaption><small id="p-viewlabel">VIEW FROM THE BALCONY · APT 65</small><span id="p-viewline">Your morning, from here.</span></figcaption>
         </figure>
         <div class="spec">
           <div><span class="tag" id="p-tag">Penthouse</span></div>
@@ -401,19 +401,31 @@ const APTS = [
     facts: [["Floor", "16"], ["Size", "125 m²"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
     view: "img/view-61.jpg", room: "img/room-61.jpg", roomcap: "The living room, opening onto the balcony.",
     video: "media/apt-61.mp4", len: "1:30" },
-  { id: "49", tag: "Apartment", title: "Apartment 49", short: "125 m²",
+  { id: "60", soon: true, tag: "Apartment", title: "Apartment 60", short: "16th floor · film coming soon",
+    text: "Four bedrooms, in the same building. We film every apartment before we list it, and the film of this one is coming soon.",
+    facts: [["Floor", "16"], ["Size", "123.5 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Film", "Coming soon"], ["Handover", "Estimated March 2027"]],
+    view: "img/building.jpg" },
+  { id: "54", soon: true, tag: "Apartment", title: "Apartment 54", short: "Film coming soon",
+    text: "Four bedrooms, in the same building. We film every apartment before we list it, and the film of this one is coming soon.",
+    facts: [["Size", "123.5 m² (to be confirmed)"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Film", "Coming soon"], ["Handover", "Estimated March 2027"]],
+    view: "img/building.jpg" },
+  { id: "53", soon: true, tag: "Apartment", title: "Apartment 53", short: "14th floor · film coming soon",
+    text: "Four bedrooms, in the same building. We film every apartment before we list it, and the film of this one is coming soon.",
+    facts: [["Floor", "14"], ["Size", "125 m² (to be confirmed)"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Film", "Coming soon"], ["Handover", "Estimated March 2027"]],
+    view: "img/building.jpg" },
+  { id: "49", tag: "Apartment", title: "Apartment 49", short: "13th floor · 125 m²",
     text: "125 m² with a long living room that runs out to a glass-railed balcony.",
-    facts: [["Size", "125 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
+    facts: [["Floor", "13"], ["Size", "125 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
     view: "img/view-49.jpg", room: "img/room-49.jpg", roomcap: "The living room, looking towards the balcony doors.",
     video: "media/apt-49.mp4", len: "1:27" },
-  { id: "45", tag: "Apartment", title: "Apartment 45", short: "4 bedrooms",
+  { id: "45", tag: "Apartment", title: "Apartment 45", short: "12th floor · 4 bedrooms",
     text: "Four bedrooms, with full-height glass doors from the living room onto the balcony.",
-    facts: [["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
+    facts: [["Floor", "12"], ["Size", "125 m² (to be confirmed)"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
     view: "img/view-45.jpg", room: "img/room-45.jpg", roomcap: "Glass doors from the living room to the balcony.",
     video: "media/apt-45.mp4", len: "1:30" },
   { id: "42", tag: "Apartment", title: "Apartment 42", short: "4 bedrooms · sea glimpse",
     text: "Four bedrooms, and a balcony with the sea on the horizon between the towers.",
-    facts: [["Bedrooms", "4"], ["Bathrooms", "2.5"], ["View", "Sea between the towers"], ["Handover", "Estimated March 2027"]],
+    facts: [["Size", "123.5 m² (to be confirmed)"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["View", "Sea between the towers"], ["Handover", "Estimated March 2027"]],
     view: "img/view-42.jpg", room: "img/room-42.jpg", roomcap: "The living room and its wall of glass doors.",
     video: "media/apt-42.mp4", len: "1:29" },
 ];
@@ -450,14 +462,17 @@ function show(id, user) {
   });
   $("apt-panel").setAttribute("aria-labelledby", "tab-" + a.id);
   $("p-view").src = a.view;
-  $("p-view").alt = "View from the balcony of " + (a.name || "apartment " + a.id);
-  $("p-viewlabel").textContent = "VIEW FROM THE BALCONY · " + (a.label || "APT " + a.id).toUpperCase();
+  $("p-view").alt = a.soon ? "The building on Halperin Street, where apartment " + a.id + " is" : "View from the balcony of " + (a.name || "apartment " + a.id);
+  $("p-viewlabel").textContent = a.soon ? "THE BUILDING · FILM OF APT " + a.id + " COMING SOON" : "VIEW FROM THE BALCONY · " + (a.label || "APT " + a.id).toUpperCase();
+  document.querySelector(".tour").style.display = a.soon ? "none" : "";
+  $("p-viewline").textContent = a.soon ? "The building on Halperin Street." : "Your morning, from here.";
   $("p-tag").textContent = a.tag;
   $("p-title").textContent = a.title;
   $("p-text").textContent = a.text;
   $("p-dl").innerHTML = a.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
   const v = $("p-video");
   v.pause();
+  if (a.soon) { v.removeAttribute("src"); v.load(); if (user) { try { history.replaceState(null, "", "#apt-" + a.id); } catch (e) {} } return; }
   v.poster = a.room;
   v.src = a.video;
   v.setAttribute("aria-label", "Walk-through of " + (a.name || "apartment " + a.id));
