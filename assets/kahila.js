@@ -52,4 +52,22 @@
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
   window.addEventListener("resize", move);
   move();
+  // Builder's estimate countdowns: days until each estimated date (Israel time)
+  var counts = document.querySelectorAll(".k-count-row[data-from]");
+  function tick() {
+    var now = Date.now();
+    Array.prototype.forEach.call(counts, function (row) {
+      var to = new Date(row.getAttribute("data-from") + "T00:00:00+02:00").getTime();
+      var days = Math.ceil((to - now) / 86400000);
+      var num = row.querySelector(".k-count-num");
+      if (days > 0) {
+        num.innerHTML = "<b>" + days + "</b><small>" + (days === 1 ? "day" : "days") + "</small>";
+        row.classList.remove("is-due");
+      } else {
+        num.innerHTML = "<b>Expected any day</b>";
+        row.classList.add("is-due");
+      }
+    });
+  }
+  if (counts.length) { tick(); setInterval(tick, 60000); }
 })();
