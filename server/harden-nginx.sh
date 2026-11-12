@@ -10,7 +10,7 @@ STAMP="$(date +%Y%m%d-%H%M%S)"
 BK="/root/closinggroup-nginx-backup-$STAMP"   # outside /etc/nginx, so nginx never loads a backup
 SNIP=/etc/nginx/snippets/closinggroup-security.conf
 
-SITE="$(grep -rlE 'server_name[^;]*closinggroupisrael\.com' /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null | head -n1 || true)"
+SITE="$(grep -RlE 'server_name[^;]*closinggroupisrael\.com' /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null | head -n1 || true)"
 [ -n "$SITE" ] || { echo "Could not find the nginx file for closinggroupisrael.com"; exit 1; }
 SITE="$(readlink -f "$SITE")"
 echo "==> Site config: $SITE"
