@@ -63,13 +63,13 @@ window.CG_QA = [
 {
 "c": "Price & saving",
 "q": "Is the saving guaranteed?",
-"a": "No — and we won't pretend it is. The saving is our goal, and the final price is only fixed in the signed contract. What we can show you is the builder's cost: the price is set from the project's דו״ח אפס — an independent appraiser's report of what the apartments really cost to build — and from real sales reported to the Tax Authority nearby.",
+"a": "No — and we won't pretend it is. The saving is our goal, and the final price is only fixed in the signed contract. What we can show you is how the price compares: our fair-price check is built from real sales reported to the Israel Tax Authority — the price per m² in the area, sales in the same building, and when they happened. If the builder supplies his דו״ח אפס (feasibility report), we use it as an extra check, not as the basis.",
 "k": "guarantee saving promised certain sure"
 },
 {
 "c": "Price & saving",
 "q": "What is a דו״ח אפס?",
-"a": "It's the feasibility report a licensed appraiser writes before construction — land, building, planning, financing, and the developer's profit. The bank requires it before lending to the project. It's the document that proves what the builder's real cost is, so the group price is built on a real number, not a guess.",
+"a": "It's the feasibility report a licensed appraiser writes before construction — land, building, planning, financing and the developer's profit. Banks require it before lending to a project. It's often unavailable or out of date by the time a building is finished, so we don't rely on it. Our fair-price check rests on real reported sales nearby and in the same building; when a builder supplies a דו״ח אפס, we add it as an extra input.",
 "k": "duach efes zero report appraiser cost builder"
 },
 {
@@ -159,7 +159,7 @@ window.CG_QA = [
 {
 "c": "Legality & protection",
 "q": "What if delivery is late?",
-"a": "The sale contract sets the handover date, and the law gives you compensation if the builder is late beyond the period the law allows — the contract and the law firm spell it out. In our Netanya group the apartments are already built, so this is about handover, not construction.",
+"a": "The sale contract sets the handover date, and the law gives you compensation if the builder is late beyond the period the law allows — the contract and the law firm spell it out. In our first Netanya building the construction is done and the builder estimates Form 4 (Tofes 4) for January–February 2027, so this is about handover, not building from scratch.",
 "k": "late delivery delay handover compensation"
 },
 {
@@ -225,7 +225,7 @@ window.CG_QA = [
 {
 "c": "Risks & safety",
 "q": "Can I visit before I commit?",
-"a": "Yes. The apartments are ready, so you or someone you trust can walk through them. We also offer live video tours for buyers abroad.",
+"a": "Yes. Every apartment has a real video, and you or someone you trust can visit the building by appointment before you commit. Some apartments are still being finished (in our first Netanya building, the builder estimates Form 4 for January–February 2027), so we tell you exactly what stage each one is at. We also offer live video tours for buyers abroad.",
 "k": "visit see apartment before tour video"
 },
 {
@@ -249,7 +249,7 @@ window.CG_QA = [
 {
 "c": "The process",
 "q": "When do I get the keys?",
-"a": "The apartments are ready or nearly ready — Form 4 status and the handover date are shown on every listing. You move in or rent it out.",
+"a": "When the builder receives Form 4 (Tofes 4, the occupancy permit) and hands over. Every project shows its Form 4 status, and where the builder has given an estimate, a countdown titled \u201cBuilder's estimate\u201d. In our first Netanya building that estimate is January–February 2027. It's the builder's estimate, not a promise; your sale contract sets the binding handover date.",
 "k": "keys when move in handover date form 4"
 },
 {
