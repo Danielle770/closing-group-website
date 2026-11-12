@@ -1,4 +1,4 @@
-/* The Closing Group: public Questions & Answers (45). One source for the Q&A page and the chat. */
+/* The Closing Group: public Questions & Answers (48). One source for the Q&A page and the chat. */
 window.CG_QA = [
 {
 "c": "Who we are",
@@ -269,6 +269,24 @@ window.CG_QA = [
 "q": "Do community leaders get paid?",
 "a": "Yes — $1,000 for every apartment sold through a leader, during the launch period, paid from our commission. It's disclosed to buyers in writing, the same as our fee.",
 "k": "leader paid kickback referral 1000 commission"
+},
+{
+"c": "Your privacy",
+"q": "What do you do with my details?",
+"a": "We use them only to run your membership: to tell you about groups in the areas you chose (only if you agreed to alerts), and to arrange viewings, the law firm and the bank if you decide to go ahead. We never sell your details. The builder sees only your name and the apartment you chose, and only once you commit. You can ask us to see, correct or delete your details at any time. Full details are in our Privacy policy.",
+"k": "privacy personal details data information share sell gdpr delete"
+},
+{
+"c": "Your privacy",
+"q": "Do you track how I use the website?",
+"a": "Yes, and we tell you openly. We use PostHog, a website analytics service, on every page. It records which pages you visit, how long you stay and how far you scroll, what you click, how you reached us, your device and browser, and your approximate country and city. It also makes recordings of how the pages moved on your screen, so we can find and fix confusing parts of the site. Anything you type into a form is hidden in those recordings. When you join a kahila, we link your visits to your membership by your email. Recordings are kept for 30 days. The data is stored by PostHog in the United States on our behalf and is never used for advertising.",
+"k": "track tracking analytics cookies posthog recording record session monitor watch spy"
+},
+{
+"c": "Your privacy",
+"q": "Can I switch the tracking off?",
+"a": "Yes, at any time. Go to our Privacy policy page and press “Switch analytics off”. That stops analytics and recordings in that browser. You can also block cookies in your browser settings, or ask us to delete the analytics data linked to you.",
+"k": "switch off opt out stop tracking disable cookies analytics"
 }
 ];
 window.CG_QA_MOST = ["How much will I save?", "Is this legal?", "Where does my money go?", "Do I get my deposit back if the group doesn't close?", "Do I pay any fees?", "What if the apartment has faults?"];
