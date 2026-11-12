@@ -120,6 +120,7 @@
           if (!j.ok) { message(form, j.error || "Something went wrong. Please try again."); return; }
           try { window.cgAnalytics && window.cgAnalytics.member(data); } catch (e) {}
           var first = (data.full_name || "").split(" ")[0];
+          try { window.cgMember && window.cgMember.remember(data.area, first); } catch (e) {}
           if (j.whatsapp === "sent") {
             message(form, "You're in! One optional extra: enter the code we sent to your WhatsApp.", true);
             showCodeStep(form, data.email);
