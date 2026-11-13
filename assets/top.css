@@ -179,3 +179,4 @@ footer p, footer span { color: #A1A1A6; }
 .cg-who-card div[lang="he"] p + p, .cg-who-card details p + p { margin-top: 10px; }
 .cg-who-sub span[lang="he"], .cg-who-addr span[lang="he"] { display: block; text-align: right; margin-bottom: 2px; }
 .cg-who-quote figcaption span[lang="he"] { display: block; margin-bottom: 4px; }
+.cg-who-text p + p { margin-top: 10px; }

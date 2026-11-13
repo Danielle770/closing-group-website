@@ -63,13 +63,13 @@ window.CG_QA = [
 {
 "c": "Price & saving",
 "q": "Is the saving guaranteed?",
-"a": "No — and we won't pretend it is. The saving is our goal, and the final price is only fixed in the signed contract. What we can show you is how the price compares: our fair-price check is built from real sales reported to the Israel Tax Authority — the price per m² in the area, sales in the same building, and when they happened. If the builder supplies his דו״ח אפס (feasibility report), we use it as an extra check, not as the basis.",
+"a": "No — and we won't pretend it is. The saving is our goal, and the final price is only fixed in the signed contract. What we can show you is how the price compares: our fair-price check is built from real sales reported to the Israel Tax Authority — the price per m² in the area, sales in the same building, and when they happened. If the builder supplies his doch efes (feasibility report), we use it as an extra check, not as the basis.",
 "k": "guarantee saving promised certain sure"
 },
 {
 "c": "Price & saving",
-"q": "What is a דו״ח אפס?",
-"a": "It's the feasibility report a licensed appraiser writes before construction — land, building, planning, financing and the developer's profit. Banks require it before lending to a project. It's often unavailable or out of date by the time a building is finished, so we don't rely on it. Our fair-price check rests on real reported sales nearby and in the same building; when a builder supplies a דו״ח אפס, we add it as an extra input.",
+"q": "What is a doch efes?",
+"a": "It's the feasibility report a licensed appraiser writes before construction — land, building, planning, financing and the developer's profit. Banks require it before lending to a project. It's often unavailable or out of date by the time a building is finished, so we don't rely on it. Our fair-price check rests on real reported sales nearby and in the same building; when a builder supplies a doch efes, we add it as an extra input.",
 "k": "duach efes zero report appraiser cost builder"
 },
 {
@@ -93,7 +93,7 @@ window.CG_QA = [
 {
 "c": "Money & deposits",
 "q": "Where does my deposit sit?",
-"a": "In the law firm's trust account (חשבון נאמנות). A trust account is a separate account the firm holds for clients — the money is yours, it can't be used for anything else, and it's released only when the deal completes.",
+"a": "In the law firm's trust account. A trust account is a separate account the firm holds for clients — the money is yours, it can't be used for anything else, and it's released only when the deal completes.",
 "k": "deposit sit trust account escrow hold where"
 },
 {
@@ -123,7 +123,7 @@ window.CG_QA = [
 {
 "c": "Money & deposits",
 "q": "Which bank do you work with?",
-"a": "Bank Hapoalim (בנק הפועלים) — one of the biggest banks in Israel. We introduce you to their foreign residents department, and they walk you through opening your account smoothly. If you already have an account in Israel, you don’t need another one.",
+"a": "Bank Hapoalim — one of the biggest banks in Israel. We introduce you to their foreign residents department, and they walk you through opening your account smoothly. If you already have an account in Israel, you don’t need another one.",
 "k": "bank hapoalim which bank account open foreign residents"
 },
 {
@@ -147,7 +147,7 @@ window.CG_QA = [
 {
 "c": "Legality & protection",
 "q": "What warranty does the builder give by law?",
-"a": "Under the Sale Law (Apartments) 1973, the builder must fix defects at his own cost. The inspection period (תקופת בדק) runs from handover — 1 year for most things, 2 years for plumbing, heating and drainage, 3 years for damp in the walls and for machines and water heaters, 5 years for cracks through walls and ceilings, and 7 years for exterior cladding — and then a further 3-year warranty period (תקופת אחריות). For anything that affects the building's stability and safety, the law gives you 20 years.",
+"a": "Under the Sale Law (Apartments) 1973, the builder must fix defects at his own cost. The inspection period (tkufat bedek) runs from handover — 1 year for most things, 2 years for plumbing, heating and drainage, 3 years for damp in the walls and for machines and water heaters, 5 years for cracks through walls and ceilings, and 7 years for exterior cladding — and then a further 3-year warranty period (tkufat achrayut). For anything that affects the building's stability and safety, the law gives you 20 years.",
 "k": "warranty guarantee builder law defects period bedek achrayut years"
 },
 {
@@ -165,7 +165,7 @@ window.CG_QA = [
 {
 "c": "Legality & protection",
 "q": "Who is the law firm?",
-"a": "Our partner Israeli law firm is Evyatar Himi (אביתר חימי), based at Ir Yamim Tower, Bnei Berman 2, Netanya, with a Tel Aviv office at HaArba'a 28 — 18 years in real estate, working with overseas clients. They are lawyers and notaries, and they know the Israeli buying process and overseas buyers inside out. They draft all the group contracts, handle every purchase contract with the builder, give you a checklist (taxes, amounts, transfer timeframes), and represent the buyers through to completion. You can also use your own lawyer instead — that’s your choice.",
+"a": "Our partner Israeli law firm is Evyatar Himi, based at Ir Yamim Tower, Bnei Berman 2, Netanya, with a Tel Aviv office at HaArba'a 28 — 18 years in real estate, working with overseas clients. They are lawyers and notaries, and they know the Israeli buying process and overseas buyers inside out. They draft all the group contracts, handle every purchase contract with the builder, give you a checklist (taxes, amounts, transfer timeframes), and represent the buyers through to completion. You can also use your own lawyer instead — that’s your choice.",
 "k": "law firm lawyer who name"
 },
 {
@@ -183,7 +183,7 @@ window.CG_QA = [
 {
 "c": "Fees & taxes",
 "q": "What taxes do I pay?",
-"a": "Purchase tax (מס רכישה) — that's the buyer's own tax, paid to the Israel Tax Authority. For a foreign resident it's 8% of the price up to ₪6,055,070 and 10% above that (2026 brackets). An Oleh buying a first home within 7 years of Aliyah pays much less. The law firm calculates your exact amount before you commit — rates and thresholds can change, so we never guess your number.",
+"a": "Purchase tax (mas rechisha) — that's the buyer's own tax, paid to the Israel Tax Authority. For a foreign resident it's 8% of the price up to ₪6,055,070 and 10% above that (2026 brackets). An Oleh buying a first home within 7 years of Aliyah pays much less. The law firm calculates your exact amount before you commit — rates and thresholds can change, so we never guess your number.",
 "k": "tax purchase tax mas rechisha how much foreign resident oleh"
 },
 {

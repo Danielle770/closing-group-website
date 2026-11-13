@@ -3,7 +3,7 @@
    No live chat and no calls at odd hours. */
 (function () {
   if (window.cgChatOpen) return;
-  var V = '20261113a';
+  var V = '20261113b';
   var STOP = 'a an and are as at be but by can do does for from get got have how i if in is it its me my of on or our so that the their them there they this to was we what when where which who why will with would you your yours im ive id please tell know about'.split(' ');
   var state = { asked: [] };
   var ref = (function () { try { var r = new URLSearchParams(location.search).get('ref'); if (r) localStorage.setItem('cg_ref', r.slice(0, 80)); return r || localStorage.getItem('cg_ref') || ''; } catch (e) { return ''; } })();
