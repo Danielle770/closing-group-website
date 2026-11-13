@@ -1,4 +1,7 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#d4af37">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+</head><body>
 <title>Halperin Street Netanya</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -409,10 +412,11 @@ const APTS = [
     text: "Four bedrooms, in the same building. We film every apartment before we list it, and the film of this one is coming soon.",
     facts: [["Size", "123.5 m² (to be confirmed)"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Film", "Coming soon"], ["Handover", "Estimated March 2027"]],
     view: "img/building.jpg" },
-  { id: "53", soon: true, tag: "Apartment", title: "Apartment 53", short: "14th floor · film coming soon",
-    text: "Four bedrooms, in the same building. We film every apartment before we list it, and the film of this one is coming soon.",
-    facts: [["Floor", "14"], ["Size", "125 m² (to be confirmed)"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Film", "Coming soon"], ["Handover", "Estimated March 2027"]],
-    view: "img/building.jpg" },
+  { id: "53", tag: "Apartment", title: "Apartment 53", short: "14th floor · 4 bedrooms",
+    text: "Four bedrooms on the 14th floor, with a balcony off the living room that looks across the city to the sea between the towers. Still in its final stage of works: the film shows boxes and materials in some rooms.",
+    facts: [["Floor", "14"], ["Size", "125 m² (to be confirmed)"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["View", "City, sea between the towers"], ["Handover", "Estimated March 2027"]],
+    view: "img/view-53.jpg", room: "img/room-53.jpg", roomcap: "The living room today, looking toward the balcony.",
+    video: "media/apt-53.mp4", len: "1:22" },
   { id: "49", tag: "Apartment", title: "Apartment 49", short: "13th floor · 125 m²",
     text: "125 m² with a long living room that runs out to a glass-railed balcony.",
     facts: [["Floor", "13"], ["Size", "125 m²"], ["Balcony", "About 16 m²"], ["Bedrooms", "4"], ["Bathrooms", "2.5"], ["Handover", "Estimated March 2027"]],
@@ -504,4 +508,5 @@ if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
 }
 </script>
 
+<script src="/assets/install.js?v=20261113a" defer></script>
 </body></html>

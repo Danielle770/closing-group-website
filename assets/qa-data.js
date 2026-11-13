@@ -1,4 +1,4 @@
-/* The Closing Group: public Questions & Answers (48). One source for the Q&A page and the chat. */
+/* The Closing Group: public Questions & Answers (50). One source for the Q&A page and the chat. Built from qa-bank-public.html, 13 Nov 2026. */
 window.CG_QA = [
 {
 "c": "Who we are",
@@ -27,8 +27,8 @@ window.CG_QA = [
 {
 "c": "What a Kahila is",
 "q": "What is a Kahila?",
-"a": "A Kahila is a group of buyers who buy together from one builder, at one time. Each buyer signs their own contract with the builder for their own apartment. You're not in a partnership with the other buyers, and no buyer is responsible for another buyer.",
-"k": "what is kahila group buying together meaning"
+"a": "A Kahila is a community of buyers — like-minded families from overseas, speaking the same language and sharing the same culture — who buy together from one builder, at one time, in one building. Each buyer signs their own contract with the builder for their own apartment. You're not in a partnership with the other buyers, and no buyer is responsible for another buyer. And it's more than a buying group: you arrive to neighbours you already know — a soft landing in Israel, and a small new community inside your own building.",
+"k": "what is kahila group buying together meaning community"
 },
 {
 "c": "What a Kahila is",
@@ -94,7 +94,7 @@ window.CG_QA = [
 "c": "Money & deposits",
 "q": "Where does my deposit sit?",
 "a": "In the law firm's trust account (חשבון נאמנות). A trust account is a separate account the firm holds for clients — the money is yours, it can't be used for anything else, and it's released only when the deal completes.",
-"k": "deposit sit trust account escrow hold where safe secure protected"
+"k": "deposit sit trust account escrow hold where"
 },
 {
 "c": "Money & deposits",
@@ -106,31 +106,31 @@ window.CG_QA = [
 "c": "Money & deposits",
 "q": "Do I get my deposit back if the group doesn't close?",
 "a": "Yes. If the kahila doesn't fill and the deal doesn't happen, your deposit is returned in full, with no fee — that's in the reservation agreement you sign before you pay anything. The trust account is for holding only; nobody makes money from held money.",
-"k": "deposit back refund return guarantee close fail fill safe lose"
+"k": "deposit back refund return guarantee close fail fill"
 },
 {
 "c": "Money & deposits",
 "q": "When do I pay the rest?",
-"a": "Only when you sign your own sale contract with the builder, on the signing day, under the payment schedule in that contract. Nothing is due before that except the ₪50,000 deposit.",
+"a": "Only when you sign your own sale contract with the builder, on the signing day, under the payment schedule in that contract. Nothing is due before that except the ₪50,000 deposit. Your money needs to be in Israel before signing day — we introduce you to a bank that helps with the transfer from abroad.",
 "k": "when pay rest payment schedule instalments"
+},
+{
+"c": "Money & deposits",
+"q": "Can I pay without coming to Israel or opening an Israeli bank account?",
+"a": "For the deposit, yes — the ₪50,000 goes from your bank abroad straight into our law firm’s trust account; you don’t need an Israeli account or a visit. For the rest of the price, our law firm opens a dedicated trust account for its clientele, and the money is wired from abroad into it. First you submit the correct documentation to the banks — all the necessary papers, and extra documentation if you’re an American citizen — and only then is that channel opened. Once the money is here, everything is agreed, and you know and have signed all the steps, all the expected taxes and everything that will happen in the process, you sign from afar. If you have questions for the lawyer, he can answer them — through us. Opening an Israeli account is still useful for the future (rent, bills) — we introduce you to Bank Hapoalim’s foreign residents department, and they walk you through opening your account smoothly. If you already have an account in Israel, you don’t need another one. Once the money is in Israel, it’s a normal purchase through the law firm — you pay the builder through the normal process, following the lawyer’s instructions — but you don’t need an Israeli account just to pay.",
+"k": "pay abroad transfer money without account visit wire trust"
+},
+{
+"c": "Money & deposits",
+"q": "Which bank do you work with?",
+"a": "Bank Hapoalim (בנק הפועלים) — one of the biggest banks in Israel. We introduce you to their foreign residents department, and they walk you through opening your account smoothly. If you already have an account in Israel, you don’t need another one.",
+"k": "bank hapoalim which bank account open foreign residents"
 },
 {
 "c": "Money & deposits",
 "q": "What if the builder goes bankrupt?",
 "a": "That's exactly what Israeli law is built for. A builder who takes more than 7% of the price before handover must give you security for your money — usually a bank guarantee or an insurance policy — for every payment you make. If the builder can't deliver, the guarantee pays you back. And your deposit never leaves the law firm's trust account in the first place.",
 "k": "bankrupt builder fails collapse guarantee safe money"
-},
-{
-"c": "Money & deposits",
-"q": "Which bank do you work with?",
-"a": "Bank Hapoalim, one of the biggest banks in Israel. Its foreign residents department walks you through opening an account, step by step. If you already have a bank account in Israel, you don't need to open another one. Once your money is in Israel, it's a normal purchase through our law firm.",
-"k": "bank hapoalim which bank account open israeli account"
-},
-{
-"c": "Money & deposits",
-"q": "Can I pay without coming to Israel?",
-"a": "Yes. Your deposit goes from abroad straight into our law firm's trust account; you don't need an Israeli account or a visit for that. For the full price, you send the bank the right documents first (Americans need a few extra), the channel opens, and the money comes to Israel. Our law firm confirms the exact route for each payment before you sign. When everything is agreed and you've seen every step, every expected tax and everything that will happen, you sign remotely with a power of attorney from the Israeli embassy.",
-"k": "pay abroad remote without coming visit fly wire transfer power of attorney embassy sign remotely"
 },
 {
 "c": "Legality & protection",
@@ -165,7 +165,7 @@ window.CG_QA = [
 {
 "c": "Legality & protection",
 "q": "Who is the law firm?",
-"a": "Evyatar Himi, a law firm in Ir Yamim, Netanya. They bring 20 years in Israeli real estate, work with overseas clients every day, and have lawyers and notaries under one roof. They draft all the group contracts, handle every purchase contract with the builder, give you a checklist (taxes, amounts, transfer timeframes) and represent the buyers through to completion. Questions for the lawyer go through us, and we bring you the answer. You can also use your own lawyer instead; that's your choice.",
+"a": "Our partner Israeli law firm is Evyatar Himi (אביתר חימי), based at Ir Yamim Tower, Bnei Berman 2, Netanya, with a Tel Aviv office at HaArba'a 28 — 18 years in real estate, working with overseas clients. They are lawyers and notaries, and they know the Israeli buying process and overseas buyers inside out. They draft all the group contracts, handle every purchase contract with the builder, give you a checklist (taxes, amounts, transfer timeframes), and represent the buyers through to completion. You can also use your own lawyer instead — that’s your choice.",
 "k": "law firm lawyer who name"
 },
 {
@@ -236,20 +236,20 @@ window.CG_QA = [
 },
 {
 "c": "The process",
-"q": "How do I get money to Israel?",
-"a": "Through Bank Hapoalim's foreign residents department, which walks you through opening an account. If you already have an Israeli bank account, you don't need another. First you send the bank the right documents (American citizens need a few extra), then the channel opens and the money comes in. Once it's in Israel and everything is agreed, it's a normal purchase: you pay the builder through our law firm, following the lawyer's instructions. Exchange rates and financing are between you and the bank.",
-"k": "money transfer abroad bank account open send funds"
-},
-{
-"c": "The process",
 "q": "I live abroad. Can I sign without flying to Israel?",
 "a": "Yes. You sign once your money is in Israel and everything is agreed, after you've seen every step, every expected tax and everything that will happen in the process. If you can't fly in, you sign remotely, with a power of attorney from the Israeli embassy. Our law firm, Evyatar Himi, is beside you the whole way: they check every contract and explain everything in plain English. One signing day, everyone together.",
 "k": "sign remotely abroad fly travel come to israel power of attorney embassy signing day without flying"
 },
 {
 "c": "The process",
+"q": "How do I get money to Israel?",
+"a": "Through Bank Hapoalim's foreign residents department, which walks you through opening an account. If you already have an Israeli bank account, you don't need another. First you send the bank the right documents (American citizens need a few extra), then the channel opens and the money comes in. Once it's in Israel and everything is agreed, it's a normal purchase: you pay the builder through our law firm, following the lawyer's instructions. Exchange rates and financing are between you and the bank.",
+"k": "money transfer abroad bank account open send funds"
+},
+{
+"c": "The process",
 "q": "When do I get the keys?",
-"a": "When the builder receives Form 4 (Tofes 4, the occupancy permit) and hands over. Every project shows its Form 4 status, and where the builder has given an estimate, a countdown titled \u201cBuilder's estimate\u201d. In our first Netanya building that estimate is January–February 2027. It's the builder's estimate, not a promise; your sale contract sets the binding handover date.",
+"a": "When the builder receives Form 4 (Tofes 4, the occupancy permit) and hands over. Every project shows its Form 4 status, and where the builder has given an estimate, a countdown titled “Builder's estimate”. In our first Netanya building that estimate is January–February 2027. It's the builder's estimate, not a promise; your sale contract sets the binding handover date.",
 "k": "keys when move in handover date form 4"
 },
 {
@@ -269,6 +269,18 @@ window.CG_QA = [
 "q": "Do community leaders get paid?",
 "a": "Yes — $1,000 for every apartment sold through a leader, during the launch period, paid from our commission. It's disclosed to buyers in writing, the same as our fee.",
 "k": "leader paid kickback referral 1000 commission"
+},
+{
+"c": "What a Kahila is",
+"q": "Does buying this way help Israel?",
+"a": "Yes — it's a win for everyone. You pay the builder's cost. The builder sells homes that are sitting empty. And every apartment is built in Israel, by Israeli builders — your purchase supports Israeli jobs and the Israeli economy.",
+"k": "help israel economy israeli builders win win support"
+},
+{
+"c": "The process",
+"q": "What if I want to change the tiles or the kitchen?",
+"a": "That's easy, and it's done after you buy. Tiles can be laid on top of tiles — that's how it's done in quality homes — and wood floors go directly on the existing floor. Kitchens are upgraded privately in Israel through a kitchen company, not through the builder, so that's never a problem. Pretty much everything is doable once the apartment is yours. The advantage of buying ready-made: you pay what you know, for exactly what you know you're getting.",
+"k": "tiles kitchen change renovate upgrade finishes floors"
 },
 {
 "c": "Your privacy",
