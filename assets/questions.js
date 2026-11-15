@@ -1,6 +1,9 @@
 /* Questions & Answers: search, topic filters, most asked, inquiry link into the chat, and anonymous counts. */
 (function () {
   var QA = window.CG_QA || [], MOST = window.CG_QA_MOST || [];
+  var FR = /^fr/i.test(document.documentElement.lang || '');
+  var L = FR ? { all: 'Toutes', one: ' r\u00e9ponse', many: ' r\u00e9ponses', more: 'Encore une question ? Laissez votre demande', page: '/fr/questions/' }
+             : { all: 'All', one: ' answer', many: ' answers', more: 'Still have a question? Leave your inquiry', page: '/questions/' };
   var $ = function (id) { return document.getElementById(id); };
   var listEl = $('qa-list'), chipsEl = $('qa-chips'), mostEl = $('qa-most-list'), mostBox = $('qa-most'),
       emptyEl = $('qa-empty'), countEl = $('qa-count'), searchEl = $('qa-search');
@@ -13,11 +16,11 @@
   }
   function ask(q) {
     if (window.cgChatOpen) window.cgChatOpen(q || '');
-    else location.href = '/questions/#ask';
+    else location.href = L.page + '#ask';
   }
   function chips() {
     chipsEl.innerHTML = ['All'].concat(cats).map(function (c) {
-      return '<button type="button" class="qa-chip" aria-pressed="' + (c === cur) + '" data-c="' + esc(c) + '">' + esc(c) + '</button>';
+      return '<button type="button" class="qa-chip" aria-pressed="' + (c === cur) + '" data-c="' + esc(c) + '">' + esc(c === 'All' ? L.all : c) + '</button>';
     }).join('');
   }
   function render() {
@@ -28,13 +31,13 @@
       if (words.length && !words.every(function (w) { return hay.indexOf(w) >= 0; })) return;
       if (x.c !== last) { html += '<h2 class="qa-cat">' + esc(x.c) + '</h2>'; last = x.c; }
       html += '<details class="qa-card" id="q' + (i + 1) + '" data-i="' + i + '"><summary>' + esc(x.q) + '</summary><div class="qa-a"><p>' + esc(x.a) + '</p>' +
-        '<button type="button" class="qa-ask" data-q="' + esc(x.q) + '">Still have a question? Leave your inquiry</button></div></details>';
+        '<button type="button" class="qa-ask" data-q="' + esc(x.q) + '">' + L.more + '</button></div></details>';
       shown++;
     });
     listEl.innerHTML = html;
     emptyEl.hidden = shown > 0;
     mostBox.hidden = !!q || cur !== 'All';
-    countEl.textContent = (q || cur !== 'All') ? shown + (shown === 1 ? ' answer' : ' answers') : QA.length + ' answers';
+    countEl.textContent = (q || cur !== 'All') ? shown + (shown === 1 ? L.one : L.many) : QA.length + L.many;
   }
   function renderMost(list) {
     mostEl.innerHTML = list.map(function (q) {
@@ -61,7 +64,7 @@
   chips(); renderMost(MOST); render();
   // Most asked: real counts from the server once there are enough; otherwise the starter list.
   fetch('/api/qa-top').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
-    if (d && d.top && d.top.length >= 4) renderMost(d.top.slice(0, 6));
+    if (!FR && d && d.top && d.top.length >= 4) renderMost(d.top.slice(0, 6));
   }).catch(function () {});
   var m = location.hash.match(/^#q(\d+)$/); if (m) openCard(+m[1] - 1);
 })();

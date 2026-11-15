@@ -3,7 +3,7 @@
    No live chat and no calls at odd hours. */
 (function () {
   if (window.cgChatOpen) return;
-  var V = '20261115a';
+  var V = '20261115b';
   var FR = /^fr/i.test(document.documentElement.lang || '');
   var T = FR ? {
     ask: 'Demandez-nous n\u2019importe quoi', sub: 'Des r\u00e9ponses tout de suite. Aucune coordonn\u00e9e demand\u00e9e.', close: 'Fermer',
@@ -22,7 +22,7 @@
     down: 'Impossible d\u2019envoyer votre message pour le moment. \u00c9crivez-nous votre question \u00e0 <b>closinggroupisrael@gmail.com</b> et nous vous r\u00e9pondrons.',
     retry: 'R\u00e9essayer',
     hi: 'Bonjour\u00a0! Posez-moi n\u2019importe quelle question sur l\u2019achat avec une Kahila, je vous r\u00e9ponds tout de suite. Aucune coordonn\u00e9e demand\u00e9e.',
-    enNote: ' <i>Pour l\u2019instant, nos r\u00e9ponses sont en anglais. La version fran\u00e7aise arrive bient\u00f4t.</i>'
+    enNote: ''
   } : {
     ask: 'Ask us anything', sub: 'Answers right away. No details needed.', close: 'Close',
     yourQ: 'Your question', ph: 'Ask anything\u2026', askBtn: 'Ask', callback: 'Want us to call you back?', callbackLow: 'want us to call you back?',
@@ -70,7 +70,7 @@
 
   function loadQA(cb) {
     if (window.CG_QA) return cb();
-    var s = document.createElement('script'); s.src = '/assets/qa-data.js?v=' + V; s.onload = cb; s.onerror = cb; document.head.appendChild(s);
+    var s = document.createElement('script'); s.src = (FR ? '/assets/qa-data-fr.js?v=' : '/assets/qa-data.js?v=') + V; s.onload = cb; s.onerror = cb; document.head.appendChild(s);
   }
   function words(t) {
     return String(t).toLowerCase().replace(/[^a-z0-9א-ת\s]/g, ' ').split(/\s+/).filter(function (w) { return w.length > 2 && STOP.indexOf(w) < 0; });
