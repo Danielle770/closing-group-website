@@ -93,7 +93,7 @@
     pin.addEventListener("blur", function () { hide(); });
     pin.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); location.href = data[id].href; } });
   });
-  var hint = wrap.querySelector(".tcg-map-hint"); if (hint && !canHover) hint.textContent = "Tap a city";
+  var hint = wrap.querySelector(".tcg-map-hint"); if (hint && !canHover) hint.textContent = /^fr/i.test(document.documentElement.lang || "") ? "Touchez une ville" : "Tap a city";
   pop.addEventListener("mouseenter", function () { clearTimeout(hideT); });
   pop.addEventListener("mouseleave", function () { hide(); });
   pop.addEventListener("focusin", function () { clearTimeout(hideT); });

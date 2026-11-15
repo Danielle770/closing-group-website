@@ -97,8 +97,10 @@
       var status = box.querySelector(".cg-analytics-status"), btn = box.querySelector("button");
       function paint() {
         var off = false; try { off = posthog.has_opted_out_capturing(); } catch (e) {}
-        status.textContent = off ? "Analytics is switched OFF in this browser." : "Analytics is switched ON in this browser.";
-        btn.textContent = off ? "Switch analytics on" : "Switch analytics off";
+        var fr = /^fr/i.test(document.documentElement.lang || "");
+        status.textContent = fr ? (off ? "Les statistiques sont D\u00c9SACTIV\u00c9ES dans ce navigateur." : "Les statistiques sont ACTIV\u00c9ES dans ce navigateur.")
+          : (off ? "Analytics is switched OFF in this browser." : "Analytics is switched ON in this browser.");
+        btn.textContent = fr ? (off ? "Activer les statistiques" : "D\u00e9sactiver les statistiques") : (off ? "Switch analytics on" : "Switch analytics off");
       }
       btn.addEventListener("click", function () {
         var off = false; try { off = posthog.has_opted_out_capturing(); } catch (e) {}

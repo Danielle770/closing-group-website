@@ -16,6 +16,14 @@ Static website for **closinggroupisrael.com**. Plain HTML, CSS and JavaScript, n
 
 Shared files: `assets/site.css`, `assets/site.js`.
 
+## French version (`/fr/`)
+
+The French pages live under `fr/` with the same folder layout (`/fr/`, `/fr/netanya/`, `/fr/netanya/halperin/`, `/fr/center/`, `/fr/jerusalem/`, `/fr/how-it-works/`, `/fr/why-now/`, `/fr/terms/`, `/fr/privacy/`, `/fr/accessibility/`, `/fr/verified/`, `/fr/unsubscribed/`). They use the same CSS and JavaScript as the English pages: every script checks `<html lang="fr">` and switches its messages (chat, sign-up, welcome, WhatsApp code, menus, countdowns, install button) to French, and its links to `/fr/…`. The Halperin page in French uses the photos and films in `netanya/halperin/img` and `media`.
+
+- **Language bar:** every page (both languages) has an English 🇺🇸 / Français 🇫🇷 switch above the header, linking to the same page in the other language, plus `hreflang` links for search engines. New pages need it too: copy the `cg-langbar` block from any page.
+- **Not translated yet:** the Q&A (`/questions/` and `assets/qa-data.js`). French pages link to the English Q&A for now, and the chat shows English answers with a note that French answers are coming.
+- **Emails** sent by the server (welcome, confirmation) are still in English.
+
 ## Deploy (Nginx)
 
 Copy the repository contents into `/var/www/closinggroupisrael.com/`. The default Nginx config works because every page is a folder with an `index.html`:

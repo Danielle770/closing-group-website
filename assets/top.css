@@ -16,15 +16,16 @@ header.cg-top { position: static !important; top: auto !important; z-index: auto
 .cg-burger { display: none; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid var(--cg-line); border-radius: 999px; background: #FFFFFF; color: var(--cg-ink); font: 600 16px/1 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; cursor: pointer; }
 .cg-burger svg { width: 20px; height: 20px; }
 
-@media (max-width: 1180px) {
+/* Menu button up to 1,430px: below that, the English menu links don't fit on one line */
+@media (max-width: 1430px) {
   .cg-top-in { flex-wrap: wrap; }
   .cg-burger { display: inline-flex; }
   .cg-nav { display: none; flex-basis: 100%; flex-direction: column; align-items: stretch; gap: 0; padding: 6px 0 4px; }
   .cg-top.is-open .cg-nav { display: flex; }
   .cg-nav a { font-size: 18px; padding: 14px 4px; border-bottom: 1px solid var(--cg-line); }
   .cg-nav a[aria-current="page"] { border-bottom: 2px solid var(--cg-gold); }
-  .cg-nav a.cg-cta { margin: 14px 0 6px; justify-content: center; min-height: 50px; }
-}
+  .cg-nav a.cg-cta { margin: 14px 0 6px; justify-content: center; min-height: 50px; }}
+
 
 
 /* ===== Home hero: white background, black writing, gold accents ===== */
@@ -180,3 +181,27 @@ footer p, footer span { color: #A1A1A6; }
 .cg-who-sub span[lang="he"], .cg-who-addr span[lang="he"] { display: block; text-align: right; margin-bottom: 2px; }
 .cg-who-quote figcaption span[lang="he"] { display: block; margin-bottom: 4px; }
 .cg-who-text p + p { margin-top: 10px; }
+
+/* Language bar: English (US flag) / Français (French flag), above the header on every page */
+.cg-langbar { background: #F5F5F7; border-bottom: 1px solid var(--cg-line); }
+.cg-langbar-in { max-width: 1240px; margin: 0 auto; padding: 5px max(22px, env(safe-area-inset-right, 0px)) 5px max(22px, env(safe-area-inset-left, 0px)); display: flex; justify-content: flex-end; }
+.cg-lang { display: inline-flex; align-items: center; gap: 2px; padding: 2px; border: 1px solid var(--cg-line); border-radius: 999px; background: #FFFFFF; }
+.cg-lang a { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px 0 10px; border-radius: 999px; color: var(--cg-ink) !important; text-decoration: none; font: 600 14px/1 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; transition: background .2s; }
+.cg-lang a:hover { background: #F5F5F7; }
+.cg-lang a[aria-current] { background: #0A0A0A; color: #FFFFFF !important; }
+.cg-lang a:focus-visible { outline: 3px solid var(--cg-gold); outline-offset: 2px; }
+.cg-lang svg { width: 21px; height: 14px; border-radius: 3px; display: block; flex: none; box-shadow: 0 0 0 1px rgba(0,0,0,.14); }
+
+
+/* French menu links are longer, so French pages use a wider header and the Menu button up to 1,600px */
+html[lang="fr"] .cg-top-in { max-width: 1640px; }
+@media (min-width: 1431px) and (max-width: 1600px) {
+  html[lang="fr"] .cg-top-in { flex-wrap: wrap; }
+  html[lang="fr"] .cg-burger { display: inline-flex; }
+  html[lang="fr"] .cg-nav { display: none; flex-basis: 100%; flex-direction: column; align-items: stretch; gap: 0; padding: 6px 0 4px; }
+  html[lang="fr"] .cg-top.is-open .cg-nav { display: flex; }
+  html[lang="fr"] .cg-nav a { font-size: 18px; padding: 14px 4px; border-bottom: 1px solid var(--cg-line); }
+  html[lang="fr"] .cg-nav a[aria-current="page"] { border-bottom: 2px solid var(--cg-gold); }
+  html[lang="fr"] .cg-nav a.cg-cta { margin: 14px 0 6px; justify-content: center; min-height: 50px; }
+}
+html[lang="fr"] .cg-langbar-in { max-width: 1640px; }

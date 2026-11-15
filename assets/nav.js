@@ -18,22 +18,24 @@
 (function () {
   var top = document.querySelector('.cg-top'); if (!top) return;
   var path = location.pathname.replace(/index\.html$/, '');
-  var K = [['/netanya/', 'Netanya'], ['/center/', 'Center'], ['/jerusalem/', 'Jerusalem']];
+  var FR = /^fr/i.test(document.documentElement.lang || ''), P = FR ? '/fr' : '';
+  var L = FR ? { sw: 'Changer de communaut\u00e9', here: ' \u00b7 vous \u00eates ici', back: 'Retour' } : { sw: 'Switch community', here: ' \u00b7 you\'re here', back: 'Back' };
+  var K = FR ? [['/fr/netanya/', 'Netanya'], ['/fr/center/', 'Centre'], ['/fr/jerusalem/', 'J\u00e9rusalem']] : [['/netanya/', 'Netanya'], ['/center/', 'Center'], ['/jerusalem/', 'Jerusalem']];
   var here = null; K.forEach(function (k) { if (path.slice(-k[0].length) === k[0]) here = k; });
-  var isHome = path === '/' || /\/preview\/$/.test(path);
+  var isHome = path === P + '/' || /\/preview\/$/.test(path);
   var sameSite = false; try { sameSite = !!document.referrer && new URL(document.referrer).origin === location.origin && document.referrer !== location.href; } catch (e) {}
   function switcher() {
-    return '<nav class="cg-switch" aria-label="Switch community"><span>Switch community:</span>' + K.map(function (k) {
+    return '<nav class="cg-switch" aria-label="' + L.sw + '"><span>' + L.sw + (FR ? '\u00a0:' : ':') + '</span>' + K.map(function (k) {
       var on = here && k[0] === here[0];
-      return '<a href="' + k[0] + '"' + (on ? ' aria-current="page"' : '') + '>' + k[1] + (on ? ' · you\'re here' : ' →') + '</a>';
+      return '<a href="' + k[0] + '"' + (on ? ' aria-current="page"' : '') + '>' + k[1] + (on ? L.here : ' →') + '</a>';
     }).join('') + '</nav>';
   }
   if (isHome && !sameSite) return;
   var bar = document.createElement('div'); bar.className = 'cg-sub';
-  bar.innerHTML = '<div class="cg-sub-in"><button type="button" class="cg-back"><span aria-hidden="true">←</span> Back</button>' + (here ? switcher() : '') + '</div>';
+  bar.innerHTML = '<div class="cg-sub-in"><button type="button" class="cg-back"><span aria-hidden="true">←</span> ' + L.back + '</button>' + (here ? switcher() : '') + '</div>';
   top.insertAdjacentElement('afterend', bar);
   bar.querySelector('.cg-back').addEventListener('click', function () {
-    if (sameSite && history.length > 1) history.back(); else location.href = '/';
+    if (sameSite && history.length > 1) history.back(); else location.href = P + '/';
   });
   if (here) {
     var foot = document.querySelector('footer');

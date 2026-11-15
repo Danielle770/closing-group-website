@@ -6,7 +6,10 @@
    First-time visitors are never redirected.
    Loaded in <head> so the redirect happens before the front page paints. */
 (function () {
-  var KAHILOT = { netanya: { path: "/netanya/", name: "Netanya" }, center: { path: "/center/", name: "Tel Aviv–Jaffa" }, jerusalem: { path: "/jerusalem/", name: "Jerusalem" } };
+  var FR = /^fr/i.test(document.documentElement.lang || ""), P = FR ? "/fr" : "";
+  var KAHILOT = FR
+    ? { netanya: { path: "/fr/netanya/", name: "de Netanya" }, center: { path: "/fr/center/", name: "de Tel-Aviv\u2013Jaffa" }, jerusalem: { path: "/fr/jerusalem/", name: "de J\u00e9rusalem" } }
+    : { netanya: { path: "/netanya/", name: "Netanya" }, center: { path: "/center/", name: "Tel Aviv–Jaffa" }, jerusalem: { path: "/jerusalem/", name: "Jerusalem" } };
   var KEY = "cg_member", SEEN = "cg_wb_seen", JUMPED = "cg_wb_jumped";
 
   function get() { try { var m = JSON.parse(localStorage.getItem(KEY) || "null"); return m && typeof m === "object" ? m : null; } catch (e) { return null; } }
@@ -30,7 +33,7 @@
   if (!m) return;                                     // first-time visitor: nothing changes
   var k = KAHILOT[m.area];
   var path = location.pathname.replace(/index\.html$/, "");
-  var isHome = path === "/" || /\/preview\/$/.test(path);
+  var isHome = path === P + "/" || /\/preview\/$/.test(path);
 
   // 1) Front page, fresh visit (not clicked from inside the site) → their Kahila
   var fromInside = false;
@@ -62,12 +65,12 @@
     var bar = document.createElement("div");
     bar.className = "cg-wb";
     bar.setAttribute("role", "status");
-    var hello = "Welcome back" + (m.name ? ", " + esc(m.name) : "") + ".";
-    var line = k
-      ? " <b>Here's what's new in your " + esc(k.name) + " Kahila.</b>"
-      : " <b>Good to see you again.</b> Choose a Kahila below to see the apartments.";
-    var link = k && document.getElementById("apartments") ? ' <a href="#apartments">See the apartments ↓</a>' : "";
-    bar.innerHTML = '<div class="cg-wb-in"><p>' + hello + line + link + '</p><button type="button" aria-label="Close welcome message">×</button></div>';
+    var hello = (FR ? "Bon retour" : "Welcome back") + (m.name ? ", " + esc(m.name) : "") + ".";
+    var line = FR
+      ? (k ? " <b>Voici les nouveaut\u00e9s de votre Kahila " + esc(k.name) + ".</b>" : " <b>Ravis de vous revoir.</b> Choisissez une Kahila ci-dessous pour voir les appartements.")
+      : (k ? " <b>Here's what's new in your " + esc(k.name) + " Kahila.</b>" : " <b>Good to see you again.</b> Choose a Kahila below to see the apartments.");
+    var link = k && document.getElementById("apartments") ? ' <a href="#apartments">' + (FR ? "Voir les appartements" : "See the apartments") + ' ↓</a>' : "";
+    bar.innerHTML = '<div class="cg-wb-in"><p>' + hello + line + link + '</p><button type="button" aria-label="' + (FR ? "Fermer le message de bienvenue" : "Close welcome message") + '">×</button></div>';
     var top = document.querySelector(".cg-top");
     var after = top && top.nextElementSibling && top.nextElementSibling.classList.contains("cg-sub") ? top.nextElementSibling : top;
     if (after) after.insertAdjacentElement("afterend", bar); else document.body.insertBefore(bar, document.body.firstChild);

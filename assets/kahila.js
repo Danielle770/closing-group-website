@@ -53,6 +53,7 @@
   window.addEventListener("resize", move);
   move();
   // Builder's estimate countdowns: days, hours, minutes until each estimated date (Israel time)
+  var FR = /^fr/i.test(document.documentElement.lang || "");
   var counts = document.querySelectorAll(".k-count-row[data-from]");
   function unit(n, one, many) { return "<span><b>" + n + "</b><small>" + (n === 1 ? one : many) + "</small></span>"; }
   function tick() {
@@ -63,10 +64,11 @@
       var num = row.querySelector(".k-count-num");
       if (mins > 0) {
         var d = Math.floor(mins / 1440), h = Math.floor((mins % 1440) / 60), m = mins % 60;
-        num.innerHTML = unit(d, "day", "days") + unit(h, "hour", "hours") + unit(m, "minute", "minutes");
+        num.innerHTML = FR ? unit(d, "jour", "jours") + unit(h, "heure", "heures") + unit(m, "minute", "minutes")
+          : unit(d, "day", "days") + unit(h, "hour", "hours") + unit(m, "minute", "minutes");
         row.classList.remove("is-due");
       } else {
-        num.innerHTML = "<span><b>Expected any day</b></span>";
+        num.innerHTML = "<span><b>" + (FR ? "Attendu d\u2019un jour \u00e0 l\u2019autre" : "Expected any day") + "</b></span>";
         row.classList.add("is-due");
       }
     });

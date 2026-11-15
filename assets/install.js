@@ -12,6 +12,22 @@
   var ua = navigator.userAgent || '';
   var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   var prompt = null;
+  var FR = /^fr/i.test(document.documentElement.lang || '');
+  var L = FR ? {
+    title: 'Ajoutez-nous \u00e0 votre \u00e9cran d\u2019accueil',
+    s1: 'Touchez <b>Partager</b> <span aria-hidden="true">(le carr\u00e9 avec la fl\u00e8che vers le haut)</span> en bas de Safari.',
+    s2: 'Faites d\u00e9filer vers le bas et touchez <b>Sur l\u2019\u00e9cran d\u2019accueil</b>, puis <b>Ajouter</b>.',
+    p: 'L\u2019ic\u00f4ne dor\u00e9e CG appara\u00eet sur votre t\u00e9l\u00e9phone. Touchez-la pour revenir directement chez nous.',
+    ok: 'Compris', foot: 'Restez en contact \u2014 ajoutez-nous \u00e0 votre \u00e9cran d\u2019accueil',
+    wTitle: 'Vous y \u00eates \u2014 ajoutez l\u2019ic\u00f4ne pour ne pas nous perdre.', wBtn: 'Ajouter \u00e0 l\u2019\u00e9cran d\u2019accueil'
+  } : {
+    title: 'Add us to your home screen',
+    s1: 'Tap <b>Share</b> <span aria-hidden="true">(the square with the arrow pointing up)</span> at the bottom of Safari.',
+    s2: 'Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.',
+    p: 'The gold CG icon appears on your phone. Tap it to come straight back to us.',
+    ok: 'Got it', foot: 'Stay in touch \u2014 add to your home screen',
+    wTitle: 'You\'re in \u2014 add the icon so you don\'t lose us.', wBtn: 'Add to your home screen'
+  };
 
   var css = '.cg-install-wrap[hidden],.cg-a2hs[hidden]{display:none!important}' +
     '.cg-install-foot{max-width:1024px;margin:0 auto 18px;display:flex;justify-content:center}' +
@@ -31,11 +47,11 @@
     if (!d) {
       d = document.createElement('div');
       d.id = 'cg-a2hs'; d.className = 'cg-a2hs'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'cg-a2hs-t');
-      d.innerHTML = '<div class="cg-a2hs-box"><h2 id="cg-a2hs-t">Add us to your home screen</h2>' +
-        '<ol><li>Tap <b>Share</b> <span aria-hidden="true">(the square with the arrow pointing up)</span> at the bottom of Safari.</li>' +
-        '<li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol>' +
-        '<p>The gold CG icon appears on your phone. Tap it to come straight back to us.</p>' +
-        '<button type="button" class="cg-a2hs-ok">Got it</button></div>';
+      d.innerHTML = '<div class="cg-a2hs-box"><h2 id="cg-a2hs-t">' + L.title + '</h2>' +
+        '<ol><li>' + L.s1 + '</li>' +
+        '<li>' + L.s2 + '</li></ol>' +
+        '<p>' + L.p + '</p>' +
+        '<button type="button" class="cg-a2hs-ok">' + L.ok + '</button></div>';
       document.body.appendChild(d);
       d.addEventListener('click', function (e) { if (e.target === d || e.target.classList.contains('cg-a2hs-ok')) close(); });
       d.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
@@ -68,7 +84,7 @@
   function addFooter() {
     var foot = document.querySelector('footer'); if (!foot || foot.querySelector('.cg-install-wrap')) return;
     var w = document.createElement('div'); w.className = 'cg-install-wrap cg-install-foot'; w.hidden = true;
-    w.appendChild(makeButton('footer', 'Stay in touch — add to your home screen'));
+    w.appendChild(makeButton('footer', L.foot));
     foot.insertBefore(w, foot.firstChild);
   }
 
@@ -76,8 +92,8 @@
   function addWelcome(el) {
     if (!el || el.querySelector('.cg-install-wrap')) return;
     var w = document.createElement('div'); w.className = 'cg-install-wrap cg-install-welcome'; w.hidden = true;
-    w.innerHTML = '<p>You\'re in — add the icon so you don\'t lose us.</p>';
-    w.appendChild(makeButton('welcome', 'Add to your home screen'));
+    w.innerHTML = '<p>' + L.wTitle + '</p>';
+    w.appendChild(makeButton('welcome', L.wBtn));
     el.appendChild(w); refresh();
   }
 
