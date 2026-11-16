@@ -1,0 +1,114 @@
+/* Halperin Street page: apartment cards (each picture is its own carousel), apartment pages and the apartment chat.
+   Uses the page's own colour variables (--band, --gold, …). */
+
+/* Members never see "Join"; visitors who haven't joined do. (member.js sets html.cg-member before the page paints.) */
+.member-only { display: none !important; }
+.cg-member .member-only { display: grid !important; }
+.cg-member .join-only { display: none !important; }
+
+.hp-howto { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 14.5px; color: var(--band-mute); margin: -8px 0 6px; }
+.hp-howto b { color: var(--gold); }
+
+/* Room-name buttons (kept from the live page, now on top of the cards) */
+.hp-roomband { position: sticky; top: 0; z-index: 5; background: rgba(12,12,11,.94); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); padding: 12px 0 8px; margin: 0 calc(-1 * var(--gutter-r)) 0 calc(-1 * var(--gutter-l)); padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.hp-roomband.static { position: static; background: none; margin: 18px 0 0; padding: 0; }
+.hp-roomrow { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 6px; scrollbar-width: none; }
+.hp-roomrow::-webkit-scrollbar { display: none; }
+.hp-roombtn { flex: 0 0 auto; border: 1.5px solid var(--gold); background: var(--band-2); color: var(--band-ink); border-radius: 10px; padding: 8px 14px; font: 14px/1.2 var(--font-body); cursor: pointer; min-height: 44px; -webkit-tap-highlight-color: transparent; }
+.hp-roombtn-staged { border-style: dashed; }
+.hp-roombtn[aria-pressed="true"] { background: var(--gold); color: #0a0a0a; font-weight: 700; box-shadow: 0 0 0 2px var(--band), 0 0 0 4px var(--gold); }
+.hp-roombtn:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+/* Cards */
+.hp-grid { display: grid; gap: 18px; margin-top: 16px; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); }
+@media (max-width: 560px) { .hp-grid { grid-template-columns: 1fr 1fr; gap: 12px; } }
+@media (max-width: 360px) { .hp-grid { grid-template-columns: 1fr; } }
+.hp-card { background: var(--band-2); border: 1.5px solid #2a2823; border-radius: var(--radius); overflow: hidden; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; color: var(--band-ink); }
+.hp-card.selected { border-color: var(--gold); box-shadow: 0 0 0 1.5px var(--gold); }
+.hp-card:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.hp-car { position: relative; }
+.hp-track, .hp-bigtrack { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; background: #000; overscroll-behavior-x: contain; }
+.hp-track { aspect-ratio: 16 / 10; }
+.hp-track::-webkit-scrollbar, .hp-bigtrack::-webkit-scrollbar { display: none; }
+.hp-track figure, .hp-bigtrack figure { margin: 0; flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; }
+.hp-track img, .hp-bigtrack img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hp-logo { background: #101014; }
+.hp-badge { position: absolute; left: 8px; top: 8px; background: rgba(10,10,10,.78); color: #fff; border: 1px solid var(--gold); border-radius: 999px; font: 700 11.5px/1 var(--font-body); letter-spacing: .04em; padding: 6px 10px; pointer-events: none; }
+.hp-chev { position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(10,10,12,.6); color: #fff; font-size: 22px; line-height: 1; display: grid; place-items: center; cursor: pointer; padding: 0; }
+.hp-chev.hp-prev { left: 6px; } .hp-chev.hp-next { right: 6px; }
+.hp-chev:focus-visible { outline: 3px solid #fff; }
+.hp-cardbody { padding: 10px 14px 14px; }
+.hp-roomline { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; font-size: 13.5px; }
+.hp-rname { color: var(--gold); font-weight: 700; }
+.hp-rname.is-staged::before { content: "✦ "; }
+.hp-pos { color: var(--band-mute); white-space: nowrap; }
+.hp-dots { display: flex; gap: 5px; margin: 8px 0 2px; flex-wrap: wrap; }
+.hp-dots i { width: 7px; height: 7px; border-radius: 50%; background: #4a4a52; display: block; }
+.hp-dots i.on { background: var(--gold); }
+.hp-name { font-family: var(--font-display); font-size: 24px; margin: 6px 0 0; }
+.hp-ph { font: 700 11px/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; background: var(--gold); color: #0a0a0a; border-radius: 999px; padding: 4px 8px; vertical-align: middle; }
+.hp-short { color: var(--band-mute); font-size: 14px; margin: 2px 0 0; }
+.hp-openlink { all: unset; cursor: pointer; color: var(--gold); font-size: 13.5px; font-weight: 600; margin-top: 8px; display: inline-block; min-height: 32px; line-height: 32px; }
+.hp-openlink:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (max-width: 560px) { .hp-name { font-size: 19px; } .hp-short { font-size: 12.5px; } .hp-ph { display: none; } .hp-chev { width: 30px; height: 30px; font-size: 18px; } }
+
+/* Apartment page */
+.hp-aptpage .wrap { max-width: 1000px; }
+.hp-back { background: none; border: 1.5px solid var(--gold); color: var(--gold); border-radius: 999px; padding: 9px 18px; font: 700 15px var(--font-body); cursor: pointer; min-height: 44px; }
+.hp-back:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.hp-aptpage h1 { font-size: var(--step-4); margin: 18px 0 4px; }
+.hp-aptpage .sub { color: var(--band-mute); font-size: var(--step-1); }
+.hp-aptpage .desc { max-width: 68ch; margin-top: 10px; }
+.hp-aptpage h2 { font-size: var(--step-2); margin: 0 0 10px; }
+.hp-sec { margin-top: clamp(26px, 4vw, 40px); }
+.hp-bigcar { position: relative; margin-top: 10px; }
+.hp-bigtrack { border-radius: var(--radius); aspect-ratio: 16 / 9; }
+.hp-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(10,10,12,.6); color: #fff; font-size: 26px; display: grid; place-items: center; cursor: pointer; padding: 0; z-index: 2; }
+.hp-arrow.prev { left: 10px; } .hp-arrow.next { right: 10px; }
+.hp-arrow:focus-visible { outline: 3px solid #fff; }
+.hp-bigcap { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 2px 0; font-size: 15px; }
+.hp-bigcap b { font-weight: 700; }
+.hp-bigcap .note { color: var(--band-mute); width: 100%; font-size: 14px; }
+.hp-stage { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.hp-stage li { display: grid; grid-template-columns: 18px 1fr; gap: 8px; font-size: 15.5px; }
+.hp-stage li::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin-top: 8px; }
+.hp-stage li.open::before { background: transparent; border: 2px solid var(--band-mute); width: 6px; height: 6px; }
+.hp-view { margin: 0; }
+.hp-view img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); display: block; }
+.hp-view figcaption { color: var(--band-mute); font-size: 14px; padding-top: 8px; }
+.hp-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(190px, 100%), 1fr)); gap: 10px; margin: 0; }
+.hp-facts div { background: var(--band-2); border: 1px solid #2a2823; border-radius: 10px; padding: 10px 12px; }
+.hp-facts dt { font-size: 12.5px; color: var(--band-mute); }
+.hp-facts dd { margin: 2px 0 0; font-size: 16px; font-weight: 600; }
+.hp-film video { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: var(--radius); display: block; }
+.hp-film p { color: var(--band-mute); margin: 0 0 10px; font-size: 15px; }
+.hp-cta { margin-top: clamp(30px, 5vw, 48px); background: var(--band-2); border: 1px solid var(--gold); border-radius: var(--radius); padding: 24px 18px; text-align: center; }
+.hp-cta h2 { margin-bottom: 6px; }
+.hp-cta p { color: var(--band-mute); margin: 0 auto 16px; max-width: 56ch; font-size: 15px; }
+
+/* Chat */
+.hp-chat { margin-top: 20px; text-align: left; background: #111110; border: 1px solid #2a2823; border-radius: 12px; overflow: hidden; }
+.hp-chathead { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #2a2823; }
+.hp-chathead b { font-size: 16px; display: block; }
+.hp-chathead span { font-size: 13px; color: var(--band-mute); }
+.hp-chatclose { background: none; border: 1.5px solid #3a3830; color: var(--band-mute); border-radius: 999px; padding: 6px 14px; cursor: pointer; font: 13.5px var(--font-body); min-height: 40px; flex: 0 0 auto; }
+.hp-log { padding: 16px; display: flex; flex-direction: column; gap: 10px; max-height: min(460px, 60vh); overflow-y: auto; }
+.hp-msg { max-width: 88%; padding: 10px 13px; border-radius: 12px; font-size: 15px; line-height: 1.45; overflow-wrap: break-word; white-space: pre-line; }
+.hp-msg.agent { background: var(--band-2); border: 1px solid #2a2823; align-self: flex-start; border-bottom-left-radius: 4px; }
+.hp-msg.visitor { background: var(--gold); color: #0a0a0a; align-self: flex-end; border-bottom-right-radius: 4px; }
+.hp-who { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; margin-bottom: 3px; opacity: .75; }
+.hp-typing .hp-text { letter-spacing: .2em; }
+.hp-quickrow { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px; }
+.hp-quick { background: var(--band-2); border: 1.5px solid var(--gold); color: var(--band-ink); border-radius: 999px; padding: 8px 14px; font: 14px var(--font-body); cursor: pointer; min-height: 44px; }
+.hp-chatform { display: flex; gap: 8px; padding: 12px 16px 14px; border-top: 1px solid #2a2823; }
+.hp-chatform input { flex: 1 1 auto; min-width: 0; background: #0a0a0a; border: 1px solid #3a3830; border-radius: 10px; color: var(--band-ink); padding: 11px 12px; font: 16px var(--font-body); min-height: 48px; }
+.hp-chatform button { flex: 0 0 auto; }
+.hp-chatnote { font-size: 13px; color: var(--band-mute); padding: 0 16px 14px; margin: 0; }
+.hp-chatclose:focus-visible, .hp-quick:focus-visible, .hp-chatform input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) { .hp-track, .hp-bigtrack, .hp-roomrow { scroll-behavior: auto; } }
+@media (max-width: 560px) {
+  .hp-aptpage h1 { font-size: var(--step-3); }
+  .hp-facts { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .hp-facts dd { font-size: 15px; }
+}
