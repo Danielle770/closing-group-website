@@ -10,8 +10,12 @@
   var MEDIA = BASE + "media/";
   var $ = function (id) { return document.getElementById(id); };
 
-  // Apartments. Each one with a film also has a still of each room, taken from that film:
-  // img/room-N.jpg (living & dining) and img/room-N-bed1.jpg … room-N-bed4.jpg (bedroom 1 is the suite).
+  // Apartments. Each one with a film also has stills of its rooms, taken from that film:
+  // img/room-N.jpg (living & dining), img/room-N-bed1.jpg … room-N-bed4.jpg,
+  // img/room-N-bath-parents.jpg, room-N-bath-family.jpg and room-N-guest-wc.jpg.
+  // The same pattern in every apartment: bedroom 1 is the suite (the parents' bedroom), the bathroom
+  // inside it is the parents' bathroom, the guest toilet is the one by the entrance, and the family
+  // bathroom (with the bath) is the one between the bedrooms.
   var EN = [
     { id: "65", tag: "Penthouse", title: "Apartment 65", short: "Penthouse · 18th floor",
       text: "The top of the building. Four bedrooms: three en-suite, plus a mamad (safe room). A large lounge and dining room, and a huge balcony that looks out over the city to the sea.",
@@ -52,39 +56,50 @@
   var FRA = [
     { id: "65", tag: "Penthouse", title: "Appartement 65", short: "Penthouse · 18e étage",
       text: "Le sommet de l’immeuble. Quatre chambres : trois en suite, plus un mamad (pièce de sécurité). Un grand salon et une salle à manger, et un immense balcon qui donne sur la ville jusqu’à la mer.",
-      facts: [["Étage", "18"], ["Chambres", "4 : 3 en suite + mamad"], ["Séjour", "Salon et salle à manger"], ["Superficie", "À confirmer"], ["Balcon", "Immense (superficie à confirmer)"], ["Plan", "Bientôt disponible"], ["Vue", "Mer et ville"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Étage", "18"], ["Chambres", "4 : 3 en suite + mamad"], ["Séjour", "Salon et salle à manger"], ["Superficie", "À confirmer"], ["Balcon", "Immense (superficie à confirmer)"], ["Plan", "Bientôt disponible"], ["Vue", "Mer et ville"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Le séjour, avec le balcon et la mer au-delà des vitres.", len: "1:28" },
     { id: "63", tag: "Penthouse", title: "Appartement 63", short: "Penthouse · 17e étage",
       text: "Le deuxième penthouse, au 17e étage. Quatre chambres : trois en suite, plus un mamad (pièce de sécurité). Un grand salon et une salle à manger, et un immense balcon avec la mer au-dessus des toits. Celui-ci est encore à un stade de travaux moins avancé que les autres : le film montre des matériaux de construction à l’intérieur et sur le balcon.",
-      facts: [["Étage", "17"], ["Chambres", "4 : 3 en suite + mamad"], ["Séjour", "Salon et salle à manger"], ["Superficie", "À confirmer"], ["Balcon", "Immense (superficie à confirmer)"], ["Plan", "Bientôt disponible"], ["Vue", "Mer et ville"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Étage", "17"], ["Chambres", "4 : 3 en suite + mamad"], ["Séjour", "Salon et salle à manger"], ["Superficie", "À confirmer"], ["Balcon", "Immense (superficie à confirmer)"], ["Plan", "Bientôt disponible"], ["Vue", "Mer et ville"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Le salon aujourd’hui, avec des matériaux de construction encore entreposés à l’intérieur.", len: "1:23" },
     { id: "61", tag: "Appartement", title: "Appartement 61", short: "16e étage · 125 m²",
       text: "Tout en haut, au 16e étage, avec un grand balcon d’environ 16 m² donnant sur Netanya.",
-      facts: [["Étage", "16"], ["Superficie", "125 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Étage", "16"], ["Superficie", "125 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Le salon, qui s’ouvre sur le balcon.", len: "1:30" },
     { id: "60", soon: true, tag: "Appartement", title: "Appartement 60", short: "16e étage · film bientôt disponible",
       text: "Quatre chambres, dans le même immeuble. Nous filmons chaque appartement avant de le présenter, et le film de celui-ci sera bientôt disponible.",
-      facts: [["Étage", "16"], ["Superficie", "123.5 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Film", "Bientôt disponible"], ["Livraison", "Prévue March 2027"]] },
+      facts: [["Étage", "16"], ["Superficie", "123.5 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Film", "Bientôt disponible"], ["Livraison", "Prévue mars 2027"]] },
     { id: "54", soon: true, tag: "Appartement", title: "Appartement 54", short: "Film bientôt disponible",
       text: "Quatre chambres, dans le même immeuble. Nous filmons chaque appartement avant de le présenter, et le film de celui-ci sera bientôt disponible.",
-      facts: [["Superficie", "123.5 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Film", "Bientôt disponible"], ["Livraison", "Prévue March 2027"]] },
+      facts: [["Superficie", "123.5 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Film", "Bientôt disponible"], ["Livraison", "Prévue mars 2027"]] },
     { id: "53", tag: "Appartement", title: "Appartement 53", short: "14e étage · 4 chambres",
       text: "Quatre chambres au 14e étage, avec un balcon attenant au salon qui donne sur la ville jusqu’à la mer, entre les tours. Encore en phase finale de travaux : le film montre des cartons et des matériaux dans certaines pièces.",
-      facts: [["Étage", "14"], ["Superficie", "125 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Vue", "Ville, mer entre les tours"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Étage", "14"], ["Superficie", "125 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Vue", "Ville, mer entre les tours"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Le salon aujourd’hui, en direction du balcon.", len: "1:22" },
     { id: "49", tag: "Appartement", title: "Appartement 49", short: "13e étage · 125 m²",
       text: "125 m² avec un long salon qui se prolonge jusqu’à un balcon à garde-corps en verre.",
-      facts: [["Étage", "13"], ["Superficie", "125 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Étage", "13"], ["Superficie", "125 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Le salon, en direction des portes du balcon.", len: "1:27" },
     { id: "45", tag: "Appartement", title: "Appartement 45", short: "12e étage · 4 chambres",
       text: "Quatre chambres, avec des portes vitrées toute hauteur du salon vers le balcon.",
-      facts: [["Étage", "12"], ["Superficie", "125 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Étage", "12"], ["Superficie", "125 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Portes vitrées du salon vers le balcon.", len: "1:30" },
     { id: "42", tag: "Appartement", title: "Appartement 42", short: "4 chambres · aperçu de la mer",
       text: "Quatre chambres, et un balcon avec la mer à l’horizon, entre les tours.",
-      facts: [["Superficie", "123.5 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Vue", "Mer entre les tours"], ["Livraison", "Prévue March 2027"]],
+      facts: [["Superficie", "123.5 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Vue", "Mer entre les tours"], ["Livraison", "Prévue mars 2027"]],
       roomcap: "Le salon et son mur de portes vitrées.", len: "1:29" }
   ];
+
+  // Which rooms each film shows. A room that isn't in an apartment's film says so instead of a photo.
+  var SHOWN = {
+    "65": ["live", "bed1", "bed2", "bed3", "bed4", "bathp"],
+    "63": ["live", "bed1", "bed2", "bed3", "bathp"],
+    "61": ["live", "bed1", "bed2", "bed3", "bathf", "wc"],
+    "53": ["live", "bed1", "bed2", "bed3", "bed4", "bathf"],
+    "49": ["live", "bed1", "bed2", "bed3", "bed4", "bathp", "bathf"],
+    "45": ["live", "bed1", "bed2", "bed3", "bathp", "bathf"],
+    "42": ["live", "bed1", "bed2", "bed3", "bathf", "wc"]
+  };
 
   var APTS = FR ? FRA : EN;
   APTS.forEach(function (a) {
@@ -104,7 +119,9 @@
     soonLine: "L’immeuble de la rue Halperin.", viewLine: "Vos matins, vus d’ici.",
     tour: function (id) { return "Visite de l’appartement " + id; },
     tourText: function (id, len) { return "Visite de l’appartement " + id + ", " + len + ". Sans son : juste l’appartement tel qu’il est aujourd’hui."; },
-    rooms: { live: "Salon et salle à manger", bed1: "Chambre 1 (suite)", bed2: "Chambre 2", bed3: "Chambre 3", bed4: "Chambre 4" },
+    rooms: { live: "Salon et salle à manger", bed1: "Chambre 1 (suite parentale)", bed2: "Chambre 2", bed3: "Chambre 3", bed4: "Chambre 4",
+             bathp: "Salle de bains parentale", bathf: "Salle de bains familiale", wc: "WC invités" },
+    notShown: function (room, id) { return "Le film de l’appartement " + id + " ne montre pas cette pièce (" + (/^WC/.test(room) ? room : room.toLowerCase()) + "). Choisissez une autre pièce, ou un autre appartement plus bas."; },
     roomCap: function (room, id) { return room + " · Appartement " + id; },
     roomAlt: function (room, id) { return room + " de l’appartement " + id + ", tel qu’il est aujourd’hui"; },
     roomSoon: function (id) { return "Les photos des pièces de l’appartement " + id + " arrivent avec son film. Choisissez un autre appartement plus bas."; },
@@ -119,7 +136,9 @@
     soonLine: "The building on Halperin Street.", viewLine: "Your morning, from here.",
     tour: function (id) { return "Walk-through of apartment " + id; },
     tourText: function (id, len) { return "Walk-through of apartment " + id + ", " + len + ". No sound: just the apartment as it is today."; },
-    rooms: { live: "Living & dining", bed1: "Bedroom 1 (suite)", bed2: "Bedroom 2", bed3: "Bedroom 3", bed4: "Bedroom 4" },
+    rooms: { live: "Living & dining", bed1: "Bedroom 1 (parents' suite)", bed2: "Bedroom 2", bed3: "Bedroom 3", bed4: "Bedroom 4",
+             bathp: "Parents' bathroom", bathf: "Family bathroom", wc: "Guest toilet" },
+    notShown: function (room, id) { return "The film of apartment " + id + " doesn't show this room (" + room.toLowerCase() + "). Pick another room, or another apartment below."; },
     roomCap: function (room, id) { return room + " · Apartment " + id; },
     roomAlt: function (room, id) { return room + " in apartment " + id + ", as it is today"; },
     roomSoon: function (id) { return "Room photos of apartment " + id + " come with its film. Pick another apartment below."; },
@@ -130,11 +149,13 @@
   function setHash(id) { try { history.replaceState(null, "", "#apt-" + id); } catch (e) {} }
 
   /* ---------- Room photos ("Reading an Israeli listing") ---------- */
-  var ROOMS = ["live", "bed1", "bed2", "bed3", "bed4"];
+  var ROOMS = ["live", "bed1", "bed2", "bed3", "bed4", "bathp", "bathf", "wc"];
+  var FILE = { bathp: "bath-parents", bathf: "bath-family", wc: "guest-wc" };
   var roomBtns = Array.prototype.slice.call(document.querySelectorAll(".roomcount [data-room]"));
   var roomSel = "live";
 
-  function roomSrc(a, r) { return r === "live" ? IMG + "room-" + a.id + ".jpg" : IMG + "room-" + a.id + "-" + r + ".jpg"; }
+  function roomSrc(a, r) { return r === "live" ? IMG + "room-" + a.id + ".jpg" : IMG + "room-" + a.id + "-" + (FILE[r] || r) + ".jpg"; }
+  function shows(a, r) { return (SHOWN[a.id] || ["live", "bed1", "bed2", "bed3", "bed4", "bathp", "bathf", "wc"]).indexOf(r) >= 0; }
 
   function showRoom(r) {
     if (ROOMS.indexOf(r) < 0) r = "live";
@@ -149,6 +170,14 @@
       img.removeAttribute("src");
       soon.hidden = false;
       soon.textContent = T.roomSoon(a.id);
+      cap.textContent = T.roomCap(name, a.id);
+      return;
+    }
+    if (!shows(a, r)) {
+      img.hidden = true;
+      img.removeAttribute("src");
+      soon.hidden = false;
+      soon.textContent = T.notShown(name, a.id);
       cap.textContent = T.roomCap(name, a.id);
       return;
     }

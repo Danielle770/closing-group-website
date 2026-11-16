@@ -177,6 +177,9 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
 .roomcount button[aria-pressed="true"] { background: var(--gold); color: #0a0a0a; border-color: var(--gold); font-weight: 700; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold); }
 .roomcount button[aria-pressed="true"]::after { content: "\25BE"; opacity: 1; }
 .roomcount button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.roomcount.bathrow { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: -4px; }
+.roomcount.bathrow button { aspect-ratio: auto; min-height: 56px; padding: 8px 18px 8px 8px; border-color: var(--gold); color: var(--ink); background: var(--paper); }
+.roomcount.bathrow button[aria-pressed="true"] { background: var(--gold); color: #0a0a0a; }
 .roomphoto { margin: 0; border-radius: var(--radius); overflow: hidden; background: var(--paper-2); border: 1px solid var(--line); }
 .roomphoto img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #e9e5da; }
 .roomphoto .roomsoon { aspect-ratio: 16 / 9; display: grid; place-items: center; padding: 18px; text-align: center; color: var(--mute); font-size: 15px; }
@@ -241,21 +244,26 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
       <h2 id="rooms-h">"5 rooms" in Israel means 4 bedrooms.</h2>
       <p class="lede">Israel counts the living room as a room. So every apartment here, listed as a 5-room apartment, gives you four bedrooms plus a large living and dining space opening onto the balcony.</p>
       <div class="baths" aria-label="Bathrooms">
-        <span>Master bedroom with en-suite bathroom</span>
-        <span>Family bathroom</span>
-        <span>Guest toilet</span>
+        <span>Parents' bathroom, inside bedroom 1</span>
+        <span>Family bathroom, between the bedrooms</span>
+        <span>Guest toilet, by the entrance</span>
       </div>
-      <p class="note">Penthouses: four bedrooms, each one a suite with its own bathroom.</p>
+      <p class="note">Penthouses: four bedrooms, three of them en-suite, plus a mamad (safe room).</p>
     </div>
     <div class="roomside">
     <div class="roomcount" role="group" aria-label="Five rooms: living room plus four bedrooms">
       <button type="button" class="live" data-room="live" aria-pressed="true" aria-controls="room-photo">Living &amp; dining</button>
-      <button type="button" class="bed" data-room="bed1" aria-pressed="false" aria-controls="room-photo">Bedroom 1<br>(suite)</button>
+      <button type="button" class="bed" data-room="bed1" aria-pressed="false" aria-controls="room-photo">Bedroom 1<br>(parents' suite)</button>
       <button type="button" class="bed" data-room="bed2" aria-pressed="false" aria-controls="room-photo">Bedroom 2</button>
       <button type="button" class="bed" data-room="bed3" aria-pressed="false" aria-controls="room-photo">Bedroom 3</button>
       <button type="button" class="bed" data-room="bed4" aria-pressed="false" aria-controls="room-photo">Bedroom 4</button>
     </div>
-    <p class="note" style="margin:0">Tap a room to see it, in the apartment you pick below.</p>
+    <div class="roomcount bathrow" role="group" aria-label="Bathrooms">
+      <button type="button" class="bath" data-room="bathp" aria-pressed="false" aria-controls="room-photo">Parents' bathroom</button>
+      <button type="button" class="bath" data-room="bathf" aria-pressed="false" aria-controls="room-photo">Family bathroom</button>
+      <button type="button" class="bath" data-room="wc" aria-pressed="false" aria-controls="room-photo">Guest toilet</button>
+    </div>
+    <p class="note" style="margin:0">Tap a room or a bathroom to see it, in the apartment you pick below.</p>
     <figure class="roomphoto" id="room-photo" aria-live="polite">
       <img id="room-img" src="img/room-65.jpg" alt="Living &amp; dining in apartment 65, as it is today" loading="lazy">
       <p class="roomsoon" id="room-soon" hidden></p>
@@ -426,7 +434,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </footer>
 
-<script src="/assets/halperin.js?v=20261116a" defer></script>
+<script src="/assets/halperin.js?v=20261116c" defer></script>
 
 <script src="/assets/install.js?v=20261116a" defer></script>
 </body></html>
