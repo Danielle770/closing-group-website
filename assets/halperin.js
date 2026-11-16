@@ -8,6 +8,7 @@
   var BASE = "/netanya/halperin/";
   var IMG = BASE + "img/";
   var MEDIA = BASE + "media/";
+  var LOGO = "/assets/closing-group-logo.png";   // stands in for a room the film doesn't show
   var $ = function (id) { return document.getElementById(id); };
 
   // Apartments. Each one with a film also has stills of its rooms, taken from that film:
@@ -128,6 +129,7 @@
     notShown: function (room, id) { return "Le film de l’appartement " + id + " ne montre pas cette pièce (" + (/^WC/.test(room) ? room : room.toLowerCase()) + "). Choisissez une autre pièce, ou un autre appartement plus bas."; },
     roomCap: function (room, id) { return room + " · Appartement " + id; },
     roomAlt: function (room, id) { return room + " de l’appartement " + id + ", tel qu’il est aujourd’hui"; },
+    logoAlt: "Logo de The Closing Group : pas encore de photo de cette pièce",
     roomSoon: function (id) { return "Les photos des pièces de l’appartement " + id + " arrivent avec son film. Choisissez un autre appartement plus bas."; },
     change: "Changer d’appartement ↓"
   } : {
@@ -145,6 +147,7 @@
     notShown: function (room, id) { return "The film of apartment " + id + " doesn't show this room (" + room.toLowerCase() + "). Pick another room, or another apartment below."; },
     roomCap: function (room, id) { return room + " · Apartment " + id; },
     roomAlt: function (room, id) { return room + " in apartment " + id + ", as it is today"; },
+    logoAlt: "The Closing Group logo: no photo of this room yet",
     roomSoon: function (id) { return "Room photos of apartment " + id + " come with its film. Pick another apartment below."; },
     change: "Change apartment ↓"
   };
@@ -170,6 +173,8 @@
     if (!fig || !a) return;
     var name = T.rooms[r];
     if (a.soon) {
+      img.classList.remove("is-logo");
+      soon.classList.remove("under");
       img.hidden = true;
       img.removeAttribute("src");
       soon.hidden = false;
@@ -178,14 +183,20 @@
       return;
     }
     if (!shows(a, r)) {
-      img.hidden = true;
-      img.removeAttribute("src");
+      // No photo of this room: show the Closing Group logo in its place, with the honest note underneath.
+      img.hidden = false;
+      img.classList.add("is-logo");
+      img.src = LOGO;
+      img.alt = T.logoAlt;
       soon.hidden = false;
+      soon.classList.add("under");
       soon.textContent = T.notShown(name, a.id);
       cap.textContent = T.roomCap(name, a.id);
       return;
     }
     soon.hidden = true;
+    soon.classList.remove("under");
+    img.classList.remove("is-logo");
     img.hidden = false;
     img.src = roomSrc(a, r);
     img.alt = T.roomAlt(name, a.id);
