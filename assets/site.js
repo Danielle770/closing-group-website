@@ -90,6 +90,13 @@
       ? '<div class="tcg-welcome" role="status" tabindex="-1"><p class="tcg-welcome-head">Welcome back' + (firstName ? ", " + esc(firstName) : "") + "! You're already in" + (KAHILA[area] ? " the " + KAHILA[area] + " Kahila" : "") + ".</p><p>We've updated your details. We'll message you the moment there's real news.</p></div>"
       : welcomeHTML(area, firstName);
     var el = box.firstChild;
+    // The films come first, right under the welcome line — one tap away
+    try {
+      if (window.cgMember && window.cgMember.filmsHTML) {
+        var head = el.querySelector(".tcg-welcome-head");
+        if (head) head.insertAdjacentHTML("afterend", window.cgMember.filmsHTML(area));
+      }
+    } catch (e) {}
     form.parentNode.replaceChild(el, form);
     el.focus({ preventScroll: true });
     el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -153,9 +160,14 @@
     });
   }
 
+  // A member on this device never sees a join form: member.js shows "Welcome back" in its place.
+  var MEMBER = null;
+  try { MEMBER = window.cgMember && window.cgMember.get(); } catch (e) {}
+
   document.querySelectorAll("form").forEach(function (form) {
     var button = form.querySelector("button");
     if (!button) return;
+    if (MEMBER && form.hasAttribute("data-area")) return;
 
     // Hidden field that only bots fill in
     var trap = document.createElement("input");

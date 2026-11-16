@@ -1,5 +1,7 @@
 /* "Stay in touch — add to your home screen".
-   Registers the service worker, and shows the install button in the footer and in the welcome after joining.
+   Registers the service worker, and shows the install button in the footer, plus a small, gentle tip inside the
+   welcome box (after joining, and "Welcome back" for members). The tip is only a suggestion: it sits below the films,
+   never opens anything by itself, and once dismissed (×) it stays hidden on this device.
    Android / Chrome: the button opens the system install sheet (beforeinstallprompt).
    iPhone / iPad: Apple doesn't let a website install itself, so the button shows the two steps instead.
    Hidden when the site is already open as an installed app. */
@@ -19,21 +21,24 @@
     s2: 'Faites d\u00e9filer vers le bas et touchez <b>Sur l\u2019\u00e9cran d\u2019accueil</b>, puis <b>Ajouter</b>.',
     p: 'L\u2019ic\u00f4ne dor\u00e9e CG appara\u00eet sur votre t\u00e9l\u00e9phone. Touchez-la pour revenir directement chez nous.',
     ok: 'Compris', foot: 'Restez en contact \u2014 ajoutez-nous \u00e0 votre \u00e9cran d\u2019accueil',
-    wTitle: 'Vous y \u00eates \u2014 ajoutez l\u2019ic\u00f4ne pour ne pas nous perdre.', wBtn: 'Ajouter \u00e0 l\u2019\u00e9cran d\u2019accueil'
+    wTip: 'Astuce\u00a0: ', wBtn: 'ajoutez-nous \u00e0 votre \u00e9cran d\u2019accueil', wClose: 'Masquer cette astuce'
   } : {
     title: 'Add us to your home screen',
     s1: 'Tap <b>Share</b> <span aria-hidden="true">(the square with the arrow pointing up)</span> at the bottom of Safari.',
     s2: 'Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.',
     p: 'The gold CG icon appears on your phone. Tap it to come straight back to us.',
     ok: 'Got it', foot: 'Stay in touch \u2014 add to your home screen',
-    wTitle: 'You\'re in \u2014 add the icon so you don\'t lose us.', wBtn: 'Add to your home screen'
+    wTip: 'Tip: ', wBtn: 'add us to your home screen', wClose: 'Hide this tip'
   };
 
   var css = '.cg-install-wrap[hidden],.cg-a2hs[hidden]{display:none!important}' +
     '.cg-install-foot{max-width:1024px;margin:0 auto 18px;display:flex;justify-content:center}' +
     '.cg-install{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:8px 20px 8px 10px;border-radius:999px;border:1.5px solid #D4AF37;background:#0A0A0A;color:#FFFFFF;font:600 15px/1.2 Inter,system-ui,sans-serif;cursor:pointer}' +
     '.cg-install img{border-radius:8px}.cg-install:hover{background:#1D1D1F}.cg-install:focus-visible{outline:3px solid #D4AF37;outline-offset:3px}' +
-    '.cg-install-welcome{margin-top:16px;padding-top:16px;border-top:1px solid rgba(0,0,0,.1)}.cg-install-welcome p{margin:0 0 10px;font-weight:600}' +
+    '.cg-install-tip{display:flex;align-items:center;gap:4px;margin-top:4px;padding-top:10px;border-top:1px solid rgba(0,0,0,.08);font:14px/1.4 Inter,system-ui,sans-serif;color:#6E6E73}' +
+    '.cg-install-tip span{flex:0 0 auto}.cg-tip-go{flex:0 1 auto;min-height:44px;padding:0 2px;border:0;background:none;color:#8A6A12;font:600 14px/1.4 Inter,system-ui,sans-serif;text-align:left;text-decoration:underline;text-underline-offset:3px;cursor:pointer}' +
+    '.cg-tip-x{margin-left:auto;min-width:44px;min-height:44px;border:0;border-radius:999px;background:none;color:#86868B;font-size:20px;line-height:1;cursor:pointer}.cg-tip-x:hover{background:rgba(0,0,0,.05)}' +
+    '.cg-tip-go:focus-visible,.cg-tip-x:focus-visible{outline:3px solid #8A6A12;outline-offset:2px}' +
     '.cg-a2hs{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px}' +
     '.cg-a2hs-box{width:min(440px,100%);background:#FFFFFF;color:#1D1D1F;border-radius:22px;padding:24px 22px;font:16px/1.55 Inter,system-ui,sans-serif}' +
     '.cg-a2hs-box h2{margin:0 0 12px;font-size:21px}.cg-a2hs-box ol{margin:0 0 12px;padding-left:22px}.cg-a2hs-box li{margin-bottom:8px}.cg-a2hs-box p{margin:0 0 16px;color:#424245}' +
@@ -88,12 +93,23 @@
     foot.insertBefore(w, foot.firstChild);
   }
 
-  // Welcome after joining: watch for the welcome box and add the button inside it
+  // Inside the welcome box (after joining, or "Welcome back"): a small tip under the films. Dismissed = gone on this device.
+  var OFF = 'cg_a2hs_tip_off';
+  function tipOff() { try { return localStorage.getItem(OFF) === '1'; } catch (e) { return false; } }
   function addWelcome(el) {
-    if (!el || el.querySelector('.cg-install-wrap')) return;
-    var w = document.createElement('div'); w.className = 'cg-install-wrap cg-install-welcome'; w.hidden = true;
-    w.innerHTML = '<p>' + L.wTitle + '</p>';
-    w.appendChild(makeButton('welcome', L.wBtn));
+    if (!el || el.querySelector('.cg-install-wrap') || tipOff()) return;
+    var w = document.createElement('div'); w.className = 'cg-install-wrap cg-install-tip'; w.hidden = true;
+    w.innerHTML = '<span>' + L.wTip + '</span>';
+    var go = document.createElement('button');
+    go.type = 'button'; go.className = 'cg-tip-go'; go.setAttribute('data-where', 'welcome_tip'); go.textContent = L.wBtn;
+    go.addEventListener('click', onClick);
+    var x = document.createElement('button');
+    x.type = 'button'; x.className = 'cg-tip-x'; x.setAttribute('aria-label', L.wClose); x.textContent = '\u00d7';
+    x.addEventListener('click', function () {
+      try { localStorage.setItem(OFF, '1'); } catch (e) {}
+      track('install_tip_dismissed'); w.remove();
+    });
+    w.appendChild(go); w.appendChild(x);
     el.appendChild(w); refresh();
   }
 
