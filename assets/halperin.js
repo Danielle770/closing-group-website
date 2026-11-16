@@ -8,7 +8,7 @@
   var BASE = "/netanya/halperin/";
   var IMG = BASE + "img/";
   var MEDIA = BASE + "media/";
-  var LOGO = "/assets/closing-group-logo.png";   // stands in for a room the film doesn't show
+  var LOGO = "/assets/room-no-photo.jpg";   // stands in for a room the film doesn't show
   var $ = function (id) { return document.getElementById(id); };
 
   // Apartments. Each one with a film also has stills of its rooms, taken from that film:
@@ -97,13 +97,20 @@
 
   // Which rooms each film shows. A room that isn't in an apartment's film says so instead of a photo.
   var SHOWN = {
-    "65": ["live", "bed1", "bed2", "bed3", "bed4", "bathp"],
-    "63": ["live", "bed1", "bed2", "bed3", "bathp"],
+    "65": ["live", "bed1", "bed2", "bed3", "bed4", "bathp", "bathf"],
+    "63": ["live", "bed1", "bed2", "bed3", "bathp", "bathf"],
     "61": ["live", "bed1", "bed2", "bed3", "bathf", "wc"],
     "53": ["live", "bed1", "bed2", "bed3", "bed4", "bathf"],
     "49": ["live", "bed1", "bed2", "bed3", "bed4", "bathp", "bathf"],
     "45": ["live", "bed1", "bed2", "bed3", "bathp", "bathf"],
     "42": ["live", "bed1", "bed2", "bed3", "bathf", "wc"]
+  };
+
+  // The penthouses have three en-suites and no separate family bathroom, so their second bathroom
+  // (shown under the "Family bathroom" button) is named for what it is.
+  var RENAME = {
+    "65": { bathf: FR ? "Deuxième salle de bains (en suite)" : "Second bathroom (en-suite)" },
+    "63": { bathf: FR ? "Deuxième salle de bains (en suite)" : "Second bathroom (en-suite)" }
   };
 
   var APTS = FR ? FRA : EN;
@@ -171,7 +178,7 @@
     var a = APTS.filter(function (x) { return x.id === current; })[0];
     var fig = $("room-photo"), img = $("room-img"), cap = $("room-cap"), soon = $("room-soon");
     if (!fig || !a) return;
-    var name = T.rooms[r];
+    var name = (RENAME[a.id] && RENAME[a.id][r]) || T.rooms[r];
     if (a.soon) {
       img.classList.remove("is-logo");
       soon.classList.remove("under");
