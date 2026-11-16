@@ -45,7 +45,7 @@
       : (FR ? "Nos premiers films viennent de Netanya. Ceux de votre Kahila " + esc(k.name) + " arrivent dès qu’un promoteur signe."
             : "Our first films are from Netanya. Your " + esc(k.name) + " films come as soon as a builder there signs.");
     return '<div class="cg-films-box"><a class="cg-films" href="' + films() + '" data-where="member">' +
-      '<span class="cg-films-play" aria-hidden="true">▶</span>' + (FR ? "Voir les films des appartements" : "Watch the apartment films") + '</a>' +
+      '<span class="cg-films-play" aria-hidden="true">▶</span>' + (FR ? "Catalogue des appartements" : "Apartment catalogue") + '</a>' +
       '<p class="cg-films-note">' + note + '</p></div>';
   }
   var FILMS_CSS =
@@ -125,7 +125,7 @@
     // "Join the Kahila free →" buttons in the page → the films
     document.querySelectorAll('a.k-btn[href="#join"]').forEach(function (a) {
       a.setAttribute("href", films());
-      a.innerHTML = (FR ? "Voir les films des appartements" : "Watch the apartment films") + ' <span aria-hidden="true">→</span>';
+      a.innerHTML = (FR ? "Catalogue des appartements" : "Apartment catalogue") + ' <span aria-hidden="true">→</span>';
     });
     document.addEventListener("click", function (e) {
       var a = e.target.closest && e.target.closest("a.cg-films, a.k-btn");
@@ -157,7 +157,7 @@
     var line = FR
       ? (k ? " <b>Vous faites déjà partie de la Kahila " + esc(k.name) + ".</b>" : " <b>Ravis de vous revoir.</b>")
       : (k ? " <b>You're already in the " + esc(k.name) + " Kahila.</b>" : " <b>Good to see you again.</b>");
-    var link = ' <a class="cg-films-link" href="' + films() + '">▶ ' + (FR ? "Voir les films des appartements" : "Watch the apartment films") + ' ›</a>';
+    var link = ' <a class="cg-films-link" href="' + films() + '">▶ ' + (FR ? "Catalogue des appartements" : "Apartment catalogue") + ' ›</a>';
     bar.innerHTML = '<div class="cg-wb-in"><p>' + hello + line + link + '</p><button type="button" aria-label="' + (FR ? "Fermer le message de bienvenue" : "Close welcome message") + '">×</button></div>';
     var top = document.querySelector(".cg-top");
     var after = top && top.nextElementSibling && top.nextElementSibling.classList.contains("cg-sub") ? top.nextElementSibling : top;
