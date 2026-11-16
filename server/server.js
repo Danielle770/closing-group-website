@@ -11,6 +11,7 @@
  *   POST /api/agent              apartment chat: one answer from the AI agent (needs ANTHROPIC_API_KEY)
  *   POST /api/lead               apartment chat: the lead, from the first question on (saved, card emailed to liaison + admin, sent to WhatsApp)
  *   GET  /api/admin/leads.csv, /api/admin/agent-gaps.csv  (password protected)
+ *   /api/portal/...              the leads portal for the liaisons and the Boss (see portal.js)
  * Configuration comes from environment variables (see .env.example).
  */
 const express = require('express');
@@ -20,6 +21,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { createAgent } = require('./agent');
+const { createPortal } = require('./portal');
 
 const env = process.env;
 const cfg = {
@@ -505,6 +507,8 @@ function leadCard(l, plan, kind) {
     `${head} · Apartment ${l.apt}${l.short ? ` (${l.short})` : ''} · Halperin Street, Netanya`,
     `Liaison: ${l.liaison}${l.lang === 'fr' ? ' (French)' : ''}`,
     who,
+    ...(l.portal && l.portal.chats > 1 ? [`Returning: this is their chat no. ${l.portal.chats} (same email, same row in the portal)`] : []),
+    ...(l.portal ? [`Open in the portal: ${l.portal.url}`] : []),
     ...contactLines(l),
     `Best time to call: ${l.best_time || 'not given yet'}`,
     `Left details: ${[l.whatsapp ? 'WhatsApp number' : '', l.member_email ? 'member email' : '', l.best_time ? 'best time' : ''].filter(Boolean).join(', ') || 'none yet'} · Pressed "Set up a call": ${l.setup_pressed ? 'yes' : 'no'}`,
@@ -632,6 +636,7 @@ app.post('/api/lead', (req, res) => {
   }
   // Answer the browser at once; the plan (may ask the AI) and the emails happen in the background.
   res.json({ ok: true, lead_id: key, emailed: kind });
+  if (kind) l.portal = portal.forLead(rowId);
   if (kind) sendLeadCard(l, kind, rowId).catch((e) => console.error('lead card error:', e.message));
 });
 
@@ -684,6 +689,10 @@ app.get('/api/admin/agent-gaps.csv', (req, res) => {
   const cols = ['created_at', 'apt', 'lang', 'question'];
   sendCsv(res, 'agent-gaps.csv', cols, db.prepare(`SELECT ${cols.join(',')} FROM agent_gaps ORDER BY created_at DESC`).all());
 });
+
+// ---------- the leads portal (liaisons + Boss) ----------
+const portal = createPortal({ db, cfg, now, esc, sendMail, emailLayout, limited, agent });
+app.use('/api/portal', portal.router);
 
 app.use('/api', (req, res) => res.status(404).json({ ok: false, error: 'Not found' }));
 

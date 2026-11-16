@@ -26,7 +26,7 @@ id -u closinggroup >/dev/null 2>&1 || useradd --system --no-create-home --shell 
 
 # App code lives OUTSIDE the public website folder
 mkdir -p "$APP_DIR" "$CONF_DIR" "$DATA_DIR"
-cp "$SITE_DIR/server/server.js" "$SITE_DIR/server/agent.js" "$SITE_DIR/server/package.json" "$APP_DIR/"
+cp "$SITE_DIR/server/server.js" "$SITE_DIR/server/agent.js" "$SITE_DIR/server/portal.js" "$SITE_DIR/server/hash-password.js" "$SITE_DIR/server/package.json" "$APP_DIR/"
 ( cd "$APP_DIR" && npm install --omit=dev --no-audit --no-fund )
 
 # Settings file (created once, never overwritten)
@@ -39,7 +39,8 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 # The chat agent reads the Q&A, the apartment facts and the pages from the website folder
 grep -q '^SITE_DIR=' "$ENV_FILE" || echo "SITE_DIR=$SITE_DIR" >> "$ENV_FILE"
-for k in ANTHROPIC_API_KEY AGENT_MODEL TWILIO_WHATSAPP_FROM COMPANY_WHATSAPP TWILIO_WHATSAPP_CONTENT_SID; do
+for k in ANTHROPIC_API_KEY AGENT_MODEL TWILIO_WHATSAPP_FROM COMPANY_WHATSAPP TWILIO_WHATSAPP_CONTENT_SID \
+  LIAISON_EN_EMAIL LIAISON_FR_EMAIL LIAISON_EN_USER LIAISON_EN_PASSWORD_HASH LIAISON_FR_USER LIAISON_FR_PASSWORD_HASH MISSED_AFTER_HOURS WATCHDOG_HOUR; do
   grep -q "^$k=" "$ENV_FILE" || echo "$k=" >> "$ENV_FILE"
 done
 chown -R closinggroup:closinggroup "$DATA_DIR"
