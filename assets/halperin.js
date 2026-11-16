@@ -379,7 +379,8 @@
 
     function reset(a) {
       apt = a;
-      st = { step: "idle", questions: [], open: [], transcript: [], time: "", waOk: null, number: "", french: FR, sent: false };
+      st = { step: "idle", questions: [], open: [], transcript: [], time: "", waOk: null, number: "", french: FR, sent: false, setup: false, leadId: newLeadId() };
+      clearTimeout(updTimer);
       if (!log) return;
       log.innerHTML = ""; quick.innerHTML = ""; quick.hidden = true;
       panel.hidden = true;
@@ -510,6 +511,7 @@
     function askTime() {
       if (st.step === "time" || st.step === "wa" || st.step === "number") return;
       st.step = "time";
+      st.setup = true; syncLead(false);
       input.placeholder = C.timePh;
       setQuick(null);
       add("agent", C.time(apt.id, liaison()));
@@ -538,6 +540,7 @@
       sendLead();
     }
     function sendLead() {
+      clearTimeout(updTimer);
       var status = add("agent", "…");
       st.transcript.pop();
       var payload = leadPayload();
@@ -567,15 +570,17 @@
       if (st.step === "question" || st.step === "done") {
         if (st.step === "question" && /^(no|nope|done|that'?s all|nothing else|no more|set up|c'?est tout|non merci|rien d'autre)\b/i.test(text)) { askTime(); return; }
         st.questions.push(text);
+        // The lead starts at the FIRST question: no button, no number needed. Later questions update it.
+        syncLead(st.questions.length === 1);
         busy = true;
         var dots = typing();
         answer(text, function (res) {
           busy = false; dots.remove();
           if (!res.known) st.open.push(text);
           add("agent", res.text);
+          syncLead(false);                 // carry the answer (and any open question) to the lead
           if (st.step === "done") {
             add("agent", C.added);
-            if (st.sent) resendUpdate();
             return;
           }
           if (!res.known || st.questions.length % 3 === 0) add("agent", C.nudge);
@@ -583,7 +588,7 @@
           setQuick([{ label: C.setup, fn: askTime }]);
         });
       } else if (st.step === "time") {
-        st.time = text; askWa();
+        st.time = text; syncLead(false); askWa();
       } else if (st.step === "wa") {
         if (/^(y|yes|yeah|yep|sure|ok|okay|fine|oui|ouais|d'accord|bien sûr)/i.test(text)) { st.waOk = true; askNumber(); }
         else if (/^(n|no|nope|non|pas)/i.test(text)) { st.waOk = false; askNumber(); }
@@ -595,15 +600,29 @@
         finish();
       }
     }
-    // Questions asked after the lead went out are sent as an update, so the liaison has them all.
-    var updTimer = null;
-    function resendUpdate() {
-      clearTimeout(updTimer);
-      updTimer = setTimeout(function () {
-        var p = leadPayload(); p.update = true;
-        fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) }).catch(function () {});
-      }, 4000);
+    // One lead per conversation. The browser makes its id, so every update lands on the same lead.
+    // The first question goes at once; after that, updates wait a few seconds and go together.
+    function newLeadId() {
+      var a = new Uint8Array(12), out = "";
+      try { (window.crypto || window.msCrypto).getRandomValues(a); } catch (e) { for (var i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
+      for (var j = 0; j < a.length; j++) out += ("0" + a[j].toString(16)).slice(-2);
+      return out;
     }
+    var updTimer = null;
+    function postLead() {
+      updTimer = null;
+      fetch("/api/lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(leadPayload()), keepalive: true })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { if (j && j.ok && j.emailed === "new") track("halperin_lead_started", { apartment: apt.id }); })
+        .catch(function () {});
+    }
+    function syncLead(now) {
+      if (!st || !apt || !st.questions.length) return;   // no question yet, no lead
+      clearTimeout(updTimer);
+      if (now) postLead(); else updTimer = setTimeout(postLead, 5000);
+    }
+    // Leaving the page: send what is waiting at once.
+    window.addEventListener("pagehide", function () { if (updTimer) { clearTimeout(updTimer); updTimer = null; postLead(); } });
 
     function leadPayload() {
       var optedOut = false;
@@ -614,7 +633,10 @@
       var replay = "", did = "";
       try { did = window.posthog && window.posthog.get_distinct_id ? window.posthog.get_distinct_id() : ""; } catch (e) {}
       try { replay = window.posthog && window.posthog.get_session_replay_url ? window.posthog.get_session_replay_url({ withTimestamp: true }) : ""; } catch (e) {}
+      var mem = null; try { mem = window.cgMember && window.cgMember.get(); } catch (e) {}
       return {
+        lead_id: st.leadId, setup_pressed: !!st.setup,
+        member_name: (mem && mem.name) || "", member_email: (mem && mem.email) || "",
         apt: apt.id, lang: FR ? "fr" : "en", liaison: st.french ? DATA.liaisons.fr : DATA.liaisons.en,
         questions: st.questions, open_questions: st.open, best_time: st.time, whatsapp_ok: !!st.waOk, whatsapp: st.number,
         transcript: st.transcript.slice(-60), page: location.pathname, ref: ls("cg_ref") || "",

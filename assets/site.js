@@ -193,7 +193,7 @@
           if (!j.ok) { message(form, srv(j.error) || M.oops); return; }
           try { window.cgAnalytics && window.cgAnalytics.member(data); } catch (e) {}
           var first = (data.full_name || "").split(" ")[0];
-          try { window.cgMember && window.cgMember.remember(data.area, first); } catch (e) {}
+          try { window.cgMember && window.cgMember.remember(data.area, first, data.email); } catch (e) {}
           if (j.whatsapp === "sent") {
             message(form, M.waSent, true);
             showCodeStep(form, data.email);

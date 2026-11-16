@@ -9,7 +9,7 @@
  *   GET  /api/admin/members.csv  member list for the team (password protected)
  *   GET  /api/health             health check
  *   POST /api/agent              apartment chat: one answer from the AI agent (needs ANTHROPIC_API_KEY)
- *   POST /api/lead               apartment chat: the warm lead card for the liaison (saved, emailed, sent to WhatsApp)
+ *   POST /api/lead               apartment chat: the lead, from the first question on (saved, card emailed to liaison + admin, sent to WhatsApp)
  *   GET  /api/admin/leads.csv, /api/admin/agent-gaps.csv  (password protected)
  * Configuration comes from environment variables (see .env.example).
  */
@@ -41,6 +41,10 @@ const cfg = {
   waFrom: env.TWILIO_WHATSAPP_FROM || '',          // our WhatsApp sender on Twilio, e.g. +14155238886
   waTo: env.COMPANY_WHATSAPP || '',                // the company WhatsApp that receives every lead, e.g. +972542222504
   waContentSid: env.TWILIO_WHATSAPP_CONTENT_SID || '', // approved WhatsApp template (needed outside the 24-hour window)
+  // Lead cards go to the liaison for the chat's language AND to the admin. Until a liaison address is set, admin only.
+  liaisonEnEmail: (env.LIAISON_EN_EMAIL || '').trim(),   // Michal
+  liaisonFrEmail: (env.LIAISON_FR_EMAIL || '').trim(),   // Levy Levin
+  leadAdminEmail: (env.ADMIN_EMAIL || 'closinggroupisrael@gmail.com').trim(),
 };
 const CONSENT_VERSION = '2026-11-09';
 const AREAS = { netanya: 'Netanya', center: 'the Center', jerusalem: 'Jerusalem', home: 'any area' };
@@ -81,14 +85,32 @@ if (db.prepare("SELECT 1 FROM pragma_table_info('inquiries') WHERE name='whatsap
     DROP TABLE inquiries_old;
     COMMIT;`);
 }
-db.exec(`CREATE TABLE IF NOT EXISTS leads (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+// Leads from the apartment chat. A lead starts at the visitor's FIRST question (no number needed);
+// later questions, the "set up a call" button, the best time and a WhatsApp number update the same row.
+const LEAD_COLS = `id INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
   apt TEXT NOT NULL, lang TEXT, liaison TEXT,
-  whatsapp TEXT NOT NULL, whatsapp_ok INTEGER, best_time TEXT,
+  whatsapp TEXT, whatsapp_ok INTEGER, best_time TEXT,
   questions TEXT, open_questions TEXT, transcript TEXT, analytics TEXT, plan TEXT,
-  page TEXT, ref TEXT, ip TEXT, status TEXT NOT NULL DEFAULT 'new'
-)`);
+  page TEXT, ref TEXT, ip TEXT, status TEXT NOT NULL DEFAULT 'new'`;
+db.exec(`CREATE TABLE IF NOT EXISTS leads (${LEAD_COLS})`);
+// Older installs required a WhatsApp number on every lead; it is optional now.
+if (db.prepare("SELECT 1 FROM pragma_table_info('leads') WHERE name='whatsapp' AND \"notnull\"=1").get()) {
+  const old = db.prepare("SELECT name FROM pragma_table_info('leads')").all().map((r) => r.name).join(', ');
+  db.exec(`BEGIN;
+    ALTER TABLE leads RENAME TO leads_old;
+    CREATE TABLE leads (${LEAD_COLS});
+    INSERT INTO leads (${old}) SELECT ${old} FROM leads_old;
+    DROP TABLE leads_old;
+    COMMIT;`);
+}
+for (const [col, type] of [['lead_key', 'TEXT'], ['member_name', 'TEXT'], ['member_email', 'TEXT'], ['member_found', 'INTEGER'],
+  ['setup_pressed', 'INTEGER'], ['completed_at', 'TEXT'], ['emailed_at', 'TEXT'], ['emails_sent', 'INTEGER']]) {
+  if (!db.prepare("SELECT 1 FROM pragma_table_info('leads') WHERE name=?").get(col)) db.exec(`ALTER TABLE leads ADD COLUMN ${col} ${type}`);
+}
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS leads_key ON leads(lead_key)');
+// Leads from before this change always had a number: they count as complete.
+db.exec('UPDATE leads SET completed_at=updated_at WHERE completed_at IS NULL AND lead_key IS NULL AND whatsapp IS NOT NULL');
 db.exec(`CREATE TABLE IF NOT EXISTS agent_gaps (
   id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL, apt TEXT, lang TEXT, question TEXT NOT NULL
 )`);
@@ -433,21 +455,65 @@ app.post('/api/agent', async (req, res) => {
   }
 });
 
-// ---------- apartment chat: the warm lead for the liaison ----------
+// ---------- apartment chat: the lead for the liaison ----------
+// A lead is born the moment a visitor asks their FIRST question in the apartment chat. WhatsApp is one way to
+// reach them, never the gate. The browser keeps a lead id for the conversation and sends it back, so later
+// questions, the "set up a call" button, the best time and the number all update the SAME lead.
+// Emails: one when the lead is born, one when it is completed with a number, and (at most every
+// LEAD_UPDATE_EVERY) one when new questions come in after that. Other updates only refresh the row.
+const LEAD_KEY_RE = /^[A-Za-z0-9_-]{16,64}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const LEAD_UPDATE_EVERY = 15 * 60e3;
 function secs(n) { n = Math.max(0, Math.round(Number(n) || 0)); const m = Math.floor(n / 60); return m ? `${m} min ${n % 60} s` : `${n} s`; }
-function leadCard(l, plan) {
+const parseJson = (s, d) => { try { return s ? JSON.parse(s) : d; } catch { return d; } };
+const n = (x, w) => `${x} ${w}${x === 1 ? '' : 's'}`;
+const waLink = (num) => `https://wa.me/${String(num).replace(/[^\d]/g, '')}`;
+
+// Everything about how involved this visitor is, in a few numbers (for the card and the list).
+function involvement(l) {
   const a = l.analytics || {};
-  const wa = l.whatsapp.replace(/[^\d]/g, '');
+  const films = a.films_watched_seconds || {};
+  const rooms = a.rooms_looked_at || {};
+  return {
+    questions: (l.questions || []).length,
+    seconds: a.opted_out ? null : Math.round(Number(a.seconds_on_site_this_visit) || 0),
+    pages: a.opted_out ? null : (a.pages_this_visit || []).length,
+    apartments: a.opted_out ? null : (a.apartments_opened || []).length,
+    rooms: a.opted_out ? null : Object.keys(rooms).reduce((n, k) => n + (rooms[k] || []).length, 0),
+    films: a.opted_out ? null : Object.keys(films).length,
+    filmSeconds: a.opted_out ? null : Object.keys(films).reduce((n, k) => n + (Number(films[k]) || 0), 0),
+    visualisations: a.opted_out ? null : (a.visualisations_seen || []).length,
+  };
+}
+// How the liaison can reach them, in plain words. WhatsApp first if we have it, otherwise the member's email.
+function contactLines(l) {
+  const out = [];
+  if (l.whatsapp) out.push(`WhatsApp: ${l.whatsapp} · ${waLink(l.whatsapp)}${l.whatsapp_ok ? ' (happy to talk on WhatsApp)' : ' (prefers a phone call)'}`);
+  else if (l.member_whatsapp) out.push(`WhatsApp (given when they joined, not in this chat): ${l.member_whatsapp} · ${waLink(l.member_whatsapp)}`);
+  if (l.member_email) out.push(`Email (member${l.whatsapp || l.member_whatsapp ? '' : ', no number given'}): ${l.member_email}`);
+  if (!out.length) out.push('Contact: none yet. They asked a question but left no number and no email (not a member on this device). The card is here so you can see them; details may follow in an update.');
+  return out;
+}
+function leadCard(l, plan, kind) {
+  const a = l.analytics || {};
+  const inv = involvement(l);
+  const head = { new: l.whatsapp || l.member_email ? 'NEW LEAD' : 'NEW LEAD · no contact yet', complete: 'LEAD COMPLETE · number given', update: 'LEAD UPDATE · new questions' }[kind] || 'LEAD';
+  const who = l.member_email
+    ? `Who: ${l.member_name || '(name not given)'} · enrolled member · ${l.member_email}${l.member_found ? `${l.member_kahila ? ` · ${l.member_kahila} Kahila` : ''}${l.member_since ? ` · joined ${l.member_since}` : ''}` : ' (email from their browser; not found in our member list)'}`
+    : 'Who: a visitor (not a member on this device, no name given)';
   const lines = [
-    `WARM LEAD · Apartment ${l.apt}${l.short ? ` (${l.short})` : ''} · Halperin Street, Netanya`,
+    `${head} · Apartment ${l.apt}${l.short ? ` (${l.short})` : ''} · Halperin Street, Netanya`,
     `Liaison: ${l.liaison}${l.lang === 'fr' ? ' (French)' : ''}`,
-    `WhatsApp: ${l.whatsapp} · https://wa.me/${wa}${l.whatsapp_ok ? ' (happy to talk on WhatsApp)' : ' (prefers a phone call)'}`,
-    `Best time to call: ${l.best_time}`,
+    who,
+    ...contactLines(l),
+    `Best time to call: ${l.best_time || 'not given yet'}`,
+    `Left details: ${[l.whatsapp ? 'WhatsApp number' : '', l.member_email ? 'member email' : '', l.best_time ? 'best time' : ''].filter(Boolean).join(', ') || 'none yet'} · Pressed "Set up a call": ${l.setup_pressed ? 'yes' : 'no'}`,
+    `How involved: ${n(inv.questions, 'question')}${a.opted_out ? ' (analytics off: no visit data)' : ` · ${secs(inv.seconds)} on the site this visit · ${n(inv.pages, 'page')} · ${n(inv.apartments, 'apartment')} opened · ${n(inv.rooms, 'room')} looked at · ${n(inv.films, 'film')} watched · ${n(inv.visualisations, 'visualisation')} seen`}`,
     '',
     'What they asked / their concerns:',
     ...(l.questions.length ? l.questions.map((q) => `- ${q}`) : ['- No specific question: general interest']),
   ];
-  if (l.open_questions.length) lines.push('', 'Still to answer on the call:', ...l.open_questions.map((q) => `- ${q}`));
+  if (l.open_questions.length) lines.push('', 'Still to answer:', ...l.open_questions.map((q) => `- ${q}`));
   lines.push('', 'On the website:');
   if (a.opted_out) lines.push('- The visitor switched analytics off, so we have no browsing data.');
   else {
@@ -462,11 +528,12 @@ function leadCard(l, plan) {
     if (Object.keys(films).length) lines.push(`- Films watched: ${Object.keys(films).map((id) => `Apt ${id} (${secs(films[id])})`).join(', ')}`);
     if (a.referrer) lines.push(`- Came from: ${a.referrer}`);
     if (a.device) lines.push(`- Device: ${a.device}`);
-    if (a.replay_url) lines.push(`- Session replay: ${a.replay_url}`);
-    else if (a.posthog_id) lines.push(`- PostHog person: https://us.posthog.com/person/${encodeURIComponent(a.posthog_id)}`);
   }
+  // Always keep a way to find who this is in PostHog.
+  if (a.replay_url) lines.push(`- Session replay: ${a.replay_url}`);
+  if (a.posthog_id) lines.push(`- PostHog person: https://us.posthog.com/person/${encodeURIComponent(a.posthog_id)}`);
   if (l.ref) lines.push(`- Referred by: ${l.ref}`);
-  lines.push('', 'How to move it towards a deal:', ...plan.map((p) => `- ${p}`));
+  if (plan && plan.length) lines.push('', 'How to move it towards a deal:', ...plan.map((p) => `- ${p}`));
   return lines;
 }
 async function sendLeadWhatsapp(text) {
@@ -481,57 +548,136 @@ async function sendLeadWhatsapp(text) {
   });
   if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 300)}`);
 }
+// Who gets the card: the liaison for the chat's language (from the settings) and the admin.
+function leadRecipients(liaison) {
+  const l = liaison === 'Levy Levin' ? cfg.liaisonFrEmail : cfg.liaisonEnEmail;
+  return [...new Set([l, cfg.leadAdminEmail].filter((e) => e && EMAIL_RE.test(e)).map((e) => e.toLowerCase()))];
+}
+async function sendLeadCard(l, kind, rowId) {
+  const plan = await agent.closingPlan(l);
+  db.prepare('UPDATE leads SET plan=?, emailed_at=?, emails_sent=IFNULL(emails_sent,0)+1 WHERE id=?').run(JSON.stringify(plan), now(), rowId);
+  const card = leadCard(l, plan, kind);
+  const reach = l.whatsapp ? `WhatsApp ${l.whatsapp}` : l.member_email ? `email ${l.member_email}` : 'no contact yet';
+  const subject = `${{ new: 'New lead', complete: 'Lead complete', update: 'Lead update' }[kind]}: Apartment ${l.apt} · ${l.member_name || 'visitor'} · ${reach} · ${l.liaison}`;
+  const transcript = l.transcript.length ? ['', 'The conversation:', ...l.transcript] : [];
+  const text = card.concat(transcript).join('\n');
+  const html = emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(text)}</pre>`);
+  for (const to of leadRecipients(l.liaison)) sendMail(to, subject, text, html).catch((e) => console.error(`lead mail error (${to}):`, e.message));
+  sendLeadWhatsapp(({ complete: '(Complete) ', update: '(Update) ' }[kind] || '') + card.join('\n')).catch((e) => console.error('lead WhatsApp error:', e.message));
+}
 
-app.post('/api/lead', async (req, res) => {
+app.post('/api/lead', (req, res) => {
   const b = req.body || {};
-  if (limited('lead:' + req.ip, 10, 10 * 60e3)) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again in a few minutes.' });
   const apt = clean(b.apt, 4);
   if (!agent.aptIds().includes(apt)) return res.status(400).json({ ok: false, error: 'Bad request' });
-  const whatsapp = normalisePhone(b.whatsapp);
-  if (!whatsapp) return res.status(400).json({ ok: false, error: 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.' });
+  let key = LEAD_KEY_RE.test(String(b.lead_id || '')) ? String(b.lead_id) : null;
+  let prev = key ? db.prepare('SELECT * FROM leads WHERE lead_key=?').get(key) : null;
+  if (prev && prev.apt !== apt) { prev = null; key = null; }    // an id belongs to one apartment chat
+  // New leads: 10 per IP per 10 minutes. Updates to a lead this browser already has: more room.
+  if (prev ? limited('leadupd:' + req.ip, 60, 10 * 60e3) : limited('lead:' + req.ip, 10, 10 * 60e3)) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again in a few minutes.' });
+  // A WhatsApp number is optional. If one is typed it must be a real number.
+  const whatsapp = b.whatsapp ? normalisePhone(b.whatsapp) : null;
+  if (b.whatsapp && !whatsapp) return res.status(400).json({ ok: false, error: 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.' });
   const list = (v, n, max) => (Array.isArray(v) ? v.slice(0, n).map((x) => clean(String(x), max)).filter(Boolean) : []);
   let analytics = {};
   try { analytics = JSON.parse(JSON.stringify(b.analytics || {}).slice(0, 8000)); } catch { analytics = {}; }
+  // Members: the browser sends the email they enrolled with (cg_member); older members only have it as the
+  // PostHog distinct id (set by posthog.identify at join). We confirm it against the member list.
+  const posthogId = clean(String(analytics.posthog_id || ''), 254).toLowerCase();
+  const sentEmail = clean(b.member_email, 254).toLowerCase();
+  const memberEmail = EMAIL_RE.test(sentEmail) ? sentEmail : EMAIL_RE.test(posthogId) ? posthogId : (prev && prev.member_email) || '';
+  const m = memberEmail ? findByEmail.get(memberEmail) : null;
   const l = {
     apt, short: agent.aptShort(apt), lang: b.lang === 'fr' ? 'fr' : 'en',
     liaison: clean(b.liaison, 40) === 'Levy Levin' ? 'Levy Levin' : 'Michal',
-    whatsapp, whatsapp_ok: !!b.whatsapp_ok, best_time: clean(b.best_time, 200) || 'not given',
+    whatsapp: whatsapp || (prev && prev.whatsapp) || null,
+    whatsapp_ok: whatsapp ? !!b.whatsapp_ok : !!(prev && prev.whatsapp_ok),
+    best_time: clean(b.best_time, 200) || (prev && prev.best_time) || '',
+    setup_pressed: !!b.setup_pressed || !!(prev && prev.setup_pressed),
     questions: list(b.questions, 40, 600), open_questions: list(b.open_questions, 40, 600), transcript: list(b.transcript, 80, 1200),
     analytics, ref: clean(b.ref, 80), page: clean(b.page, 200),
+    member_email: memberEmail, member_found: !!m,
+    member_name: (m && m.full_name) || clean(b.member_name, 120) || (prev && prev.member_name) || '',
+    member_whatsapp: (m && m.whatsapp) || '', member_kahila: m ? (AREAS[m.area] && m.area !== 'home' ? AREAS[m.area] : '') : '',
+    member_since: m ? String(m.created_at || '').slice(0, 10) : '',
   };
+  // A conversation's question list only grows; never let a stale update shrink it.
+  if (prev) {
+    const pq = parseJson(prev.questions, []);
+    if (pq.length > l.questions.length) l.questions = pq;
+  }
   const t = now();
-  // A follow-up from the same chat (questions asked after the summary) updates the lead instead of making a new one.
-  const prev = b.update ? db.prepare("SELECT id FROM leads WHERE apt=? AND whatsapp=? AND created_at > ? ORDER BY id DESC LIMIT 1")
-    .get(apt, whatsapp, new Date(Date.now() - 6 * 3600e3).toISOString()) : null;
-  const plan = await agent.closingPlan(l);
-  const row = [t, l.lang, l.liaison, whatsapp, l.whatsapp_ok ? 1 : 0, l.best_time, JSON.stringify(l.questions), JSON.stringify(l.open_questions),
-    JSON.stringify(l.transcript), JSON.stringify(analytics), JSON.stringify(plan), l.page, l.ref, req.ip];
+  const completing = !!whatsapp && !(prev && prev.completed_at);
+  let kind = null;
+  if (!prev) kind = 'new';
+  else if (completing) kind = 'complete';
+  else if (prev.completed_at && l.questions.length > parseJson(prev.questions, []).length &&
+    (!prev.emailed_at || Date.now() - Date.parse(prev.emailed_at) > LEAD_UPDATE_EVERY)) kind = 'update';
+  const vals = [t, l.lang, l.liaison, l.whatsapp, l.whatsapp_ok ? 1 : 0, l.best_time, JSON.stringify(l.questions), JSON.stringify(l.open_questions),
+    JSON.stringify(l.transcript), JSON.stringify(analytics), l.page, l.ref, req.ip, l.member_name || null, l.member_email || null, l.member_found ? 1 : 0, l.setup_pressed ? 1 : 0];
+  let rowId;
   if (prev) {
     db.prepare(`UPDATE leads SET updated_at=?, lang=?, liaison=?, whatsapp=?, whatsapp_ok=?, best_time=?, questions=?, open_questions=?, transcript=?,
-      analytics=?, plan=?, page=?, ref=?, ip=? WHERE id=?`).run(...row, prev.id);
+      analytics=?, page=?, ref=?, ip=?, member_name=?, member_email=?, member_found=?, setup_pressed=?, completed_at=COALESCE(completed_at, ?) WHERE id=?`)
+      .run(...vals, completing ? t : null, prev.id);
+    rowId = prev.id;
   } else {
-    db.prepare(`INSERT INTO leads (created_at, updated_at, apt, lang, liaison, whatsapp, whatsapp_ok, best_time, questions, open_questions, transcript, analytics, plan, page, ref, ip)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(t, t, apt, ...row.slice(1));
+    key = key || crypto.randomBytes(12).toString('hex');
+    rowId = db.prepare(`INSERT INTO leads (created_at, updated_at, lang, liaison, whatsapp, whatsapp_ok, best_time, questions, open_questions, transcript,
+      analytics, page, ref, ip, member_name, member_email, member_found, setup_pressed, completed_at, apt, lead_key)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(t, ...vals, completing ? t : null, apt, key).lastInsertRowid;
   }
   for (const q of l.open_questions) {
     if (!db.prepare('SELECT 1 FROM agent_gaps WHERE question=? AND apt=?').get(q, apt)) db.prepare('INSERT INTO agent_gaps (created_at, apt, lang, question) VALUES (?,?,?,?)').run(t, apt, l.lang, q);
   }
-  const card = leadCard(l, plan);
-  const subject = `${prev ? 'Lead update' : 'Warm lead'}: Apartment ${apt} · call ${l.best_time} · ${l.liaison}`;
-  const transcript = l.transcript.length ? ['', 'The conversation:', ...l.transcript] : [];
-  if (cfg.adminEmail) {
-    sendMail(cfg.adminEmail, subject, card.concat(transcript).join('\n'),
-      emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(card.concat(transcript).join('\n'))}</pre>`))
-      .catch((e) => console.error('lead mail error:', e.message));
-  }
-  sendLeadWhatsapp((prev ? '(Update) ' : '') + card.join('\n')).catch((e) => console.error('lead WhatsApp error:', e.message));
-  res.json({ ok: true });
+  // Answer the browser at once; the plan (may ask the AI) and the emails happen in the background.
+  res.json({ ok: true, lead_id: key, emailed: kind });
+  if (kind) sendLeadCard(l, kind, rowId).catch((e) => console.error('lead card error:', e.message));
 });
 
+// The list the liaison works: every lead, partial ones included, newest first, one row each.
 app.get('/api/admin/leads.csv', (req, res) => {
   if (!isAdmin(req)) { res.set('WWW-Authenticate', 'Basic realm="The Closing Group"'); return res.status(401).send('Login required'); }
-  const cols = ['created_at', 'updated_at', 'apt', 'liaison', 'whatsapp', 'whatsapp_ok', 'best_time', 'questions', 'open_questions', 'plan', 'analytics', 'transcript', 'lang', 'ref', 'status'];
-  sendCsv(res, 'leads.csv', cols, db.prepare(`SELECT ${cols.join(',')} FROM leads ORDER BY updated_at DESC`).all());
+  const rows = db.prepare('SELECT * FROM leads ORDER BY updated_at DESC, id DESC').all().map((r) => {
+    const questions = parseJson(r.questions, []), open = parseJson(r.open_questions, []), a = parseJson(r.analytics, {});
+    const m = r.member_email ? findByEmail.get(r.member_email) : null;
+    const inv = involvement({ questions, analytics: a });
+    const films = a.films_watched_seconds || {}, rooms = a.rooms_looked_at || {};
+    const left = [r.whatsapp ? 'WhatsApp' : '', r.member_email ? 'member email' : '', r.best_time ? 'best time' : ''].filter(Boolean);
+    return {
+      updated_at: r.updated_at, created_at: r.created_at,
+      stage: r.completed_at ? 'complete' : 'partial',
+      apartment: r.apt, liaison: r.liaison, lang: r.lang,
+      name: r.member_name || '', member_email: r.member_email || '', member: r.member_email ? (r.member_found ? 'yes' : 'email not in member list') : 'no',
+      whatsapp: r.whatsapp || '',
+      how_to_reach: r.whatsapp ? `WhatsApp ${r.whatsapp} ${waLink(r.whatsapp)}` : m && m.whatsapp ? `WhatsApp (from joining) ${m.whatsapp}` : r.member_email ? `Email (member, no number given) ${r.member_email}` : 'no contact yet',
+      left_details: left.length ? left.join(' + ') : 'none',
+      best_time: r.best_time || '', pressed_set_up_call: r.setup_pressed ? 'yes' : 'no',
+      questions_asked: inv.questions,
+      minutes_on_site: inv.seconds == null ? 'analytics off' : Math.round(inv.seconds / 6) / 10,
+      pages_visited: inv.pages == null ? '' : inv.pages,
+      apartments_opened_count: inv.apartments == null ? '' : inv.apartments,
+      rooms_looked_at_count: inv.rooms == null ? '' : inv.rooms,
+      films_watched_count: inv.films == null ? '' : inv.films,
+      film_minutes: inv.filmSeconds == null ? '' : Math.round(inv.filmSeconds / 6) / 10,
+      visualisations_seen_count: inv.visualisations == null ? '' : inv.visualisations,
+      questions: questions.join(' | '), still_to_answer: open.join(' | '),
+      pages: (a.pages_this_visit || []).join(' > '),
+      apartments_opened: (a.apartments_opened || []).join(', '),
+      rooms_looked_at: Object.keys(rooms).map((k) => `Apt ${k}: ${(rooms[k] || []).join(', ')}`).join(' | '),
+      films_watched: Object.keys(films).map((k) => `Apt ${k} (${secs(films[k])})`).join(', '),
+      visualisations_seen: (a.visualisations_seen || []).join(', '),
+      first_visit: a.first_visit ? String(a.first_visit).slice(0, 10) : '', came_from: a.referrer || '', device: a.device || '',
+      posthog: a.replay_url || (a.posthog_id ? `https://us.posthog.com/person/${encodeURIComponent(a.posthog_id)}` : ''),
+      ref: r.ref || '', emails_sent: r.emails_sent || 0, status: r.status,
+      plan: parseJson(r.plan, []).join(' | '), transcript: parseJson(r.transcript, []).join('\n'),
+    };
+  });
+  const cols = ['updated_at', 'created_at', 'stage', 'apartment', 'liaison', 'name', 'member_email', 'member', 'whatsapp', 'how_to_reach', 'left_details',
+    'best_time', 'pressed_set_up_call', 'questions_asked', 'minutes_on_site', 'pages_visited', 'apartments_opened_count', 'rooms_looked_at_count',
+    'films_watched_count', 'film_minutes', 'visualisations_seen_count', 'questions', 'still_to_answer', 'pages', 'apartments_opened', 'rooms_looked_at',
+    'films_watched', 'visualisations_seen', 'first_visit', 'came_from', 'device', 'posthog', 'ref', 'lang', 'emails_sent', 'status', 'plan', 'transcript'];
+  sendCsv(res, 'leads.csv', cols, rows);
 });
 app.get('/api/admin/agent-gaps.csv', (req, res) => {
   if (!isAdmin(req)) { res.set('WWW-Authenticate', 'Basic realm="The Closing Group"'); return res.status(401).send('Login required'); }
