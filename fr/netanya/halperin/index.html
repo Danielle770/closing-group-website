@@ -166,6 +166,28 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   .roomcount div { font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+/* Room photos: tap a room box to see that room in the apartment picked below */
+.roomside { display: grid; gap: 14px; }
+.roomcount button { all: unset; box-sizing: border-box; cursor: pointer; aspect-ratio: 1; border-radius: 10px; border: 1.5px solid var(--line); display: grid; place-items: center; text-align: center; font-size: 13px; padding: 6px; line-height: 1.25; color: var(--mute); position: relative; transition: transform .15s ease, box-shadow .15s ease; -webkit-tap-highlight-color: transparent; }
+.roomcount button.bed { border-color: var(--gold); color: var(--ink); background: #fbf6e6; }
+.roomcount button.live { background: var(--band); color: var(--band-ink); border-color: var(--band); }
+.roomcount button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.10); }
+.roomcount button::after { content: "\25B8"; position: absolute; right: 6px; bottom: 4px; font-size: 11px; opacity: .55; }
+.roomcount button[aria-pressed="true"] { background: var(--gold); color: #0a0a0a; border-color: var(--gold); font-weight: 700; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold); }
+.roomcount button[aria-pressed="true"]::after { content: "\25BE"; opacity: 1; }
+.roomcount button:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.roomcount.bathrow { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: -4px; }
+.roomcount.bathrow button { aspect-ratio: auto; min-height: 56px; padding: 8px 18px 8px 8px; border-color: var(--gold); color: var(--ink); background: var(--paper); }
+.roomcount.bathrow button[aria-pressed="true"] { background: var(--gold); color: #0a0a0a; }
+.roomphoto { margin: 0; border-radius: var(--radius); overflow: hidden; background: var(--paper-2); border: 1px solid var(--line); }
+.roomphoto img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #e9e5da; }
+.roomphoto .roomsoon { aspect-ratio: 16 / 9; display: grid; place-items: center; padding: 18px; text-align: center; color: var(--mute); font-size: 15px; }
+.roomphoto figcaption { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 14px; font-size: 14px; }
+.roomphoto figcaption span { font-weight: 600; }
+.roomphoto figcaption a { color: var(--gold-text); font-weight: 600; text-decoration: none; }
+@media (max-width: 520px) { .roomcount button { font-size: 11px; padding: 4px; } }
+@media (prefers-reduced-motion: reduce) { .roomcount button { transition: none; } .roomcount button:hover { transform: none; } }
 </style>
 
 <style>/* Language bar (English / Français) */
@@ -210,7 +232,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
       <li><b>4 chambres</b><span>dans chaque appartement</span></li>
       <li><b>2.5 salles de bains</b><span>suite parentale, salle de bains familiale, WC invités</span></li>
       <li><b>9 appartements</b><span>7 appartements + 2 penthouses</span></li>
-      <li><b>March 2027</b><span>livraison estimée</span></li>
+      <li><b>Mars 2027</b><span>livraison estimée</span></li>
     </ul>
   </div>
 </section>
@@ -222,18 +244,31 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
       <h2 id="rooms-h">« 5 pièces » en Israël signifie 4 chambres.</h2>
       <p class="lede">En Israël, le salon compte comme une pièce. Chaque appartement ici, annoncé comme un 5 pièces, vous offre donc quatre chambres plus un grand espace salon et salle à manger qui s’ouvre sur le balcon.</p>
       <div class="baths" aria-label="Salles de bains">
-        <span>Chambre parentale avec salle de bains attenante</span>
-        <span>Salle de bains familiale</span>
-        <span>WC invités</span>
+        <span>Salle de bains parentale, dans la chambre 1</span>
+        <span>Salle de bains familiale, entre les chambres</span>
+        <span>WC invités, près de l’entrée</span>
       </div>
-      <p class="note">Penthouses : quatre chambres, chacune une suite avec sa propre salle de bains.</p>
+      <p class="note">Penthouses : quatre chambres, dont trois en suite, plus un mamad (pièce de sécurité).</p>
     </div>
-    <div class="roomcount" aria-label="Cinq pièces : salon plus quatre chambres">
-      <div class="live">Salon et salle à manger</div>
-      <div class="bed">Chambre 1<br>(suite)</div>
-      <div class="bed">Chambre 2</div>
-      <div class="bed">Chambre 3</div>
-      <div class="bed">Chambre 4</div>
+    <div class="roomside">
+    <div class="roomcount" role="group" aria-label="Cinq pièces : salon plus quatre chambres">
+      <button type="button" class="live" data-room="live" aria-pressed="true" aria-controls="room-photo">Salon et salle à manger</button>
+      <button type="button" class="bed" data-room="bed1" aria-pressed="false" aria-controls="room-photo">Chambre 1<br>(suite parentale)</button>
+      <button type="button" class="bed" data-room="bed2" aria-pressed="false" aria-controls="room-photo">Chambre 2</button>
+      <button type="button" class="bed" data-room="bed3" aria-pressed="false" aria-controls="room-photo">Chambre 3</button>
+      <button type="button" class="bed" data-room="bed4" aria-pressed="false" aria-controls="room-photo">Chambre 4</button>
+    </div>
+    <div class="roomcount bathrow" role="group" aria-label="Salles de bains">
+      <button type="button" class="bath" data-room="bathp" aria-pressed="false" aria-controls="room-photo">Salle de bains parentale</button>
+      <button type="button" class="bath" data-room="bathf" aria-pressed="false" aria-controls="room-photo">Salle de bains familiale</button>
+      <button type="button" class="bath" data-room="wc" aria-pressed="false" aria-controls="room-photo">WC invités</button>
+    </div>
+    <p class="note" style="margin:0">Touchez une pièce ou une salle de bains pour la voir, dans l’appartement choisi plus bas.</p>
+    <figure class="roomphoto" id="room-photo" aria-live="polite">
+      <img id="room-img" src="/netanya/halperin/img/room-65.jpg" alt="Salon et salle à manger de l’appartement 65, tel qu’il est aujourd’hui" loading="lazy">
+      <p class="roomsoon" id="room-soon" hidden></p>
+      <figcaption><span id="room-cap">Salon et salle à manger · Appartement 65</span><a id="room-change" href="#apartments"></a></figcaption>
+    </figure>
     </div>
   </div>
 </section>
@@ -261,7 +296,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
       </div>
       <div class="tour">
         <div>
-          <video id="p-video" controls preload="none" playsinline poster="/netanya/halperin/img/room-65.jpg"></video>
+          <video id="p-video" controls preload="none" playsinline poster="/netanya/halperin/img/view-65.jpg"></video>
           <p class="tourtext" id="p-tourtext"></p>
         </div>
         <div class="room">
@@ -355,7 +390,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
         <li>Les unités de climatisation sont en place sur les balcons de service.</li>
         <li class="todo">Les travaux de finition se poursuivent dans certaines salles de bains et sur certains balcons.</li>
         <li class="todo">Le hall d’entrée est encore en construction (voir le film ci-dessous).</li>
-        <li class="todo">Livraison estimée : March 2027.</li>
+        <li class="todo">Livraison estimée : mars 2027.</li>
       </ul>
       <div style="margin-top: 22px;">
         <video src="/netanya/halperin/media/lobby.mp4" controls preload="none" playsinline muted style="width:100%;aspect-ratio:16/9;border-radius:var(--radius);background:#000;display:block;"></video>
@@ -399,126 +434,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </footer>
 
-<script>
-const APTS = [
-  { id: "65", tag: "Penthouse", title: "Appartement 65", short: "Penthouse · 18e étage",
-    text: "Le sommet de l’immeuble. Quatre chambres : trois en suite, plus un mamad (pièce de sécurité). Un grand salon et une salle à manger, et un immense balcon qui donne sur la ville jusqu’à la mer.",
-    facts: [["Étage", "18"], ["Chambres", "4 : 3 en suite + mamad"], ["Séjour", "Salon et salle à manger"], ["Superficie", "À confirmer"], ["Balcon", "Immense (superficie à confirmer)"], ["Plan", "Bientôt disponible"], ["Vue", "Mer et ville"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-65.jpg", room: "/netanya/halperin/img/room-65.jpg", roomcap: "Le séjour, avec le balcon et la mer au-delà des vitres.",
-    video: "/netanya/halperin/media/apt-65.mp4", len: "1:28" },
-  { id: "63", tag: "Penthouse", title: "Appartement 63", short: "Penthouse · 17e étage",
-    text: "Le deuxième penthouse, au 17e étage. Quatre chambres : trois en suite, plus un mamad (pièce de sécurité). Un grand salon et une salle à manger, et un immense balcon avec la mer au-dessus des toits. Celui-ci est encore à un stade de travaux moins avancé que les autres : le film montre des matériaux de construction à l’intérieur et sur le balcon.",
-    facts: [["Étage", "17"], ["Chambres", "4 : 3 en suite + mamad"], ["Séjour", "Salon et salle à manger"], ["Superficie", "À confirmer"], ["Balcon", "Immense (superficie à confirmer)"], ["Plan", "Bientôt disponible"], ["Vue", "Mer et ville"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-63.jpg", room: "/netanya/halperin/img/room-63.jpg", roomcap: "Le salon aujourd’hui, avec des matériaux de construction encore entreposés à l’intérieur.",
-    video: "/netanya/halperin/media/apt-63.mp4", len: "1:23" },
-  { id: "61", tag: "Appartement", title: "Appartement 61", short: "16e étage · 125 m²",
-    text: "Tout en haut, au 16e étage, avec un grand balcon d’environ 16 m² donnant sur Netanya.",
-    facts: [["Étage", "16"], ["Superficie", "125 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-61.jpg", room: "/netanya/halperin/img/room-61.jpg", roomcap: "Le salon, qui s’ouvre sur le balcon.",
-    video: "/netanya/halperin/media/apt-61.mp4", len: "1:30" },
-  { id: "60", soon: true, tag: "Appartement", title: "Appartement 60", short: "16e étage · film bientôt disponible",
-    text: "Quatre chambres, dans le même immeuble. Nous filmons chaque appartement avant de le présenter, et le film de celui-ci sera bientôt disponible.",
-    facts: [["Étage", "16"], ["Superficie", "123.5 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Film", "Bientôt disponible"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/building.jpg" },
-  { id: "54", soon: true, tag: "Appartement", title: "Appartement 54", short: "Film bientôt disponible",
-    text: "Quatre chambres, dans le même immeuble. Nous filmons chaque appartement avant de le présenter, et le film de celui-ci sera bientôt disponible.",
-    facts: [["Superficie", "123.5 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Film", "Bientôt disponible"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/building.jpg" },
-  { id: "53", tag: "Appartement", title: "Appartement 53", short: "14e étage · 4 chambres",
-    text: "Quatre chambres au 14e étage, avec un balcon attenant au salon qui donne sur la ville jusqu’à la mer, entre les tours. Encore en phase finale de travaux : le film montre des cartons et des matériaux dans certaines pièces.",
-    facts: [["Étage", "14"], ["Superficie", "125 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Vue", "Ville, mer entre les tours"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-53.jpg", room: "/netanya/halperin/img/room-53.jpg", roomcap: "Le salon aujourd’hui, en direction du balcon.",
-    video: "/netanya/halperin/media/apt-53.mp4", len: "1:22" },
-  { id: "49", tag: "Appartement", title: "Appartement 49", short: "13e étage · 125 m²",
-    text: "125 m² avec un long salon qui se prolonge jusqu’à un balcon à garde-corps en verre.",
-    facts: [["Étage", "13"], ["Superficie", "125 m²"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-49.jpg", room: "/netanya/halperin/img/room-49.jpg", roomcap: "Le salon, en direction des portes du balcon.",
-    video: "/netanya/halperin/media/apt-49.mp4", len: "1:27" },
-  { id: "45", tag: "Appartement", title: "Appartement 45", short: "12e étage · 4 chambres",
-    text: "Quatre chambres, avec des portes vitrées toute hauteur du salon vers le balcon.",
-    facts: [["Étage", "12"], ["Superficie", "125 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-45.jpg", room: "/netanya/halperin/img/room-45.jpg", roomcap: "Portes vitrées du salon vers le balcon.",
-    video: "/netanya/halperin/media/apt-45.mp4", len: "1:30" },
-  { id: "42", tag: "Appartement", title: "Appartement 42", short: "4 chambres · aperçu de la mer",
-    text: "Quatre chambres, et un balcon avec la mer à l’horizon, entre les tours.",
-    facts: [["Superficie", "123.5 m² (à confirmer)"], ["Balcon", "Environ 16 m²"], ["Chambres", "4"], ["Salles de bains", "2.5"], ["Vue", "Mer entre les tours"], ["Livraison", "Prévue March 2027"]],
-    view: "/netanya/halperin/img/view-42.jpg", room: "/netanya/halperin/img/room-42.jpg", roomcap: "Le salon et son mur de portes vitrées.",
-    video: "/netanya/halperin/media/apt-42.mp4", len: "1:29" },
-];
-
-const picker = document.getElementById("picker");
-const $ = (id) => document.getElementById(id);
-let current = null;
-
-APTS.forEach((a, i) => {
-  const b = document.createElement("button");
-  b.className = "pick";
-  b.id = "tab-" + a.id;
-  b.setAttribute("role", "tab");
-  b.setAttribute("aria-controls", "apt-panel");
-  b.innerHTML = `<img src="${a.view}" alt="" loading="lazy"><span><b>${a.label || "Appt " + a.id}</b><small>${a.short}</small></span>`;
-  b.addEventListener("click", () => show(a.id, true));
-  b.addEventListener("keydown", (e) => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    const next = (i + (e.key === "ArrowRight" ? 1 : APTS.length - 1)) % APTS.length;
-    show(APTS[next].id, true);
-    $("tab-" + APTS[next].id).focus();
-  });
-  picker.appendChild(b);
-});
-
-function show(id, user) {
-  const a = APTS.find((x) => x.id === id) || APTS[0];
-  if (current === a.id) return;
-  current = a.id;
-  APTS.forEach((x) => {
-    const t = $("tab-" + x.id);
-    t.setAttribute("aria-selected", x.id === a.id ? "true" : "false");
-    t.tabIndex = x.id === a.id ? 0 : -1;
-  });
-  $("apt-panel").setAttribute("aria-labelledby", "tab-" + a.id);
-  $("p-view").src = a.view;
-  $("p-view").alt = a.soon ? "L’immeuble de la rue Halperin, où se trouve l’appartement " + a.id : "Vue depuis le balcon de " + (a.name || "l’appartement " + a.id);
-  $("p-viewlabel").textContent = a.soon ? "L’IMMEUBLE · FILM DE L’APPARTEMENT " + a.id + " BIENTÔT DISPONIBLE" : "VUE DEPUIS LE BALCON · " + (a.label || "APPARTEMENT " + a.id).toUpperCase();
-  document.querySelector(".tour").style.display = a.soon ? "none" : "";
-  $("p-viewline").textContent = a.soon ? "L’immeuble de la rue Halperin." : "Vos matins, vus d’ici.";
-  $("p-tag").textContent = a.tag;
-  $("p-title").textContent = a.title;
-  $("p-text").textContent = a.text;
-  $("p-dl").innerHTML = a.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
-  const v = $("p-video");
-  v.pause();
-  if (a.soon) { v.removeAttribute("src"); v.load(); if (user) { try { history.replaceState(null, "", "#apt-" + a.id); } catch (e) {} } return; }
-  v.poster = a.room;
-  v.src = a.video;
-  v.setAttribute("aria-label", "Visite de " + (a.name || "l’appartement " + a.id));
-  $("p-tourtext").textContent = `Visite de ${a.name || "l’appartement " + a.id}, ${a.len}. Sans son : juste l’appartement tel qu’il est aujourd’hui.`;
-  $("p-room").src = a.room;
-  $("p-room").alt = a.roomcap;
-  $("p-roomcap").textContent = a.roomcap;
-  if (user) { try { history.replaceState(null, "", "#apt-" + a.id); } catch (e) {} }
-}
-
-const fromHash = (location.hash.match(/^#apt-(\w+)$/) || [])[1];
-show(fromHash || "65", false);
-if (fromHash) document.getElementById("apartments").scrollIntoView();
-
-// Only one film plays at a time.
-document.addEventListener("play", (e) => {
-  document.querySelectorAll("video").forEach((v) => {
-    if (v !== e.target && v.id !== "heroVideo") v.pause();
-  });
-}, true);
-
-// Respect reduced motion: keep the hero still.
-const hero = $("heroVideo");
-if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  hero.removeAttribute("autoplay");
-  hero.pause();
-} else {
-  hero.play().catch(() => {});
-}
-</script>
+<script src="/assets/halperin.js?v=20261116c" defer></script>
 
 <script src="/assets/install.js?v=20261116a" defer></script>
 </body></html>
