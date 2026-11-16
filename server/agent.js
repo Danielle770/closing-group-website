@@ -166,7 +166,7 @@ ${k.site}`;
   function aptShort(id) { try { const a = knowledge().hp.en.apts.find((x) => x.id === id); return a ? a.short : ''; } catch { return ''; } }
   function aptIds() { try { return knowledge().hp.order; } catch { return ['65', '63', '61', '60', '54', '53', '49', '45', '42']; } }
 
-  return { enabled: !!cfg.anthropicKey, ask, closingPlan, aptShort, aptIds, GLAD };
+  return { enabled: !!cfg.anthropicKey, ask, closingPlan, aptShort, aptIds, GLAD, callClaude };
 }
 
 module.exports = { createAgent };

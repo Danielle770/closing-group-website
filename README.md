@@ -36,6 +36,17 @@ The French pages live under `fr/` with the same folder layout (`/fr/`, `/fr/neta
   - **Downloads** (username `admin`): `/api/admin/leads.csv`, and `/api/admin/agent-gaps.csv`, the questions the agent couldn't answer. Add those answers to the Q&A and the agent knows them from then on.
   - Check: `curl https://closinggroupisrael.com/api/health` shows `"agent":true` and `"leadsToWhatsapp":true` when both are on.
 
+## Leads portal (`/api/portal/`)
+
+Where the liaisons work their leads, on a phone or a computer. Plain pages, no scripts.
+
+- **Who is a lead:** every member who joined (email required, phone optional) and every visitor who asked in the apartment chat. Same email = one row; a member who chats again on another day lands on the same row. Anonymous visitors: one row per conversation. Leads are never deleted.
+- **Grades** (colour-coded in the list and on the lead page): **Best** (green/gold) asked 2+ questions, came back on 3+ days, or left a WhatsApp number or best time; **Warmer** (amber) went to the chat, read the Q&A, came back once, or pressed "Set up a call"; **Cool** (grey-blue) joined and only looked around.
+- **Zones:** Michal sees English leads only, Levy Levin French only (the language of the latest chat, or of the page they joined on). Boss (`admin` + `ADMIN_PASSWORD`) sees all zones and the **Team** view (per liaison: leads given, touched, spoken to, appointments, sales, needs attention).
+- **Status** (New, Called, Spoke, Appointment booked, Sale, Lost) and **notes**: only the zone's liaison or Boss; every change is logged with who and when.
+- **Liaison logins:** set `LIAISON_EN_USER` / `LIAISON_FR_USER` and their hashed passwords in `/etc/closinggroup/closinggroup.env`. Make a hash with `node /opt/closinggroup/hash-password.js`, paste the `scrypt:...` line, then `sudo systemctl restart closinggroup`.
+- **Daily check (watchdog):** every day at `WATCHDOG_HOUR` (Israel time) it flags open leads nobody touched within `MISSED_AFTER_HOURS` (default 24) as "Needs attention", emails the missed list to `ADMIN_EMAIL` and writes the day's summary on the Team view. With `ANTHROPIC_API_KEY` it adds suggestions (it sends numbers only, no names or contacts). It never changes a status or writes a note.
+
 ## Deploy (Nginx)
 
 Copy the repository contents into `/var/www/closinggroupisrael.com/`. The default Nginx config works because every page is a folder with an `index.html`:
