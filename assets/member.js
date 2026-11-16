@@ -1,5 +1,6 @@
 /* Welcome back: members are recognised on their own phone/browser.
-   - After joining, we keep their first name and Kahila on this device only (localStorage "cg_member").
+   - After joining, we keep their first name, Kahila and the email they joined with on this device only
+     (localStorage "cg_member"). The apartment chat sends that email with a lead so the liaison knows who it is.
    - When a member opens the site fresh on the front page, they go straight to their Kahila page.
    - On their Kahila page they see "Welcome back, [name]" once per visit.
    - Clicking Home / the logo from inside the site never redirects, so they can go anywhere.
@@ -21,10 +22,12 @@
 
   // Called by the sign-up form (site.js) and the email-confirmed page (verified.js)
   window.cgMember = {
-    remember: function (area, firstName) {
+    remember: function (area, firstName, email) {
       var m = get() || {};
       if (KAHILOT[area]) m.area = area;              // a "home" sign-up keeps any Kahila they already had
       if (firstName) m.name = String(firstName).slice(0, 40);
+      // The email they enrolled with, so the apartment chat can tell the liaison who they are.
+      if (email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(email).trim())) m.email = String(email).trim().toLowerCase().slice(0, 254);
       m.since = m.since || new Date().toISOString().slice(0, 10);
       set(m);
       ss(SEEN, "1");                                  // they've just been welcomed on this visit
