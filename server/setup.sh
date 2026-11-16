@@ -26,7 +26,7 @@ id -u closinggroup >/dev/null 2>&1 || useradd --system --no-create-home --shell 
 
 # App code lives OUTSIDE the public website folder
 mkdir -p "$APP_DIR" "$CONF_DIR" "$DATA_DIR"
-cp "$SITE_DIR/server/server.js" "$SITE_DIR/server/package.json" "$APP_DIR/"
+cp "$SITE_DIR/server/server.js" "$SITE_DIR/server/agent.js" "$SITE_DIR/server/package.json" "$APP_DIR/"
 ( cd "$APP_DIR" && npm install --omit=dev --no-audit --no-fund )
 
 # Settings file (created once, never overwritten)
@@ -37,6 +37,11 @@ if [ ! -f "$ENV_FILE" ]; then
   echo "==> Created $ENV_FILE  (fill in SMTP_* and TWILIO_* there)"
   echo "    Member list password (username: admin): $ADMIN_PW"
 fi
+# The chat agent reads the Q&A, the apartment facts and the pages from the website folder
+grep -q '^SITE_DIR=' "$ENV_FILE" || echo "SITE_DIR=$SITE_DIR" >> "$ENV_FILE"
+for k in ANTHROPIC_API_KEY AGENT_MODEL TWILIO_WHATSAPP_FROM COMPANY_WHATSAPP TWILIO_WHATSAPP_CONTENT_SID; do
+  grep -q "^$k=" "$ENV_FILE" || echo "$k=" >> "$ENV_FILE"
+done
 chown -R closinggroup:closinggroup "$DATA_DIR"
 chown root:closinggroup "$ENV_FILE"; chmod 640 "$ENV_FILE"
 

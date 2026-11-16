@@ -10,6 +10,16 @@
   if (window.__cgAnalytics) return;
   window.__cgAnalytics = 1;
 
+  // Pages seen on this visit (kept in this browser tab only). The apartment chat sends them with a lead,
+  // so the liaison knows what the visitor read; nothing is sent unless the visitor gives us their number.
+  try {
+    if (!sessionStorage.getItem("cg_sess_start")) sessionStorage.setItem("cg_sess_start", String(Date.now()));
+    if (!localStorage.getItem("cg_first_seen")) localStorage.setItem("cg_first_seen", new Date().toISOString());
+    var trail = JSON.parse(sessionStorage.getItem("cg_trail") || "[]");
+    if (trail[trail.length - 1] !== location.pathname) trail.push(location.pathname);
+    sessionStorage.setItem("cg_trail", JSON.stringify(trail.slice(-40)));
+  } catch (e) {}
+
   // Official PostHog HTML snippet (queues calls until the SDK has loaded)
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId setPersonProperties".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
 

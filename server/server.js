@@ -8,6 +8,9 @@
  *   GET  /api/unsubscribe        stop alerts (link in every email)
  *   GET  /api/admin/members.csv  member list for the team (password protected)
  *   GET  /api/health             health check
+ *   POST /api/agent              apartment chat: one answer from the AI agent (needs ANTHROPIC_API_KEY)
+ *   POST /api/lead               apartment chat: the warm lead card for the liaison (saved, emailed, sent to WhatsApp)
+ *   GET  /api/admin/leads.csv, /api/admin/agent-gaps.csv  (password protected)
  * Configuration comes from environment variables (see .env.example).
  */
 const express = require('express');
@@ -16,6 +19,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { createAgent } = require('./agent');
 
 const env = process.env;
 const cfg = {
@@ -30,6 +34,13 @@ const cfg = {
   adminEmail: env.ADMIN_EMAIL || '',
   adminPassword: env.ADMIN_PASSWORD || '',
   twilio: { sid: env.TWILIO_ACCOUNT_SID, token: env.TWILIO_AUTH_TOKEN, verifySid: env.TWILIO_VERIFY_SERVICE_SID },
+  // Apartment chat agent + leads
+  siteDir: env.SITE_DIR || '/var/www/closinggroupisrael.com',
+  anthropicKey: env.ANTHROPIC_API_KEY || '',
+  model: env.AGENT_MODEL || 'claude-sonnet-5-5',
+  waFrom: env.TWILIO_WHATSAPP_FROM || '',          // our WhatsApp sender on Twilio, e.g. +14155238886
+  waTo: env.COMPANY_WHATSAPP || '',                // the company WhatsApp that receives every lead, e.g. +972542222504
+  waContentSid: env.TWILIO_WHATSAPP_CONTENT_SID || '', // approved WhatsApp template (needed outside the 24-hour window)
 };
 const CONSENT_VERSION = '2026-11-09';
 const AREAS = { netanya: 'Netanya', center: 'the Center', jerusalem: 'Jerusalem', home: 'any area' };
@@ -70,6 +81,17 @@ if (db.prepare("SELECT 1 FROM pragma_table_info('inquiries') WHERE name='whatsap
     DROP TABLE inquiries_old;
     COMMIT;`);
 }
+db.exec(`CREATE TABLE IF NOT EXISTS leads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+  apt TEXT NOT NULL, lang TEXT, liaison TEXT,
+  whatsapp TEXT NOT NULL, whatsapp_ok INTEGER, best_time TEXT,
+  questions TEXT, open_questions TEXT, transcript TEXT, analytics TEXT, plan TEXT,
+  page TEXT, ref TEXT, ip TEXT, status TEXT NOT NULL DEFAULT 'new'
+)`);
+db.exec(`CREATE TABLE IF NOT EXISTS agent_gaps (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL, apt TEXT, lang TEXT, question TEXT NOT NULL
+)`);
 db.exec(`CREATE TABLE IF NOT EXISTS qa_opens (question TEXT PRIMARY KEY, opens INTEGER NOT NULL DEFAULT 0, updated_at TEXT)`);
 
 const now = () => new Date().toISOString();
@@ -221,7 +243,7 @@ app.get('/api/health', async (req, res) => {
   if (mailProvider === 'smtp' && req.query.check === 'email') {
     try { await mailer.verify(); emailStatus = 'working'; } catch (e) { emailStatus = 'error: ' + e.message; }
   }
-  res.json({ ok: true, email: emailStatus, whatsapp: whatsappEnabled });
+  res.json({ ok: true, email: emailStatus, whatsapp: whatsappEnabled, agent: agent.enabled, leadsToWhatsapp: leadWhatsappEnabled });
 });
 
 app.post('/api/join', async (req, res) => {
@@ -388,8 +410,137 @@ app.get('/api/admin/inquiries.csv', (req, res) => {
   sendCsv(res, 'inquiries.csv', cols, db.prepare(`SELECT ${cols.join(',')} FROM inquiries ORDER BY created_at DESC`).all());
 });
 
+// ---------- apartment chat: the AI agent ----------
+const agent = createAgent(cfg);
+const leadWhatsappEnabled = !!(cfg.twilio.sid && cfg.twilio.token && cfg.waFrom && cfg.waTo);
+
+app.post('/api/agent', async (req, res) => {
+  if (!agent.enabled) return res.status(503).json({ ok: false, error: 'agent off' });
+  const b = req.body || {};
+  if (limited('agent:' + req.ip, 40, 10 * 60e3)) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again in a few minutes.' });
+  const apt = clean(b.apt, 4);
+  const question = clean(String(b.question || '').replace(/\r?\n/g, ' '), 600);
+  if (!agent.aptIds().includes(apt) || !question) return res.status(400).json({ ok: false, error: 'Bad request' });
+  const lang = b.lang === 'fr' ? 'fr' : 'en';
+  const history = Array.isArray(b.history) ? b.history.slice(-12).map((h) => clean(String(h), 800)) : [];
+  try {
+    const out = await agent.ask({ apt, lang, question, history });
+    if (!out.answered) db.prepare('INSERT INTO agent_gaps (created_at, apt, lang, question) VALUES (?,?,?,?)').run(now(), apt, lang, question);
+    res.json({ ok: true, answer: out.answer, answered: out.answered });
+  } catch (e) {
+    console.error('agent error:', e.message);
+    res.status(502).json({ ok: false, error: 'agent unavailable' });
+  }
+});
+
+// ---------- apartment chat: the warm lead for the liaison ----------
+function secs(n) { n = Math.max(0, Math.round(Number(n) || 0)); const m = Math.floor(n / 60); return m ? `${m} min ${n % 60} s` : `${n} s`; }
+function leadCard(l, plan) {
+  const a = l.analytics || {};
+  const wa = l.whatsapp.replace(/[^\d]/g, '');
+  const lines = [
+    `WARM LEAD · Apartment ${l.apt}${l.short ? ` (${l.short})` : ''} · Halperin Street, Netanya`,
+    `Liaison: ${l.liaison}${l.lang === 'fr' ? ' (French)' : ''}`,
+    `WhatsApp: ${l.whatsapp} · https://wa.me/${wa}${l.whatsapp_ok ? ' (happy to talk on WhatsApp)' : ' (prefers a phone call)'}`,
+    `Best time to call: ${l.best_time}`,
+    '',
+    'What they asked / their concerns:',
+    ...(l.questions.length ? l.questions.map((q) => `- ${q}`) : ['- No specific question: general interest']),
+  ];
+  if (l.open_questions.length) lines.push('', 'Still to answer on the call:', ...l.open_questions.map((q) => `- ${q}`));
+  lines.push('', 'On the website:');
+  if (a.opted_out) lines.push('- The visitor switched analytics off, so we have no browsing data.');
+  else {
+    lines.push(`- Time on the website this visit: ${secs(a.seconds_on_site_this_visit)} (this page: ${secs(a.seconds_on_this_page)}, chat: ${secs(a.seconds_in_chat)})`);
+    if (a.first_visit) lines.push(`- First visit: ${String(a.first_visit).slice(0, 10)}`);
+    if ((a.pages_this_visit || []).length) lines.push(`- Pages this visit: ${a.pages_this_visit.join(' > ')}`);
+    if ((a.apartments_opened || []).length) lines.push(`- Apartments opened: ${a.apartments_opened.join(', ')}`);
+    const rooms = a.rooms_looked_at || {};
+    Object.keys(rooms).forEach((id) => lines.push(`- Rooms looked at in Apt ${id}: ${(rooms[id] || []).join(', ')}`));
+    if ((a.visualisations_seen || []).length) lines.push(`- Furnished visualisations seen: ${a.visualisations_seen.join(', ')}`);
+    const films = a.films_watched_seconds || {};
+    if (Object.keys(films).length) lines.push(`- Films watched: ${Object.keys(films).map((id) => `Apt ${id} (${secs(films[id])})`).join(', ')}`);
+    if (a.referrer) lines.push(`- Came from: ${a.referrer}`);
+    if (a.device) lines.push(`- Device: ${a.device}`);
+    if (a.replay_url) lines.push(`- Session replay: ${a.replay_url}`);
+    else if (a.posthog_id) lines.push(`- PostHog person: https://us.posthog.com/person/${encodeURIComponent(a.posthog_id)}`);
+  }
+  if (l.ref) lines.push(`- Referred by: ${l.ref}`);
+  lines.push('', 'How to move it towards a deal:', ...plan.map((p) => `- ${p}`));
+  return lines;
+}
+async function sendLeadWhatsapp(text) {
+  if (!leadWhatsappEnabled) return;
+  const params = { From: 'whatsapp:' + cfg.waFrom, To: 'whatsapp:' + cfg.waTo };
+  if (cfg.waContentSid) { params.ContentSid = cfg.waContentSid; params.ContentVariables = JSON.stringify({ 1: text.slice(0, 1500) }); }
+  else params.Body = text.slice(0, 1550);
+  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${cfg.twilio.sid}/Messages.json`, {
+    method: 'POST',
+    headers: { Authorization: 'Basic ' + Buffer.from(`${cfg.twilio.sid}:${cfg.twilio.token}`).toString('base64'), 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(params),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 300)}`);
+}
+
+app.post('/api/lead', async (req, res) => {
+  const b = req.body || {};
+  if (limited('lead:' + req.ip, 10, 10 * 60e3)) return res.status(429).json({ ok: false, error: 'Too many messages. Please try again in a few minutes.' });
+  const apt = clean(b.apt, 4);
+  if (!agent.aptIds().includes(apt)) return res.status(400).json({ ok: false, error: 'Bad request' });
+  const whatsapp = normalisePhone(b.whatsapp);
+  if (!whatsapp) return res.status(400).json({ ok: false, error: 'Please enter your WhatsApp number with the country code, for example +1 212 555 0100.' });
+  const list = (v, n, max) => (Array.isArray(v) ? v.slice(0, n).map((x) => clean(String(x), max)).filter(Boolean) : []);
+  let analytics = {};
+  try { analytics = JSON.parse(JSON.stringify(b.analytics || {}).slice(0, 8000)); } catch { analytics = {}; }
+  const l = {
+    apt, short: agent.aptShort(apt), lang: b.lang === 'fr' ? 'fr' : 'en',
+    liaison: clean(b.liaison, 40) === 'Levy Levin' ? 'Levy Levin' : 'Michal',
+    whatsapp, whatsapp_ok: !!b.whatsapp_ok, best_time: clean(b.best_time, 200) || 'not given',
+    questions: list(b.questions, 40, 600), open_questions: list(b.open_questions, 40, 600), transcript: list(b.transcript, 80, 1200),
+    analytics, ref: clean(b.ref, 80), page: clean(b.page, 200),
+  };
+  const t = now();
+  // A follow-up from the same chat (questions asked after the summary) updates the lead instead of making a new one.
+  const prev = b.update ? db.prepare("SELECT id FROM leads WHERE apt=? AND whatsapp=? AND created_at > ? ORDER BY id DESC LIMIT 1")
+    .get(apt, whatsapp, new Date(Date.now() - 6 * 3600e3).toISOString()) : null;
+  const plan = await agent.closingPlan(l);
+  const row = [t, l.lang, l.liaison, whatsapp, l.whatsapp_ok ? 1 : 0, l.best_time, JSON.stringify(l.questions), JSON.stringify(l.open_questions),
+    JSON.stringify(l.transcript), JSON.stringify(analytics), JSON.stringify(plan), l.page, l.ref, req.ip];
+  if (prev) {
+    db.prepare(`UPDATE leads SET updated_at=?, lang=?, liaison=?, whatsapp=?, whatsapp_ok=?, best_time=?, questions=?, open_questions=?, transcript=?,
+      analytics=?, plan=?, page=?, ref=?, ip=? WHERE id=?`).run(...row, prev.id);
+  } else {
+    db.prepare(`INSERT INTO leads (created_at, updated_at, apt, lang, liaison, whatsapp, whatsapp_ok, best_time, questions, open_questions, transcript, analytics, plan, page, ref, ip)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(t, t, apt, ...row.slice(1));
+  }
+  for (const q of l.open_questions) {
+    if (!db.prepare('SELECT 1 FROM agent_gaps WHERE question=? AND apt=?').get(q, apt)) db.prepare('INSERT INTO agent_gaps (created_at, apt, lang, question) VALUES (?,?,?,?)').run(t, apt, l.lang, q);
+  }
+  const card = leadCard(l, plan);
+  const subject = `${prev ? 'Lead update' : 'Warm lead'}: Apartment ${apt} · call ${l.best_time} · ${l.liaison}`;
+  const transcript = l.transcript.length ? ['', 'The conversation:', ...l.transcript] : [];
+  if (cfg.adminEmail) {
+    sendMail(cfg.adminEmail, subject, card.concat(transcript).join('\n'),
+      emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(card.concat(transcript).join('\n'))}</pre>`))
+      .catch((e) => console.error('lead mail error:', e.message));
+  }
+  sendLeadWhatsapp((prev ? '(Update) ' : '') + card.join('\n')).catch((e) => console.error('lead WhatsApp error:', e.message));
+  res.json({ ok: true });
+});
+
+app.get('/api/admin/leads.csv', (req, res) => {
+  if (!isAdmin(req)) { res.set('WWW-Authenticate', 'Basic realm="The Closing Group"'); return res.status(401).send('Login required'); }
+  const cols = ['created_at', 'updated_at', 'apt', 'liaison', 'whatsapp', 'whatsapp_ok', 'best_time', 'questions', 'open_questions', 'plan', 'analytics', 'transcript', 'lang', 'ref', 'status'];
+  sendCsv(res, 'leads.csv', cols, db.prepare(`SELECT ${cols.join(',')} FROM leads ORDER BY updated_at DESC`).all());
+});
+app.get('/api/admin/agent-gaps.csv', (req, res) => {
+  if (!isAdmin(req)) { res.set('WWW-Authenticate', 'Basic realm="The Closing Group"'); return res.status(401).send('Login required'); }
+  const cols = ['created_at', 'apt', 'lang', 'question'];
+  sendCsv(res, 'agent-gaps.csv', cols, db.prepare(`SELECT ${cols.join(',')} FROM agent_gaps ORDER BY created_at DESC`).all());
+});
+
 app.use('/api', (req, res) => res.status(404).json({ ok: false, error: 'Not found' }));
 
 app.listen(cfg.port, '127.0.0.1', () => {
-  console.log(`Closing Group API on 127.0.0.1:${cfg.port} · email ${mailProvider === 'off' ? 'OFF (logging only)' : mailProvider} · WhatsApp ${whatsappEnabled ? 'on' : 'OFF'}`);
+  console.log(`Closing Group API on 127.0.0.1:${cfg.port} · email ${mailProvider === 'off' ? 'OFF (logging only)' : mailProvider} · WhatsApp ${whatsappEnabled ? 'on' : 'OFF'} · agent ${agent.enabled ? 'on' : 'OFF'} · leads to WhatsApp ${leadWhatsappEnabled ? 'on' : 'OFF'}`);
 });

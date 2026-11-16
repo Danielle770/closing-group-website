@@ -24,6 +24,18 @@ The French pages live under `fr/` with the same folder layout (`/fr/`, `/fr/neta
 - **Not translated yet:** the Q&A (`/questions/` and `assets/qa-data.js`). French pages link to the English Q&A for now, and the chat shows English answers with a note that French answers are coming.
 - **Emails** sent by the server (welcome, confirmation) are still in English.
 
+## Halperin page: apartment picker, apartment pages, apartment chat
+
+`/netanya/halperin/` and `/fr/netanya/halperin/` share `assets/halperin.js`, `assets/halperin.css` and **`assets/halperin-data.js`, the one place for the apartment facts** (sizes, balconies, floors, rooms). The page and the chat agent both read it.
+
+- **Picker:** every apartment card's picture is a carousel (furnished visualisation first, then the real rooms). The room names on top follow the picture. Double-tap a card, or its name, to open the apartment's page (`#apt-65`).
+- **Staged pictures:** `netanya/halperin/img/staged-N.jpg`, always labelled as a visualisation.
+- **Apartment chat** ("Ask us about Apartment 65"): answers, collects questions, the best time to call and the WhatsApp number, then sends a lead card (questions, open questions, visit summary, how to move it to a deal) to `ADMIN_EMAIL`, and to the company WhatsApp when set up. Liaison: Michal, or Levy Levin for French.
+  - **AI answers:** set `ANTHROPIC_API_KEY` in `/etc/closinggroup/closinggroup.env`, then `sudo systemctl restart closinggroup`. The agent reads the Q&A, the apartment facts and the website pages from `SITE_DIR` every 10 minutes, so it learns whatever is added to the site. Without a key, the chat answers in the browser from the same Q&A and facts.
+  - **Leads to the company WhatsApp:** set `TWILIO_WHATSAPP_FROM`, `COMPANY_WHATSAPP` and, for messages at any time, an approved template in `TWILIO_WHATSAPP_CONTENT_SID`.
+  - **Downloads** (username `admin`): `/api/admin/leads.csv`, and `/api/admin/agent-gaps.csv`, the questions the agent couldn't answer. Add those answers to the Q&A and the agent knows them from then on.
+  - Check: `curl https://closinggroupisrael.com/api/health` shows `"agent":true` and `"leadsToWhatsapp":true` when both are on.
+
 ## Deploy (Nginx)
 
 Copy the repository contents into `/var/www/closinggroupisrael.com/`. The default Nginx config works because every page is a folder with an `index.html`:

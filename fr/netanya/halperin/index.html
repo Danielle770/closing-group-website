@@ -4,6 +4,9 @@
 <link rel="alternate" hreflang="en" href="https://closinggroupisrael.com/netanya/halperin/">
 <link rel="alternate" hreflang="fr" href="https://closinggroupisrael.com/fr/netanya/halperin/">
 <link rel="alternate" hreflang="x-default" href="https://closinggroupisrael.com/netanya/halperin/">
+<link rel="stylesheet" href="/assets/halperin.css?v=20261116g">
+<script src="/assets/analytics.js?v=20261116g"></script>
+<script src="/assets/member.js?v=20261116b"></script>
 </head><body>
 <title>Rue Halperin, Netanya</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -212,25 +215,25 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </header>
 
-<section class="hero" aria-label="Rue Halperin, Netanya">
+<section data-hp-list class="hero" aria-label="Rue Halperin, Netanya">
   <img class="hero-poster" src="/netanya/halperin/img/view-65.jpg" alt="">
   <video id="heroVideo" src="/netanya/halperin/media/hero.mp4" poster="/netanya/halperin/img/view-65.jpg" muted loop playsinline autoplay aria-hidden="true"></video>
   <div class="wrap">
     <span class="eyebrow">Kahila de Netanya · Rue Halperin</span>
     <h1>Un logement au bord de la mer à Netanya, acheté ensemble.</h1>
-    <p class="sub">À environ 250 mètres de la plage. Vue sur la mer depuis les étages supérieurs. Quatre chambres dans chaque appartement.</p>
+    <p class="sub">À environ 250 mètres de la plage. Vue sur la mer depuis les étages supérieurs. Quatre chambres dans huit des neuf appartements.</p>
     <div class="actions">
       <a class="btn" href="#apartments">Voir les appartements</a>
-      <a class="btn ghost" href="/fr/netanya/">Rejoindre la Kahila de Netanya</a>
+      <a class="btn ghost join-only" href="/fr/netanya/">Rejoindre la Kahila de Netanya</a>
     </div>
   </div>
 </section>
 
-<section class="facts" aria-label="Chiffres clés">
+<section data-hp-list class="facts" aria-label="Chiffres clés">
   <div class="wrap">
     <ul>
       <li><b>~250 m</b><span>de la plage</span></li>
-      <li><b>4 chambres</b><span>dans chaque appartement</span></li>
+      <li><b>4 chambres</b><span>dans 8 des 9 appartements (le 60 en a 3)</span></li>
       <li><b>2.5 salles de bains</b><span>suite parentale, salle de bains familiale, WC invités</span></li>
       <li><b>9 appartements</b><span>7 appartements + 2 penthouses</span></li>
       <li><b>Mars 2027</b><span>livraison estimée</span></li>
@@ -238,12 +241,12 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </section>
 
-<section class="band" aria-labelledby="rooms-h">
+<section data-hp-list class="band" aria-labelledby="rooms-h">
   <div class="wrap rooms">
     <div>
       <span class="eyebrow">Lire une annonce israélienne</span>
       <h2 id="rooms-h">« 5 pièces » en Israël signifie 4 chambres.</h2>
-      <p class="lede">En Israël, le salon compte comme une pièce. Chaque appartement ici, annoncé comme un 5 pièces, vous offre donc quatre chambres plus un grand espace salon et salle à manger qui s’ouvre sur le balcon.</p>
+      <p class="lede">En Israël, le salon compte comme une pièce. Un 5 pièces ici vous offre donc quatre chambres plus un grand espace salon et salle à manger qui s’ouvre sur le balcon. L’appartement 60 est un 4 pièces : trois chambres.</p>
       <div class="baths" aria-label="Salles de bains">
         <span>Salle de bains parentale, dans la chambre 1</span>
         <span>Salle de bains familiale, entre les chambres</span>
@@ -252,64 +255,68 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
       <p class="note">Penthouses : quatre chambres, dont trois en suite, plus un mamad (pièce de sécurité).</p>
     </div>
     <div class="roomside">
-    <div class="roomcount" role="group" aria-label="Cinq pièces : salon plus quatre chambres">
-      <button type="button" class="live" data-room="live" aria-pressed="true" aria-controls="room-photo">Salon et salle à manger</button>
-      <button type="button" class="bed" data-room="bed1" aria-pressed="false" aria-controls="room-photo">Chambre 1<br>(suite parentale)</button>
-      <button type="button" class="bed" data-room="bed2" aria-pressed="false" aria-controls="room-photo">Chambre 2</button>
-      <button type="button" class="bed" data-room="bed3" aria-pressed="false" aria-controls="room-photo">Chambre 3</button>
-      <button type="button" class="bed" data-room="bed4" aria-pressed="false" aria-controls="room-photo">Chambre 4</button>
+    <div class="roomcount" role="img" aria-label="Cinq pièces : salon plus quatre chambres">
+      <div class="live">Salon et salle à manger</div>
+      <div class="bed">Chambre 1<br>(suite parentale)</div>
+      <div class="bed">Chambre 2</div>
+      <div class="bed">Chambre 3</div>
+      <div class="bed">Chambre 4</div>
     </div>
-    <div class="roomcount bathrow" role="group" aria-label="Salles de bains">
-      <button type="button" class="bath" data-room="bathp" aria-pressed="false" aria-controls="room-photo">Salle de bains parentale</button>
-      <button type="button" class="bath" data-room="bathf" aria-pressed="false" aria-controls="room-photo">Salle de bains familiale</button>
-      <button type="button" class="bath" data-room="wc" aria-pressed="false" aria-controls="room-photo">WC invités</button>
-    </div>
-    <p class="note" style="margin:0">Touchez une pièce ou une salle de bains pour la voir, dans l’appartement choisi plus bas.</p>
-    <figure class="roomphoto" id="room-photo" aria-live="polite">
-      <img id="room-img" src="/netanya/halperin/img/room-65.jpg" alt="Salon et salle à manger de l’appartement 65, tel qu’il est aujourd’hui" loading="lazy">
-      <p class="roomsoon" id="room-soon" hidden></p>
-      <figcaption><span id="room-cap">Salon et salle à manger · Appartement 65</span><a id="room-change" href="#apartments"></a></figcaption>
-    </figure>
+    <p class="note" style="margin:0"><a href="#apartments" style="color:var(--gold-text);font-weight:600;text-decoration:none">Pièce par pièce, en photos : faites glisser l’image de n’importe quel appartement plus bas. ↓</a></p>
     </div>
   </div>
 </section>
 
-<section class="band dark" id="apartments" aria-labelledby="apts-h">
+<section data-hp-list class="band dark" id="apartments" aria-labelledby="apts-h">
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Choisissez votre appartement</span>
-      <h2 id="apts-h">Voici la vue depuis votre balcon.</h2>
-      <p class="lede">Choisissez un appartement pour voir la vue depuis son balcon, ses détails et une courte visite filmée le 12 November 2026. Les appartements sont en phase finale de travaux, et les films les montrent exactement tels qu’ils sont aujourd’hui.</p>
+      <h2 id="apts-h">Les neuf appartements, pièce par pièce.</h2>
+      <p class="lede">Faites glisser une image pour parcourir l’appartement : d’abord une visualisation meublée de ce qu’il pourrait être, puis les vraies pièces telles qu’elles sont aujourd’hui, filmées le 12 novembre 2026. Touchez deux fois une image ou un nom pour ouvrir la page de l’appartement.</p>
     </div>
-    <div class="picker" role="tablist" aria-label="Appartements" id="picker"></div>
-    <div id="apt-panel" role="tabpanel">
-      <div class="panel">
-        <figure class="viewfig">
-          <img id="p-view" src="/netanya/halperin/img/view-65.jpg" alt="">
-          <figcaption><small id="p-viewlabel">VUE DEPUIS LE BALCON · APPARTEMENT 65</small><span id="p-viewline">Vos matins, vus d’ici.</span></figcaption>
-        </figure>
-        <div class="spec">
-          <div><span class="tag" id="p-tag">Penthouse</span></div>
-          <h3 id="p-title">Appartement 65</h3>
-          <p class="lede" id="p-text"></p>
-          <dl id="p-dl"></dl>
-        </div>
+    <div class="hp-howto"><span><b>Faites glisser</b> une image pour voir ses pièces.</span><span><b>Touchez un nom de pièce</b> pour la voir dans chaque appartement.</span><span><b>Touchez deux fois</b> pour ouvrir l’appartement.</span></div>
+    <div class="hp-roomband" id="hp-roomband"></div>
+    <div class="hp-grid" id="hp-grid"></div>
+  </div>
+</section>
+
+<section class="band dark hp-aptpage" id="hp-aptpage" aria-labelledby="ap-title" hidden>
+  <div class="wrap">
+    <button type="button" class="hp-back" id="ap-back">← Retour à tous les appartements</button>
+    <h1 id="ap-title"></h1>
+    <p class="sub" id="ap-sub"></p>
+    <p class="desc lede" id="ap-desc"></p>
+    <div class="hp-sec">
+      <h2>À l’intérieur, pièce par pièce</h2>
+      <div class="hp-roomband static" id="ap-roomband"></div>
+      <div class="hp-bigcar">
+        <button class="hp-arrow prev" id="ap-prev" type="button" aria-label="Image précédente">‹</button>
+        <div class="hp-bigtrack" id="ap-track"></div>
+        <button class="hp-arrow next" id="ap-next" type="button" aria-label="Image suivante">›</button>
       </div>
-      <div class="tour">
-        <div>
-          <video id="p-video" controls preload="none" playsinline poster="/netanya/halperin/img/view-65.jpg"></video>
-          <p class="tourtext" id="p-tourtext"></p>
-        </div>
-        <div class="room">
-          <img id="p-room" src="/netanya/halperin/img/room-65.jpg" alt="">
-          <p id="p-roomcap"></p>
-        </div>
+      <div class="hp-bigcap" aria-live="polite"><b id="ap-cap"></b><span id="ap-pos"></span><span class="note" id="ap-note"></span></div>
+      <div class="hp-dots" id="ap-dots" aria-hidden="true"></div>
+    </div>
+    <div class="hp-sec"><h2>Où en est cet appartement</h2><ul class="hp-stage" id="ap-stage"></ul></div>
+    <div class="hp-sec"><h2>La vue depuis le balcon</h2><figure class="hp-view"><img id="ap-view" alt="" loading="lazy"><figcaption id="ap-view-cap"></figcaption></figure></div>
+    <div class="hp-sec"><h2>Caractéristiques complètes</h2><dl class="hp-facts" id="ap-facts"></dl></div>
+    <div class="hp-sec hp-film"><h2 id="ap-film-title"></h2><p id="ap-film-text"></p><video id="ap-video" controls preload="none" playsinline></video></div>
+    <div class="hp-cta">
+      <h2 id="ap-cta-title"></h2>
+      <p>Touchez le bouton et un chat s’ouvre ici même. Posez toutes vos questions : notre agent les rassemble, avec vos inquiétudes, et l’un de nos conseillers vous appelle au moment qui vous convient. En français, c’est Levy Levin.</p>
+      <button class="btn" id="ap-cta-btn" type="button">Posez-nous vos questions sur cet appartement</button>
+      <div class="hp-chat" id="ap-chat" role="region" aria-label="Chat sur cet appartement" hidden>
+        <div class="hp-chathead"><div><b>Vos questions sur cet appartement</b><span>Des réponses tout de suite, puis l’appel d’un conseiller</span></div><button class="hp-chatclose" id="chat-close" type="button">Fermer</button></div>
+        <div class="hp-log" id="chat-log" aria-live="polite"></div>
+        <div class="hp-quickrow" id="chat-quick" hidden></div>
+        <form class="hp-chatform" id="chat-form" autocomplete="off"><input id="chat-input" type="text" maxlength="600" aria-label="Votre message" placeholder="Écrivez votre question…"><button class="btn" type="submit">Envoyer</button></form>
+        <p class="hp-chatnote">Votre numéro et vos questions ne vont qu’à notre équipe, pour vous rappeler. Voir notre <a href="/fr/privacy/" style="color:var(--gold)">page confidentialité</a>.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="band soft" id="included" aria-labelledby="inc-h">
+<section data-hp-list class="band soft" id="included" aria-labelledby="inc-h">
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Ce que vous obtenez</span>
@@ -353,7 +360,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </section>
 
-<section class="band" id="location" aria-labelledby="loc-h">
+<section data-hp-list class="band" id="location" aria-labelledby="loc-h">
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Rue Halperin, Netanya</span>
@@ -362,16 +369,16 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
     </div>
     <div class="loc">
       <div>
-        <video src="/netanya/halperin/media/drive.mp4" controls preload="none" playsinline poster="/netanya/halperin/img/view-42.jpg"></video>
+        <video src="/netanya/halperin/media/drive.mp4" controls preload="none" playsinline poster="/netanya/halperin/img/poster-drive.jpg"></video>
         <p class="cap">Le trajet en voiture de l’immeuble jusqu’à la promenade du front de mer.</p>
       </div>
       <div class="side">
         <div>
-          <video class="ambient" src="/netanya/halperin/media/building.mp4" muted loop playsinline preload="metadata" controls></video>
+          <video class="ambient" src="/netanya/halperin/media/building.mp4" poster="/netanya/halperin/img/poster-building.jpg" muted loop playsinline preload="metadata" controls></video>
           <p class="cap">L’immeuble, vu depuis la cour.</p>
         </div>
         <div>
-          <video class="ambient" src="/netanya/halperin/media/street.mp4" muted loop playsinline preload="metadata" controls></video>
+          <video class="ambient" src="/netanya/halperin/media/street.mp4" poster="/netanya/halperin/img/poster-street.jpg" muted loop playsinline preload="metadata" controls></video>
           <p class="cap">Rue Halperin.</p>
         </div>
       </div>
@@ -380,7 +387,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </section>
 
-<section class="band dark" id="group" aria-labelledby="group-h">
+<section data-hp-list class="band dark" id="group" aria-labelledby="group-h">
   <div class="wrap two">
     <div>
       <span class="eyebrow">Où en sont les travaux</span>
@@ -394,7 +401,7 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
         <li class="todo">Livraison estimée : mars 2027.</li>
       </ul>
       <div style="margin-top: 22px;">
-        <video src="/netanya/halperin/media/lobby.mp4" controls preload="none" playsinline muted style="width:100%;aspect-ratio:16/9;border-radius:var(--radius);background:#000;display:block;"></video>
+        <video src="/netanya/halperin/media/lobby.mp4" poster="/netanya/halperin/img/poster-lobby.jpg" controls preload="none" playsinline muted style="width:100%;aspect-ratio:16/9;border-radius:var(--radius);background:#000;display:block;"></video>
         <p class="cap">Le hall d’entrée aujourd’hui, en construction.</p>
       </div>
     </div>
@@ -417,25 +424,33 @@ footer .wrap { padding-block: 28px; display: grid; gap: 8px; }
   </div>
 </section>
 
-<section class="band" aria-labelledby="cta-h">
-  <div class="wrap cta">
+<section data-hp-list class="band" aria-labelledby="cta-h">
+  <div class="wrap cta join-only">
     <span class="eyebrow">Vous avez trouvé le bon ?</span>
     <h2 id="cta-h">Rejoignez la Kahila de Netanya et nous vous accompagnerons à chaque étape.</h2>
-    <p class="lede">L’inscription est gratuite. Une question d’abord ? Posez-la dans le chat sur notre site, et laissez votre numéro WhatsApp si vous souhaitez que nous vous rappelions à un moment qui vous convient.</p>
+    <p class="lede">L’inscription est gratuite. Une question sur un appartement ? Ouvrez-le plus haut et touchez « Posez-nous vos questions » : un conseiller vous rappellera au moment qui vous convient.</p>
     <div class="actions">
       <a class="btn" href="/fr/netanya/">Rejoindre la Kahila de Netanya</a>
     </div>
+  </div>
+  <div class="wrap cta member-only">
+    <span class="eyebrow">Vous avez trouvé le bon ?</span>
+    <h2>Vous faites déjà partie de la Kahila de Netanya.</h2>
+    <p class="lede">Choisissez un appartement plus haut, ouvrez-le et touchez « Posez-nous vos questions sur l’appartement ». Notre agent prend vos questions, et Levy Levin vous rappelle en français au moment qui vous convient.</p>
+    <div class="actions"><a class="btn" href="#apartments">Choisir un appartement</a></div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     <p>The Closing Group Israel réunit des acheteurs pour qu’un promoteur propose un seul prix de groupe. Nous coordonnons ; nous ne possédons, n’achetons ni ne vendons les appartements, et nous ne détenons jamais votre argent.</p>
-    <p>Films et photos réalisés le 12 November 2026, pendant la finition des appartements. Rien sur cette page ne constitue un conseil juridique, fiscal, financier ou en investissement.</p>
+    <p>Films et photos réalisés le 12 novembre 2026, pendant la finition des appartements. Rien sur cette page ne constitue un conseil juridique, fiscal, financier ou en investissement.</p>
   </div>
 </footer>
 
-<script src="/assets/halperin.js?v=20261116f" defer></script>
+<script src="/assets/qa-data-fr.js?v=20261116g" defer></script>
+<script src="/assets/halperin-data.js?v=20261116g" defer></script>
+<script src="/assets/halperin.js?v=20261116g" defer></script>
 
 <script src="/assets/install.js?v=20261116a" defer></script>
 </body></html>
