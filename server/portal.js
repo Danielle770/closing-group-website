@@ -17,6 +17,12 @@
  *   - A liaison sees ONLY their zone; Boss sees everything. Zone = the language of the latest chat,
  *     or, for members who never chatted, the language of the page they joined on.
  *   - The watchdog (once a day) only flags and suggests. It never changes a status or writes a note.
+ *   - Nobody mails the liaisons. New leads are notified IN THE SYSTEM: a lead is "New" until someone
+ *     (the liaison or Boss) touches it (a status change or a note). Boss sees new leads in all zones,
+ *     a liaison only in their own zone.
+ *   - Warm leads (Best and Warmer) are the ones to work: the "How to move it towards a deal" plan on the
+ *     lead page is the instruction. Cool leads are listed and kept, but never marked as needing action
+ *     and never flagged as missed. The missed flag (24 h, MISSED_AFTER_HOURS) is for warm leads only.
  *
  * Pages are plain server-rendered HTML with forms: no scripts, so the site's Content-Security-Policy
  * stays as it is and the portal is fast on a phone.
@@ -164,6 +170,9 @@ function createPortal({ db, cfg, now, esc, sendMail, emailLayout, limited, agent
       sawQA: [...pages].some((u) => /^\/(fr\/)?questions\//.test(u)),
       whatsapp, whatsappOk, joinWhatsapp: (m && m.whatsapp) || '', bestTime, setup,
       apts: [...new Set(leads.map((l) => l.apt))],
+      // When it first showed real interest: its first chat (else when it became a lead).
+      warmSince: leads.length ? leads.map((l) => l.created_at).sort()[0] : p.created_at,
+      plan: (leads.map((l) => parse(l.plan, [])).find((pl) => pl.length)) || [],
     };
     const r = [];
     if (x.questions.length >= 2) r.push(`asked ${x.questions.length} questions`);
@@ -180,13 +189,17 @@ function createPortal({ db, cfg, now, esc, sendMail, emailLayout, limited, agent
       if (!r.length) r.push('joined and only looked around');
     }
     x.reasons = r;
+    x.warm = x.grade !== 'cool';               // Best + Warmer: the leads to work
+    x.isNew = !p.touched_at;                   // new until the liaison or Boss touches it
+    x.toWork = x.warm && OPEN(x.status);
     x.needsAttention = needsAttention(x);
     return x;
   }
-  // Open, and nobody touched it within the window (since it became a lead, or since its newest activity after the last touch).
+  // Warm (Best/Warmer), open, and nobody touched it within the window (since it first showed interest,
+  // or since its newest activity after the last touch). Cool leads are never flagged.
   function needsAttention(x, at = Date.now()) {
-    if (!OPEN(x.status)) return false;
-    const since = !x.touched_at ? x.created_at : x.last_activity_at > x.touched_at ? x.last_activity_at : null;
+    if (!x.warm || !OPEN(x.status)) return false;
+    const since = !x.touched_at ? x.warmSince : x.last_activity_at > x.touched_at ? x.last_activity_at : null;
     return !!since && at - Date.parse(since) > P.missedHours * 3600e3;
   }
   function people({ zone, id } = {}) {
@@ -250,7 +263,10 @@ main{max-width:860px;margin:0 auto;padding:12px}h1{font-size:20px;margin:6px 0 1
 .g-best{background:#E3F4E8;color:#1F7A44;border-color:#D4AF37}.g-warmer{background:#FDEBD7;color:#A35208}.g-cool{background:#E8EEF5;color:#4A5D78}
 .s-new{background:#E6EEFC;color:#2350A8}.s-called{background:#EFEAFE;color:#5B3FD1}.s-spoke{background:#DDF3F4;color:#0B6F78}
 .s-appointment{background:#FFF1C9;color:#8A6200}.s-sale{background:#1F7A44;color:#fff}.s-lost{background:#E5E5E5;color:#555}
-.attn{background:#C62828;color:#fff}
+.attn{background:#C62828;color:#fff}.newb{background:#2350A8;color:#fff}.work{background:#1D1D1F;color:#D4AF37}
+header a.newc{background:#2350A8;color:#fff}
+.banner{background:#fff;border-radius:12px;padding:10px 12px;margin:0 0 10px;border-left:6px solid #2350A8}
+.instr{border-left:6px solid #1F7A44}.instr ul{font-size:15px}
 .row{display:block;background:#fff;border-radius:12px;padding:10px 12px;margin:0 0 8px;text-decoration:none;color:inherit;border-left:6px solid #ccc}
 .row.b-best{border-left-color:#1F7A44;box-shadow:inset 0 0 0 1px #D4AF37}.row.b-warmer{border-left-color:#E08A2E}.row.b-cool{border-left-color:#8FA3BF}
 .row .top{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.row .name{font-weight:600;margin-right:auto}
@@ -266,11 +282,18 @@ select,input[type=text],input[type=password]{border:1px solid #ccc;border-radius
 table{border-collapse:collapse;width:100%;background:#fff;border-radius:12px;overflow:hidden;font-size:14px}th,td{padding:7px 8px;text-align:left;border-bottom:1px solid #eee}th{font-size:12px;color:#6E6E73}
 .ok{background:#E3F4E8;padding:8px 12px;border-radius:10px;margin:0 0 10px}.err{background:#FDE7E7;padding:8px 12px;border-radius:10px;margin:0 0 10px}
 details summary{cursor:pointer;color:#A8522F}pre{white-space:pre-wrap;font:inherit;font-size:13px;margin:6px 0}`;
+  // New leads for this user (Boss: all zones; liaison: their zone). Shown in the header on every page.
+  function newCount(u) {
+    if (!u) return 0;
+    const z = u.role === 'boss' ? null : u.zone;
+    return db.prepare(`SELECT COUNT(*) c FROM prospects WHERE merged_into IS NULL AND touched_at IS NULL${z ? ' AND zone=?' : ''}`).get(...(z ? [z] : [])).c;
+  }
   function page(title, u, body) {
+    const nc = newCount(u);
     return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><title>${esc(title)} · The Closing Group leads</title><style>${CSS}</style></head><body>
 <header><b>The Closing Group · Leads</b>${u ? `<span>${esc(u.name)}${u.zone ? ` · ${ZONE[u.zone]}` : ' · all zones'}</span>
-<a href="/api/portal/">List</a>${u.role === 'boss' ? '<a href="/api/portal/team">Team</a>' : ''}
+<a href="/api/portal/">List</a>${nc ? `<a href="/api/portal/?fresh=1" class="chip newc">${nc} new</a>` : ''}${u.role === 'boss' ? '<a href="/api/portal/team">Team</a>' : ''}
 <form method="post" action="/api/portal/logout"><button>Sign out</button></form>` : ''}</header><main>${body}</main></body></html>`;
   }
   function send(res, html, code = 200) {
@@ -341,21 +364,27 @@ ${configured ? '' : '<p class="err">No logins are set up yet on this server (ADM
     if (GRADE[q.grade]) list = list.filter((x) => x.grade === q.grade);
     if (STATUS_LABEL[q.status]) list = list.filter((x) => x.status === q.status);
     if (q.attention === '1') list = list.filter((x) => x.needsAttention);
+    if (q.fresh === '1') list = list.filter((x) => x.isNew);
     const count = (f) => all.filter(f).length;
     const link = (patch) => {
-      const p = new URLSearchParams(Object.entries({ zone: zone || '', grade: q.grade || '', status: q.status || '', attention: q.attention || '', ...patch }).filter(([, v]) => v));
+      const p = new URLSearchParams(Object.entries({ zone: zone || '', grade: q.grade || '', status: q.status || '', attention: q.attention || '', fresh: q.fresh || '', ...patch }).filter(([, v]) => v));
       return '/api/portal/' + (p.toString() ? `?${p}` : '');
     };
     const chip = (text, patch, on) => `<a href="${esc(link(patch))}" class="${on ? 'on' : ''}">${esc(text)}</a>`;
     const limit = q.all === '1' ? Infinity : 200;
     const rows = list.slice(0, limit).map((x) => `<a class="row b-${x.grade}" href="/api/portal/lead/${x.id}">
-<div class="top"><span class="name">${esc(label(x))}</span>${gradeChip(x.grade)}${statusChip(x.status)}${x.needsAttention ? '<span class="chip attn">Needs attention</span>' : ''}</div>
+<div class="top"><span class="name">${esc(label(x))}</span>${x.isNew ? '<span class="chip newb">New</span>' : ''}${gradeChip(x.grade)}${statusChip(x.status)}${x.toWork && x.isNew ? '<span class="chip work">Work this lead</span>' : ''}${x.needsAttention ? '<span class="chip attn">Needs attention</span>' : ''}</div>
 <div class="facts">${esc(factsLine(x))}</div>
 <div class="meta">${u.role === 'boss' ? `${ZONE[x.zone]} · ${esc(liaisonName(x.zone))} · ` : ''}${x.member ? 'member' : x.email ? 'email known' : 'visitor'} · last activity ${esc(ago(x.last_activity_at))}</div></a>`).join('');
+    const fresh = all.filter((x) => x.isNew), freshWarm = fresh.filter((x) => x.toWork);
+    const banner = fresh.length
+      ? `<div class="banner"><b>${fresh.length} new lead${fresh.length === 1 ? '' : 's'}</b>${u.role === 'boss' ? (zone ? ` in the ${ZONE[zone]} zone` : ' in all zones') : ''}: <b>${freshWarm.length} to work</b> (Best and Warmer)${fresh.length - freshWarm.length ? `, ${fresh.length - freshWarm.length} Cool (kept for later, no action needed)` : ''}. A lead stops being new once you change its status or add a note. <a href="${esc(link({ fresh: q.fresh === '1' ? '' : '1' }))}">${q.fresh === '1' ? 'Show all' : 'Show only new'}</a></div>`
+      : '<div class="banner">No new leads. Everything has been looked at.</div>';
     send(res, page('Leads', u, `<h1>${u.role === 'boss' ? (zone ? `${ZONE[zone]} leads` : 'All leads') : `Your leads (${ZONE[u.zone]})`} · ${all.length}</h1>
 ${u.role === 'boss' ? `<div class="filters">${chip('All zones', { zone: '' }, !zone)}${chip(`English · ${P.en.name}`, { zone: 'en' }, zone === 'en')}${chip(`French · ${P.fr.name}`, { zone: 'fr' }, zone === 'fr')}</div>` : ''}
 <div class="filters">${chip(`All ${all.length}`, { grade: '', attention: '' }, !q.grade && q.attention !== '1')}${['best', 'warmer', 'cool'].map((g) => chip(`${GRADE[g]} ${count((x) => x.grade === g)}`, { grade: g }, q.grade === g)).join('')}
-${chip(`Needs attention ${count((x) => x.needsAttention)}`, { attention: q.attention === '1' ? '' : '1' }, q.attention === '1')}</div>
+${chip(`New ${fresh.length}`, { fresh: q.fresh === '1' ? '' : '1' }, q.fresh === '1')}${chip(`Needs attention ${count((x) => x.needsAttention)}`, { attention: q.attention === '1' ? '' : '1' }, q.attention === '1')}</div>
+${banner}
 <div class="filters">${chip('Any status', { status: '' }, !q.status)}${STATUSES.map(([k, v]) => chip(`${v} ${count((x) => x.status === k)}`, { status: k }, q.status === k)).join('')}</div>
 ${rows || '<p class="card">No leads here yet.</p>'}${list.length > limit ? `<p><a href="${esc(link({ all: '1' }))}">Show all ${list.length}</a></p>` : ''}`));
   });
@@ -395,14 +424,17 @@ ${rows || '<p class="card">No leads here yet.</p>'}${list.length > limit ? `<p><
       const ph = a.replay_url || (a.posthog_id ? `https://us.posthog.com/person/${encodeURIComponent(a.posthog_id)}` : '');
       return `<div class="card"><p><b>Chat · Apartment ${esc(l.apt)}</b> · ${esc(when(l.created_at))}${l.lang === 'fr' ? ' · French' : ''}</p>
 <ul>${facts.map((f) => `<li>${esc(f)}</li>`).join('')}${ph ? `<li><a href="${esc(ph)}" rel="noopener">PostHog</a></li>` : ''}</ul>
-${plan.length ? `<details><summary>How to move it towards a deal</summary><ul>${plan.map((p) => `<li>${esc(p)}</li>`).join('')}</ul></details>` : ''}
+${plan.length ? `<p><b>How to move it towards a deal</b></p><ul>${plan.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}
 ${tr.length ? `<details><summary>The conversation</summary><pre>${esc(tr.join('\n'))}</pre></details>` : ''}</div>`;
     }).join('');
     send(res, page(label(x), u, `<p><a href="/api/portal/">← All leads</a></p>
 <h1>${esc(label(x))}</h1>
-<p>${gradeChip(x.grade)} ${statusChip(x.status)} ${x.needsAttention ? '<span class="chip attn">Needs attention</span>' : ''}</p>
+<p>${x.isNew ? '<span class="chip newb">New</span> ' : ''}${gradeChip(x.grade)} ${statusChip(x.status)} ${x.needsAttention ? '<span class="chip attn">Needs attention</span>' : ''}</p>
 <p class="k">Why ${GRADE[x.grade]}: ${esc(x.reasons.join(', '))}.</p>
 ${req.query.saved ? '<p class="ok">Saved.</p>' : ''}
+${x.toWork ? `<div class="card instr"><p><b>Work this lead: ${esc(liaisonName(x.zone))}, this one is yours.</b> Contact them within ${P.missedHours} hours, then save the status or a note.</p>
+<p><b>How to move it towards a deal</b></p>${x.plan.length ? `<ul>${x.plan.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>` : '<ul><li>No AI plan for this lead yet (no plan was written for their chat). Reach out using the contact below, answer their questions, and ask what they are looking for.</li></ul>'}</div>`
+  : x.warm ? '' : '<div class="card"><p class="k">Cool lead: kept in the system for later. No action needed now.</p></div>'}
 <div class="card"><p><b>Who</b></p>
 <p>${m ? `Enrolled member${m.area && m.area !== 'home' ? ` · ${esc({ netanya: 'Netanya', center: 'Center', jerusalem: 'Jerusalem' }[m.area] || m.area)} Kahila` : ''} · joined ${esc(day(m.created_at))}${m.country_city ? ` · ${esc(m.country_city)}` : ''}${m.community ? ` · ${esc(m.community)}` : ''}` : x.email ? 'Not in the member list (email from their browser)' : 'A visitor (not a member on that device)'}</p>
 <p class="k">${ZONE[x.zone]} zone · ${esc(liaisonName(x.zone))} · lead since ${esc(when(x.created_at))} · last activity ${esc(ago(x.last_activity_at))}</p>
@@ -479,7 +511,7 @@ ${s ? `<div class="card"><pre>${esc(summaryText(parse(s.counts, {})))}</pre>
 ${s.suggestions ? `<p><b>Suggestions</b> <span class="k">(AI, advice only: it never changes a status or writes a note)</span></p><pre>${esc(s.suggestions)}</pre>` : '<p class="k">No AI suggestions (no Anthropic key on the server).</p>'}
 <p><b>Missed (${missed.length})</b></p>${missed.length ? `<ul>${missed.slice(0, 100).map((m) => `<li><a href="/api/portal/lead/${m.id}">${esc(m.name)}</a> · ${GRADE[m.grade]} · ${esc(m.liaison)} · waiting ${esc(m.waiting)}</li>`).join('')}</ul>` : '<p class="k">None.</p>'}</div>` : '<p class="card">No summary yet. It is written once a day, or press the button below.</p>'}
 <form method="post" action="/api/portal/watchdog"><button class="btn">Run the check now</button></form>
-<p class="k">The check runs every day at ${String(P.watchdogHour).padStart(2, '0')}:00 Israel time. A lead needs attention when nobody touched it (status or note) within ${P.missedHours} hours.</p>`));
+<p class="k">The check runs every day at ${String(P.watchdogHour).padStart(2, '0')}:00 Israel time. A Best or Warmer lead needs attention when nobody touched it (status or note) within ${P.missedHours} hours. Cool leads are kept for later and never flagged.</p>`));
   });
 
   // ---------- the watchdog ----------
@@ -502,7 +534,7 @@ ${s.suggestions ? `<p><b>Suggestions</b> <span class="k">(AI, advice only: it ne
     for (const x of missed) {
       if (x.missed_at) continue;   // already flagged in this run of silence
       db.prepare('UPDATE prospects SET missed_at=? WHERE id=?').run(t, x.id);
-      event.run(x.id, t, 'Watchdog', 'flag', null, null, `Needs attention: nobody touched this lead within ${P.missedHours} hours.`);
+      event.run(x.id, t, 'Watchdog', 'flag', null, null, `Needs attention: a ${GRADE[x.grade]} lead nobody touched within ${P.missedHours} hours.`);
     }
     const waiting = (x) => ago(!x.touched_at ? x.created_at : x.last_activity_at).replace(' ago', '');
     const missedList = missed.map((x) => ({ id: x.id, name: label(x), grade: x.grade, zone: x.zone, liaison: liaisonName(x.zone), waiting: waiting(x),
@@ -516,7 +548,7 @@ ${s.suggestions ? `<p><b>Suggestions</b> <span class="k">(AI, advice only: it ne
     if (cfg.anthropicKey && agent.callClaude) {
       try {
         // Numbers only: no names, emails or phone numbers leave the server for this.
-        suggestions = await agent.callClaude(`You advise the Boss of The Closing Group, a group-buying platform for new apartments in Israel. Liaisons call leads that come from the website (members who joined, and visitors who asked in the apartment chat). Grades: Best (several questions, came back, or left a number/best time), Warmer (chatted, read the Q&A, or came back once), Cool (joined, only looked). Statuses: New, Called, Spoke, Appointment booked, Sale, Lost. A lead "needs attention" when nobody touched it within ${P.missedHours} hours.
+        suggestions = await agent.callClaude(`You advise the Boss of The Closing Group, a group-buying platform for new apartments in Israel. Liaisons call leads that come from the website (members who joined, and visitors who asked in the apartment chat). Grades: Best (several questions, came back, or left a number/best time), Warmer (chatted, read the Q&A, or came back once), Cool (joined, only looked). Statuses: New, Called, Spoke, Appointment booked, Sale, Lost. Only Best and Warmer leads are worked; Cool leads are kept for later and never count as missed. A Best or Warmer lead "needs attention" when nobody touched it within ${P.missedHours} hours.
 From today's numbers, write 3 to 5 short, plain, practical suggestions for what the team should do better today (who to call first, which liaison needs help, where leads drop off). Be specific to the numbers. Plain text, one per line, no numbering, no markdown. Never invent numbers.`,
         [{ role: 'user', content: JSON.stringify(counts) }], 500);
       } catch (e) { console.error('watchdog AI error:', e.message); suggestions = ''; }
@@ -529,7 +561,7 @@ From today's numbers, write 3 to 5 short, plain, practical suggestions for what 
     if (to) {
       const lines = [`Daily leads check · ${today}`, '', summaryText(counts), ''];
       if (missedList.length) {
-        lines.push(`MISSED: ${missedList.length} open lead${missedList.length === 1 ? '' : 's'} nobody touched within ${P.missedHours} hours:`);
+        lines.push(`MISSED: ${missedList.length} open warm lead${missedList.length === 1 ? '' : 's'} (Best or Warmer) nobody touched within ${P.missedHours} hours:`);
         for (const z of ['en', 'fr']) {
           const L = missedList.filter((m) => m.zone === z);
           if (!L.length) continue;
@@ -537,7 +569,7 @@ From today's numbers, write 3 to 5 short, plain, practical suggestions for what 
           L.slice(0, 200).forEach((m) => lines.push(`- [${GRADE[m.grade]}] ${m.name} · ${m.contact} · waiting ${m.waiting} · ${cfg.siteUrl}/api/portal/lead/${m.id}`));
           if (L.length > 200) lines.push(`- … and ${L.length - 200} more in the portal`);
         }
-      } else lines.push('No missed leads. Every open lead was touched in time.');
+      } else lines.push('No missed leads. Every open warm lead was touched in time. (Cool leads are never counted as missed.)');
       if (suggestions) lines.push('', 'Suggestions (AI, advice only):', ...suggestions.split('\n').map((s) => `- ${s.replace(/^[-•*\s]+/, '')}`));
       lines.push('', `Portal: ${cfg.siteUrl}/api/portal/team`);
       const text = lines.join('\n');
