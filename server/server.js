@@ -548,10 +548,10 @@ async function sendLeadWhatsapp(text) {
   });
   if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 300)}`);
 }
-// Who gets the card: the liaison for the chat's language (from the settings) and the admin.
-function leadRecipients(liaison) {
-  const l = liaison === 'Levy Levin' ? cfg.liaisonFrEmail : cfg.liaisonEnEmail;
-  return [...new Set([l, cfg.leadAdminEmail].filter((e) => e && EMAIL_RE.test(e)).map((e) => e.toLowerCase()))];
+// Who gets the card: the company inbox ONLY. Nobody mails the liaisons: they work the lead in the
+// system (the portal). LIAISON_EN_EMAIL / LIAISON_FR_EMAIL stay in the settings but are not used for the card.
+function leadRecipients() {
+  return [cfg.leadAdminEmail].filter((e) => e && EMAIL_RE.test(e)).map((e) => e.toLowerCase());
 }
 async function sendLeadCard(l, kind, rowId) {
   const plan = await agent.closingPlan(l);
@@ -562,7 +562,7 @@ async function sendLeadCard(l, kind, rowId) {
   const transcript = l.transcript.length ? ['', 'The conversation:', ...l.transcript] : [];
   const text = card.concat(transcript).join('\n');
   const html = emailLayout(`<pre style="font-family:inherit;font-size:15px;line-height:1.6;white-space:pre-wrap">${esc(text)}</pre>`);
-  for (const to of leadRecipients(l.liaison)) sendMail(to, subject, text, html).catch((e) => console.error(`lead mail error (${to}):`, e.message));
+  for (const to of leadRecipients()) sendMail(to, subject, text, html).catch((e) => console.error(`lead mail error (${to}):`, e.message));
   sendLeadWhatsapp(({ complete: '(Complete) ', update: '(Update) ' }[kind] || '') + card.join('\n')).catch((e) => console.error('lead WhatsApp error:', e.message));
 }
 
