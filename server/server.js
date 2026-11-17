@@ -9,7 +9,7 @@
  *   GET  /api/admin/members.csv  member list for the team (password protected)
  *   GET  /api/health             health check
  *   POST /api/agent              apartment chat: one answer from the AI agent (needs ANTHROPIC_API_KEY)
- *   POST /api/lead               apartment chat: the lead, from the first question on (saved, card emailed to liaison + admin, sent to WhatsApp)
+ *   POST /api/lead               apartment chat: the lead, from the first question on (saved, card emailed to the company inbox only, sent to WhatsApp)
  *   GET  /api/admin/leads.csv, /api/admin/agent-gaps.csv  (password protected)
  * Configuration comes from environment variables (see .env.example).
  */
